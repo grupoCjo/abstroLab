@@ -1,5 +1,5 @@
 const express = require('express');
-const axios = require('axios');
+const axios = require('axios/index.d.cts');
 const app = express();
 const port = 3000;
 const key = "1799d40e8a8570462380ba0b674d2039f309c";
