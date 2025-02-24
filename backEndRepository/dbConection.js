@@ -1,19 +1,20 @@
+require('dotenv').config();
 
-// const mysql = require('mysql2');
+const mysql = require('mysql2');
 
-
-// const sql = mysql.createPool({
-//   host: '',      
-//   user: '',           
-//   password: '',
-//   database: '', 
-//   waitForConnections: true, 
-//   queueLimit: 0           
-// });
+const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+  waitForConnections: true,
+  connectionLimit: process.env.DB_CONNECTION_LIMIT,
+  queueLimit: 0
+});
 
 const query = (sql, params) => {
   return new Promise((resolve, reject) => {
-    sql.query(sql, params, (err, results) => {
+    pool.query(sql, params, (err, results) => {
       if (err) {
         reject(err);
       } else {
@@ -24,7 +25,7 @@ const query = (sql, params) => {
 };
 
 const closeConnection = () => {
-  sql.end(err => {
+  pool.end(err => {
     if (err) {
       console.log('Erro ao fechar a conexão:', err);
     } else {
