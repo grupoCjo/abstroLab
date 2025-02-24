@@ -1,15 +1,15 @@
 
-const mysql = require('mysql2');
+// const mysql = require('mysql2');
 
 
-const sql = mysql.createPool({
-  host: '',      
-  user: '',           
-  password: '',
-  database: '', 
-  waitForConnections: true, 
-  queueLimit: 0           
-});
+// const sql = mysql.createPool({
+//   host: '',      
+//   user: '',           
+//   password: '',
+//   database: '', 
+//   waitForConnections: true, 
+//   queueLimit: 0           
+// });
 
 const query = (sql, params) => {
   return new Promise((resolve, reject) => {
