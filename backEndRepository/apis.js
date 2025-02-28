@@ -1,6 +1,6 @@
+import express from 'express';
+import { request } from 'axios/index.d.cts';
 const env = require('env').config().parsed;
-const express = require('express');
-const axios = require('axios/index.d.cts');
 const app = express();
 const port = process.env.PORT || 3000;
 const key = env.EMOJI_API_KEY;
@@ -16,7 +16,7 @@ const getEmojis = async () => {
       }
     };
     
-    const response = await axios.request(config);
+    const response = await request(config);
     
     return response.data;
   } catch (error) {
