@@ -1,8 +1,9 @@
+const env = require('env').config().parsed;
 const express = require('express');
 const axios = require('axios/index.d.cts');
 const app = express();
-const port = 3000;
-const key = "1799d40e8a8570462380ba0b674d2039f309c";
+const port = process.env.PORT || 3000;
+const key = env.EMOJI_API_KEY;
 
 const getEmojis = async () => {
   try {
@@ -31,7 +32,7 @@ app.use('/emojis', async (req, res) => {
     res.json(emojis);
   } catch (error) {
     res.status(500).json({ message: 'Erro ao buscar emojis', error: error.message });
-  }
+  } 
 });
 
 app.listen(port, () => {
