@@ -1,0 +1,197 @@
+body {
+    background-color: #68c8d8;
+    height: 100vh;
+    margin: 0;
+}
+
+.container-geral {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 80vh; 
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container-branco {
+    width: 90%;
+    height: 90%;
+    border-radius: 10px;
+    display: flex;
+}
+
+.container-esquerda {
+    width: 50%;
+    height: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    border-right: 1px solid #ccc;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+
+.container-direita {
+    width: 50%;
+    height: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #8FBC8F;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.btn-login {
+    width: 250px;
+    height: 40px;
+    border-radius: 10px;
+    padding: 10px;
+    border: 2px solid black; 
+    background-color: transparent; 
+    color: black; 
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.btn-login i {
+    margin-right: 10px; 
+    margin-left: -10px; 
+    display: inline-block;
+    text-align: left;
+    min-width: 20px;
+    position: abs;
+  }
+
+input {
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 2px solid #ccc;
+    width: 250px;
+}
+
+select {
+    margin-bottom: 20px;
+}
+
+.data-nascimento {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.campo-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 30%;
+}
+
+.genero {
+    display: flex;
+    justify-content: space-between;
+    width: 300px;
+}
+
+.genero input[type="radio"] {
+    display: none;
+}
+
+.genero label {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #fff;
+    cursor: pointer;
+    margin-bottom: 20px;
+    width: 80px;
+    text-align: left;
+    position: relative;
+    margin-right: 10px;
+    box-shadow: 0 0 0 1px #ccc; 
+}
+
+.genero label::after {
+    content: "";
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.genero input[type="radio"]:checked + label::after {
+    background-color: #333;
+}
+
+.genero input[type="radio"]:checked + label {
+    background-color: #ccc;
+}
+
+.btn-cadastro {
+    width: 200px;
+    height: 40px;
+    border-radius: 10px;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: #fff;
+}
+
+.linha-horizontal {
+    width: 100%;
+    height: 1px;
+    background-color: #ccc;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.linha-horizontal::before {
+    content: "OU";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fff;
+    padding: 0 10px;
+}
+
+.linha-horizontal::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #ccc;
+    z-index: -1;
+}
+
+.campo-login, .campo-senha {
+    position: relative;
+}
+
+.campo-login i, .campo-senha i {
+    position: absolute;
+    top: 35%;
+    left: 5%;
+    transform: translate(-50%, -50%);
+}
+
+#email, #senha {
+    padding-left: 30px;
+}

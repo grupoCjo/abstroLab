@@ -1,11 +1,21 @@
 <!DOCTYPE html>
-<html>  
-    <head>
-        <title></title>
-        <link rel="stylesheet" type="text/css" href="styles.css">
-        <meta charset="UTF-8">
-    </head>
-    <body>
-        
-    </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AbstroLab</title>
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+    <div class="container">
+        <button class="btn btn-login" onclick="redirecionar()">login</button>
+        <button class="btn btn-cadastro" onclick="redirecionar()">Cadastro</button>
+    </div>
+
+    <script>
+        function redirecionar() {
+            window.location.href = "cadastro.html";
+        }
+    </script>
+</body>
 </html>
