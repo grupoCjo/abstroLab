@@ -1,0 +1,52 @@
+body {
+    background-image: url("Cadastro e Login.png");
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    margin: 0;
+}
+
+.btn {
+    width: 214px;
+    height: 68px;
+    border-radius: 10px;
+    padding: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-login {
+    background-color:#ff8674;
+    color: black;
+}
+
+.btn-cadastro {
+    background-color: #ffc25a;
+    color: black;
+}
+
+.container {
+    position: absolute;
+    bottom: 40%;
+    right: 5%;
+    display: flex;
+    justify-content: flex-end;
+    width: 90%;
+}
+
+.container button + button {
+    margin-left: 50px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        width: 80%;
+    }
+
+    .container button + button {
+        margin-left: 0;
+        margin-top: 20px;
+    }
+}
