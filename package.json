@@ -3,6 +3,8 @@
     "axios": "^1.7.9",
     "express": "^4.21.2",
     "mysql": "^2.18.1",
+    "react-router-dom": "^7.3.0",
+    "styled-components": "^6.1.15",
     "winston": "^3.17.0"
   },
   "scripts": {
