@@ -52,38 +52,16 @@
                     <i class="fa fa-envelope input-icon"></i>
                     <input type="email" id="email" name="email" placeholder="E-mail" class="form-control">
                 </div>
-                <a href="#">Esqueceu sua senha?</a>
-            </div>
-            <div class="container-direita">
-                <p>Cadastrar-se</p>
-                <input type="text" id="nome" name="nome" placeholder="Nome completo">
-                <input type="text" id="celular" name="celular" placeholder="Celular ou e-mail">
-                <input type="password" id="senha-cadastro" name="senha-cadastro" placeholder="Senha">
-                <p>Data de Nascimento:</p>
-                <div class="data-nascimento">
-                    <div class="campo-data">
-                        <input type="number" id="dia" name="dia" min="1" max="31" style="width: 50px;" placeholder="Dia">
-                    </div>
-                    <div class="campo-data">
-                        <select id="mes" name="mes" style="width: 100px; padding: 10px; border: none; border-radius: 10px;">
-                            <option value="" selected disabled>Mês</option>
-                            <option value="1">Janeiro</option>
-                            <option value="2">Fevereiro</option>
-                            <option value="3">Março</option>
-                            <option value="4">Abril</option>
-                            <option value="5">Maio</option>
-                            <option value="6">Junho</option>
-                            <option value="7">Julho</option>
-                            <option value="8">Agosto</option>
-                            <option value="9">Setembro</option>
-                            <option value="10">Outubro</option>
-                            <option value="11">Novembro</option>
-                            <option value="12">Dezembro</option>
-                        </select>
-                    </div>
-                    <div class="campo-data">
-                        <input type="number" id="ano" name="ano" style="width: 60px;" placeholder="Ano">
-                    </div>
+                <!-- Campo Senha -->
+                <div class="input-group mt-3">
+                    <i class="fa fa-lock input-icon"></i>
+                    <input type="password" id="senha" name="senha" placeholder="Senha" class="form-control">
+                </div>
+
+                <!-- Campo Idade -->
+                <div class="input-group mt-3">
+                    <i class="fa fa-calendar input-icon"></i>
+                    <input type="text" id="idade" name="idade" placeholder="Idade" class="form-control">
                 </div>
 
                 <!-- Gênero -->
@@ -98,11 +76,9 @@
                         <input type="radio" id="outro" name="genero" class="mr-2"> Outro
                     </label>
                 </div>
-                <p>As pessoas que usam nosso serviço podem ter carregado suas infromações de contato no Medium. <a href="#">Saiba mais.</a>
-                    </p>
-                    <p>Ao clicar em Cadastrar-se, você concorda com nossos <a href="#">Termos, Politica de Privacidade e Política de Cookies.</a>Você poderá receber notificações por email e cancelar quando quiser.</p>
-                <button class="btn-cadastro">Cadastrar-se</button>
-            </div>
+
+                <button class="btnCadastro">Cadastrar-se</button>
+             </div>
         </div>
                 <!-- Container de Login -->
                 <div id="container-login" class="cardLogin">
