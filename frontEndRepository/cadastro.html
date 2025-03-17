@@ -1,36 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro</title>
-    <link rel="stylesheet" href="cadastro.css">
-    <link rel="stylesheet" href="font-awesome.min.css">
+    <title>Cadastro / Login</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
-    <div class="container-geral">
-        <div class="container-branco">
-            <div class="container-esquerda">
-                <p>BEM-VINDO DE VOLTA!</p>
-                <button class="btn-login" id="google"><i class="fa fa-google" aria-hidden="true"></i> Fazer login com o Google</button>
-                <button class="btn-login" id="facebook"><i class="fa fa-facebook" aria-hidden="true"></i> Fazer login com o Facebook</button>
-                <button class="btn-login" id="twitter"><i class="fa fa-twitter" aria-hidden="true"></i> Fazer login com o Twitter</button>                
-                <br>
-                <div class="linha-horizontal"></div>
-                <br>
-                <div class="campo-login">
-                    <i class="fa fa-user" aria-hidden="true"></i>
-                    <input type="text" id="email" name="email" placeholder="Login de e-mail ou nome de usuário">
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="#">AbstroLab</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#inicio">Início</a></li>
+                <li><a href="#funcionalidades">Funcionalidades</a></li>
+                <li><a href="#sobre">Sobre</a></li>
+                <li><a href="#depoimentos">Depoimentos</a></li>
+                <li><a href="#contato">Contato</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="text-center">
+        <h2 class="mainTitle">BEM-VINDO DE VOLTA!</h2>
+    </div>
+
+    <div class="main-container">
+        <!-- Container de Cadastro -->
+        <div id="container-cadastro" class="card">
+            <div class="card-body">
+                <h2 class="text-center">Cadastrar-se</h2>
+                <div class="line-divider my-4"></div>
+
+                <!-- Campo Nome -->
+                <div class="input-group">
+                    <i class="fa fa-user input-icon"></i>
+                    <input type="text" id="nome" name="nome" placeholder="Nome Completo" class="form-control">
                 </div>
-                
-                <div class="campo-senha">
-                    <i class="fa fa-lock" aria-hidden="true"></i>
-                    <input type="password" id="senha" name="senha" placeholder="Senha">
+
+                <!-- Campo E-mail -->
+                <div class="input-group mt-3">
+                    <i class="fa fa-envelope input-icon"></i>
+                    <input type="email" id="email" name="email" placeholder="E-mail" class="form-control">
                 </div>
                 <a href="#">Esqueceu sua senha?</a>
             </div>
             <div class="container-direita">
-                <p>CADASTRE-SE!</p>
+                <p>Cadastrar-se</p>
                 <input type="text" id="nome" name="nome" placeholder="Nome completo">
                 <input type="text" id="celular" name="celular" placeholder="Celular ou e-mail">
                 <input type="password" id="senha-cadastro" name="senha-cadastro" placeholder="Senha">
@@ -60,22 +85,52 @@
                         <input type="number" id="ano" name="ano" style="width: 60px;" placeholder="Ano">
                     </div>
                 </div>
-                <p>Gênero:</p>
-                <div class="genero">
-                    <input type="radio" id="feminino" name="genero">
-                    <label for="feminino">F</label>
-                    <input type="radio" id="masculino" name="genero">
-                    <label for="masculino">M</label>
-                    <input type="radio" id="outro" name="genero">
-                    <label for="outro">Outro</label>
+
+                <!-- Gênero -->
+                <div class="d-flex justify-content-between mt-3">
+                    <label class="d-flex align-items-center">
+                        <input type="radio" id="feminino" name="genero" class="mr-2"> F
+                    </label>
+                    <label class="d-flex align-items-center">
+                        <input type="radio" id="masculino" name="genero" class="mr-2"> M
+                    </label>
+                    <label class="d-flex align-items-center">
+                        <input type="radio" id="outro" name="genero" class="mr-2"> Outro
+                    </label>
                 </div>
-                <!--essa linha 73 aqui????-->
-                <p>As pessoas que usam nosso serviço podem ter suas infromações de contato carregadas no Medium. <a href="#">Saiba mais.</a>
+                <p>As pessoas que usam nosso serviço podem ter carregado suas infromações de contato no Medium. <a href="#">Saiba mais.</a>
                     </p>
                     <p>Ao clicar em Cadastrar-se, você concorda com nossos <a href="#">Termos, Politica de Privacidade e Política de Cookies.</a>Você poderá receber notificações por email e cancelar quando quiser.</p>
                 <button class="btn-cadastro">Cadastrar-se</button>
             </div>
         </div>
+                <!-- Container de Login -->
+                <div id="container-login" class="cardLogin">
+                    <div class="card-body">
+                        <div class = "LoginTitle">
+                            <h2>Entrar</h2> 
+                        </div>
+                        <div class="line-divider my-4"></div>
+                        <div class="input-group">
+                            <i class="fa fa-user input-icon"></i>
+                            <input type="text" id="email" name="email" placeholder="E-mail ou nome de usuário" class="form-control">
+                        </div>
+                        <div class="input-group mt-3">
+                            <i class="fa fa-lock input-icon"></i>
+                            <input type="password" id="senha" name="senha" placeholder="Senha" class="form-control">
+                        </div>
+                        <div class="btnEntrar">
+                            <button class="entrarBtn">Entrar</button>
+                        </div>
+                        <a href="#" class="text-muted mt-2">Esqueceu sua senha?</a>
+                    </div>
+                </div>
+        
     </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 AbstroLab. Todos os direitos reservados.</p>
+    </footer>
 </body>
+
 </html>
