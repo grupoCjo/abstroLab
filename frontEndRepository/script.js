@@ -26,22 +26,58 @@ document.querySelector('.carousel-next').addEventListener('click', () => moveCar
 //enviar o cadastro p DB
 
     // Função de validação de senha
-    function validarSenhas() {
-        const senha = document.getElementById('senha').value;
-        const confirmarSenha = document.getElementById('confirmarSenha').value;
-        const mensagemErro = document.getElementById('erroSenha');
+    // function validarSenhas() {
+    //     const senha = document.getElementById('senha').value;
+    //     const confirmarSenha = document.getElementById('confirmarSenha').value;
+    //     const mensagemErro = document.getElementById('erroSenha');
 
-        if (senha !== confirmarSenha) {
-            mensagemErro.style.display = 'block';
-            mensagemErro.innerText = '*As senhas não coincidem';
-        } else {
-            mensagemErro.style.display = 'none'; 
-            // colocar aqui o cod p enviar p bd
-            console.log("As senhas coincidem. Enviar para o banco de dados.");
-        }
+    //     if (senha !== confirmarSenha) {
+    //         mensagemErro.style.display = 'block';
+    //         mensagemErro.innerText = '*As senhas não coincidem';
+    //     } else {
+    //         mensagemErro.style.display = 'none'; 
+    //         // colocar aqui o cod p enviar p bd
+    //         console.log("As senhas coincidem. Enviar para o banco de dados.");
+    //     }
+    // }
+
+    // document.querySelector('.btnCadastro').addEventListener('click', function(e) {
+    //     e.preventDefault(); 
+    //     validarSenhas(); 
+    // });
+
+//Criação de endpoint para INSERT no banco com dados do --CADASTRO--
+
+document.querySelector(".btnCadastro").addEventListener("click", async () => {
+    const nome = document.getElementById("nome").value;
+    const email = document.getElementById("email").value;
+    const senha = document.getElementById("senha").value;
+    const confirmarSenha = document.getElementById("confirmarSenha").value;
+    const dataNascimento = document.getElementById("dataNascimento").value; // Novo campo
+
+    // Validação básica dos campos de senha
+    if (senha !== confirmarSenha) {
+        document.getElementById("erroSenha").innerText = "As senhas não coincidem!";
+        document.getElementById("erroSenha").style.display = "block";
+        return;
+    } else {
+        document.getElementById("erroSenha").style.display = "none";
     }
 
-    document.querySelector('.btnCadastro').addEventListener('click', function(e) {
-        e.preventDefault(); 
-        validarSenhas(); 
-    });
+    const dados = { nome, email, senha, dataNascimento };
+
+    try {
+        const response = await fetch("http://localhost:3000/cadastrar", { //chama o endpoint cadastrar (VEJA O ARQUIVO server.js, o endpoint está lá) e executa o método POST para enviar os dados para o BD.
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(dados),
+        });
+
+        const resultado = await response.json();
+        alert(resultado.message);
+    } catch (error) {
+        console.error("Erro ao cadastrar:", error);
+        alert("Erro ao cadastrar usuário.");
+    }
+});
+
