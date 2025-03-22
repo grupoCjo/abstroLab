@@ -1,6 +1,6 @@
 /*
     Notas para o grupo
-    REFERENCES é usado p indicar FK
+    REFERENCES é p FK
     ON DELETE CASCADE - Se o registro principal for apagado, apaga os registros dependentes    
     ON UPDATE CASCADE - Se o registro principal for alterado, altera tbm os registros dependentes
     leia-se: registro principal como PK
@@ -37,7 +37,12 @@ CREATE TABLE configuracoes_usuario (
 CREATE TABLE exercicios (
     exercicio_ID VARCHAR(10) PRIMARY KEY,
     posicao_trilha INT NOT NULL,
-    resposta_correta VARCHAR(255) NOT NULL
+    titulo VARCHAR(255) NOT NULL,
+    enunciado TEXT,
+    alternativas TEXT,
+    resposta_correta VARCHAR(255) NOT NULL,
+    nivel ENUM('iniciante', 'intermediario', 'avancado') DEFAULT 'iniciante',
+    codigo LONGTEXT
 );
 
 CREATE TABLE progresso_exercicios (

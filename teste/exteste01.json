@@ -1,0 +1,14 @@
+{
+    "exercicio_ID": "EX001",
+    "posicao_trilha": 1,
+    "titulo": "Escolha a sequência ordenada",
+    "enunciado": "Qual dessas opções está em ordem crescente?",
+    "alternativas": [
+      "5, 3, 2",
+      "1, 2, 3",
+      "4, 4, 1"
+    ],
+    "resposta_correta": "1, 2, 3",
+    "nivel": "iniciante"
+  }
+  
