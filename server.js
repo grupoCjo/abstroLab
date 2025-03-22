@@ -10,6 +10,16 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+
+// Configuração da conexão com o MySQL usando as variáveis do .env
+const db = mysql.createConnection({
+    host: process.env.DB_HOST,      
+    user: process.env.DB_USER,      
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: 3306    
+});
+
 //gera novo ID para usuário. aqui foi feito um select para pegar o último ID cadastrado e incrementar 1 para gerar novo ID.
 const gerarUsuarioID = async () => {
     try {
