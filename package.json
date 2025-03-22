@@ -11,6 +11,6 @@
     "winston": "^3.17.0"
   },
   "scripts": {
-    "start": "node server.cjs"
+    "start": "node server.js"
   }
 }
