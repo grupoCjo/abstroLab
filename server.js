@@ -2,13 +2,35 @@ const winston = require("winston");
 const path = require("path");
 require("dotenv").config();
 const express = require("express");
-const cors = require("cors");
+//const cors = require("cors");
 const { query, closeConnection } = require('./backEndRepository/dbConnection');
 const PORT = process.env.PORT || 3000;
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+//app.use(cors());
+
+const mysql = require('mysql2');
+
+// Configurações da conexão
+const connection = mysql.createConnection({
+    host: process.env.DB_HOST,            // Pega o host do banco de dados do arquivo .env
+    user: process.env.DB_USER,            // Usuário do banco
+    password: process.env.DB_PASSWORD,    // Senha do banco
+    database: process.env.DB_DATABASE,    // Nome do banco de dados
+  });
+
+// Tentando conectar
+connection.connect((err) => {
+    if (err) {
+        console.error('Erro ao conectar ao banco de dados:', err.stack);
+        return;
+    }
+    console.log('Conexão bem-sucedida ao banco de dados com ID:', connection.threadId);
+});
+
+// Exportar a conexão (opcional)
+module.exports = connection;
 
 
 //gera novo ID para usuário. aqui foi feito um select para pegar o último ID cadastrado e incrementar 1 para gerar novo ID.
@@ -84,3 +106,49 @@ app.listen(PORT, () => {
     logger.info(`Servidor rodando na porta ${PORT}`);
     console.log(` Servidor rodando em http://localhost:${PORT}`);
 });
+
+app.get("/fechar", (req, res) => {
+    logger.info("Encerrando o servidor...");
+    res.send("O servidor está sendo encerrado...");
+    
+    // Aguarde o envio da resposta antes de finalizar
+    setTimeout(() => {
+        process.exit(0); // Encerra o processo com sucesso (código 0)
+    }, 1000);
+});
+
+//Endpoint dos exercicios
+
+
+app.post('/api/exercicios/criar', (req, res) => {
+    const exercicio = req.body;
+  
+    // Validação dos dados
+    /*Pessoal aqui a função checa se há algum campo vazio se tiver ele envia a mensagem que precisa de todos*/
+    if (!exercicio.exercicio_ID || !exercicio.posicao_trilha || !exercicio.titulo || !exercicio.enunciado || 
+        !exercicio.alternativas || !exercicio.resposta_correta || !exercicio.nivel) {
+      return res.status(400).json({ error: 
+        'Todos os campos são necessários (exercicio_ID, posicao_trilha, titulo, enunciado, alternativas, resposta_correta, nivel)' });
+    }
+  
+    // Query para inserir o exercício no banco de dados
+    /*guarda os comandos em sql para adicionar nas tabelas corretas*/
+    const query = `
+      INSERT INTO exercicios (exercicio_ID, posicao_trilha, titulo, enunciado, alternativas, resposta_correta, nivel)
+      VALUES (?, ?, ?, ?, ?, ?, ?)`;
+  
+    // Executa a query no banco de dados
+
+    connection.execute(query, [ exercicio.exercicio_ID, exercicio.posicao_trilha,exercicio.titulo, exercicio.enunciado, 
+      JSON.stringify(exercicio.alternativas), // Converte o array p string do json (não sei se ta certo )
+      exercicio.resposta_correta, exercicio.nivel], 
+      (err, results) => {
+      if (err) {
+        return res.status(500).json({ error: 'Erro ao inserir exercício', details: err });
+      }
+      res.status(201).json({
+        message: 'Exercício criado com sucesso!',
+        id: results.insertId // Retorna o id do exercício inserido
+      });
+    });
+  });
