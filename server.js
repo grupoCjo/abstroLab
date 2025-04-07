@@ -152,3 +152,119 @@ app.post('/api/exercicios/criar', (req, res) => {
       });
     });
   });
+
+//Novas Requisições
+//Req/Get - Consultar um usuário específico
+app.get("/usuarios/:id", (req, res) => {
+    const { id } = req.params;
+  
+    db.query("SELECT * FROM usuarios WHERE usuario_ID = ?", [id], (err, results) => {
+      if (err) return res.status(500).json({ error: err.message });
+      
+      if (results.length === 0) {
+        return res.status(404).json({ message: "Usuário não encontrado!" });
+      }
+      
+      res.json(results[0]);
+    });
+});
+  
+//Req/Put - Atualizar info usuário
+app.put("/usuarios/:id", (req, res) => {
+    const { id } = req.params;
+    const { usuario_nome, usuario_data_nascimento, usuario_email } = req.body;
+  
+    db.query(
+      "UPDATE usuarios SET usuario_nome = ?, usuario_data_nascimento = ?, usuario_email = ? WHERE usuario_ID = ?",
+      [usuario_nome, usuario_data_nascimento, usuario_email, id],
+      (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ message: "Usuário atualizado com sucesso!" });
+      });
+});
+  
+//Req/Delete - Exluir um usuário
+app.delete("/usuarios/:id", (req, res) => {
+    const { id } = req.params;
+  
+    db.query("DELETE FROM usuarios WHERE usuario_ID = ?", [id], (err, result) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ message: "Usuário deletado com sucesso!" });
+    });
+});
+  
+  
+//Req/Post??? - Criar uma nova sessão
+app.post("/sessoes", (req, res) => {
+    const { sessao_ID, usuario_ID, sessao_data_hora_inicio, sessao_data_hora_fim, sessao_duracao, sessao_status } = 
+    req.body;
+  
+    db.query(
+      "INSERT INTO sessoes (sessao_ID, usuario_ID, sessao_data_hora_inicio, sessao_data_hora_fim, sessao_duracao, sessao_status) VALUES (?, ?, ?, ?, ?, ?)",
+      [sessao_ID, usuario_ID, sessao_data_hora_inicio, sessao_data_hora_fim, sessao_duracao, sessao_status],
+      (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ message: "Sessão criada com sucesso!" });
+    });
+});
+  
+//Req/Get - Checar configurações de um usuário
+app.get("/configuracoes/:id", (req, res) => {
+    const { id } = req.params;
+  
+    db.query("SELECT * FROM configuracoes_usuario WHERE usuario_ID = ?", [id], (err, results) => {
+      if (err) return res.status(500).json({ error: err.message });
+  
+      if (results.length === 0) {
+        return res.status(404).json({ message: "Configurações não encontradas!" });
+      }
+  
+      res.json(results[0]);
+    });
+});
+  
+  
+//Req/Put Atualizar configurações de usuário
+app.put("/configuracoes/:id", (req, res) => {
+    const { id } = req.params;
+    const { tema } = req.body;
+  
+    db.query(
+      "UPDATE configuracoes_usuario SET tema = ? WHERE usuario_ID = ?",
+      [tema, id],
+      (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ message: "Configurações atualizadas com sucesso!" });
+    });
+});
+  
+//Req/Get - Checar Progresso do usuário
+app.get("/progresso/:id", (req, res) => {
+    const { id } = req.params;
+  
+    db.query(
+      "SELECT exercicios.titulo, exercicios.nivel FROM progresso_exercicios JOIN exercicios ON progresso_exercicios.exercicio_ID = exercicios.exercicio_ID WHERE progresso_exercicios.usuario_ID = ?",
+      [id],
+      (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+  
+        if (results.length === 0) {
+          return res.status(404).json({ message: "Nenhum progresso encontrado!" });
+        }
+        res.json(results);
+    });
+});
+  
+//Req/Post - Registrar progresso de um exercício
+app.post("/progresso", (req, res) => {
+    const { usuario_ID, exercicio_ID } = req.body;
+  
+    db.query(
+      "INSERT INTO progresso_exercicios (usuario_ID, exercicio_ID) VALUES (?, ?)",
+      [usuario_ID, exercicio_ID],
+      (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ message: "Progresso registrado com sucesso!" });
+    });
+});
+  
