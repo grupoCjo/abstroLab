@@ -1,14 +1,100 @@
-{
-    "exercicio_ID": "EX001",
+[
+  {
     "posicao_trilha": 1,
-    "titulo": "Escolha a sequência ordenada",
-    "enunciado": "Qual dessas opções está em ordem crescente?",
-    "alternativas": [
-      "5, 3, 2",
-      "1, 2, 3",
-      "4, 4, 1"
-    ],
-    "resposta_correta": "1, 2, 3",
-    "nivel": "iniciante"
+    "titulo": "Quantas maçãs há na cesta?",
+    "enunciado": "Olhe para a imagem da cesta de frutas e conte quantas maçãs estão nela.",
+    "alternativas": {
+      "1": "2",
+      "2": "3",
+      "3": "4",
+      "4": "5"
+    },
+    "resposta_correta": "3",
+    "nivel": "iniciante",
+    "codigo": null
+  },
+  {
+    "posicao_trilha": 2,
+    "titulo": "Qual número vem depois do 5?",
+    "enunciado": "Pense na contagem: 1, 2, 3, 4, 5... Qual número vem a seguir?",
+    "alternativas": {
+      "1": "6",
+      "2": "7",
+      "3": "8",
+      "4": "9"
+    },
+    "resposta_correta": "6",
+    "nivel": "iniciante",
+    "codigo": null
+  },
+  {
+    "posicao_trilha": 3,
+    "titulo": "Qual figura é diferente das outras?",
+    "enunciado": "Observe as figuras abaixo e escolha aquela que não pertence ao grupo.",
+    "alternativas": {
+      "1": "Quadrado",
+      "2": "Triângulo",
+      "3": "Círculo",
+      "4": "Retângulo"
+    },
+    "resposta_correta": "Círculo",
+    "nivel": "iniciante",
+    "codigo": null
+  },
+  {
+    "posicao_trilha": 4,
+    "titulo": "Complete a sequência",
+    "enunciado": "A sequência é: vermelho, azul, vermelho, azul, ... Qual cor vem a seguir?",
+    "alternativas": {
+      "1": "Verde",
+      "2": "Vermelho",
+      "3": "Azul",
+      "4": "Amarelo"
+    },
+    "resposta_correta": "Vermelho",
+    "nivel": "iniciante",
+    "codigo": null
+  },
+  {
+    "posicao_trilha": 5,
+    "titulo": "Quantos lados tem um hexágono?",
+    "enunciado": "Pense nas formas geométricas! Quantos lados possui um hexágono?",
+    "alternativas": {
+      "1": "5",
+      "2": "6",
+      "3": "7",
+      "4": "8"
+    },
+    "resposta_correta": "6",
+    "nivel": "iniciante",
+    "codigo": null
+  },
+  {
+    "posicao_trilha": 6,
+    "titulo": "Quanto é 2 + 3?",
+    "enunciado": "Resolva a soma: 2 + 3 = ?",
+    "alternativas": {
+      "1": "4",
+      "2": "5",
+      "3": "6",
+      "4": "7"
+    },
+    "resposta_correta": "5",
+    "nivel": "iniciante",
+    "codigo": null
+  },
+  {
+    "posicao_trilha": 7,
+    "titulo": "Qual número é menor?",
+    "enunciado": "Observe os números: 8, 5, 9, 6. Qual é o menor deles?",
+    "alternativas": {
+      "1": "5",
+      "2": "6",
+      "3": "8",
+      "4": "9"
+    },
+    "resposta_correta": "5",
+    "nivel": "iniciante",
+    "codigo": null
   }
-  
+]
