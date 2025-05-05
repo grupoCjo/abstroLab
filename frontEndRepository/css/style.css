@@ -503,4 +503,53 @@ footer {
   .bolinha:active {
     background-color: #1abc9c;
   }
-  
+  #imagem {
+    width: 100%;
+    height: 200px;
+    background-color: #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem 0;
+    border-radius: 8px;
+  }
+
+  .alternativa {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .alternativa:hover {
+    background-color: #f0f0f0;
+  }
+
+  .alternativa.selecionada {
+    background-color: #d0eaff;
+    border-color: #2196f3;
+  }
+
+  #resultado {
+    margin-top: 1rem;
+    font-weight: bold;
+  }
+
+  button#verificar {
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  button#verificar:hover {
+    background-color: #45a049;
+  }  
