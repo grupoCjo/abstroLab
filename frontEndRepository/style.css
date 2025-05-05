@@ -481,3 +481,26 @@ footer {
     color: #fff;
     animation: fadeIn 1s ease-in-out;
 }
+/* Estilos das bolinhas */
+.bolinha {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #3498db;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .bolinha:hover {
+    background-color: #2980b9;
+  }
+  
+  .bolinha:active {
+    background-color: #1abc9c;
+  }
+  
