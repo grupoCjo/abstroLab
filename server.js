@@ -298,55 +298,61 @@ app.get('/api/exercicios/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    // Busca no banco de dados pelo ID do exercício
+    console.log("ID recebido:", id);
     const resultado = await query('SELECT * FROM exercicios WHERE exercicio_ID = ?', [id]);
-
+  
     if (resultado.length === 0) {
       return res.status(404).json({ message: 'Exercício não encontrado' });
     }
-
+  
     const exercicio = resultado[0];
-
-    // Verifica se as alternativas existem e fazem sentido
+    console.log("Exercício encontrado:", exercicio);
+  
     let alternativas;
     try {
+      console.log("Alternativas brutas:", exercicio.alternativas);
       alternativas = JSON.parse(exercicio.alternativas);
     } catch (e) {
+      console.error("Erro ao fazer parse de alternativas:", e.message);
       return res.status(500).json({ message: 'Formato de alternativas inválido' });
     }
-
-    // Verifica se todas as alternativas estão presentes
-    if (!alternativas["1"] || !alternativas["2"] || !alternativas["3"] || !alternativas["4"]) {
+  
+    if (
+      alternativas["1"] == null ||
+      alternativas["2"] == null ||
+      alternativas["3"] == null ||
+      alternativas["4"] == null
+    ) {
+      console.error("Alternativas incompletas:", alternativas);
       return res.status(500).json({ message: 'Alternativas incompletas ou inválidas' });
     }
-
-    // Encontra a chave da alternativa correta
+  
     const resposta_correta = Object.keys(alternativas).find(
-      key => alternativas[key] === exercicio.resposta_correta
+      key => String(alternativas[key]) === String(exercicio.resposta_correta)
     );
-
+  
     if (!resposta_correta) {
+      console.error("Resposta correta não encontrada:", exercicio.resposta_correta, alternativas);
       return res.status(500).json({ message: 'Resposta correta não encontrada nas alternativas' });
     }
-
-    // Responde com os dados do exercício
-    res.json({
+  
+    return res.json({
       titulo: exercicio.titulo,
       enunciado: exercicio.enunciado,
       alternativa_1: alternativas["1"],
       alternativa_2: alternativas["2"],
       alternativa_3: alternativas["3"],
       alternativa_4: alternativas["4"],
-      resposta_correta: Number(resposta_correta),  // Garante que a resposta seja convertida para número
+      resposta_correta: Number(resposta_correta),
       nivel: exercicio.nivel,
       posicao_trilha: exercicio.posicao_trilha
     });
   } catch (error) {
-    console.error("Erro ao buscar exercício:", error);
+    console.error("Erro ao buscar exercício:", error, error.stack);
     res.status(500).json({ message: 'Erro ao buscar exercício' });
   }
+  
 });
-
 
 /*---------------------------------------------------------------------------------*/
 // Rota - Sessões
