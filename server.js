@@ -293,11 +293,12 @@ app.get('/exercicios', async (req, res) => {
   }
 });
 
-// Buscar exercício específico por ID
+/// Buscar exercício específico por ID
 app.get('/api/exercicios/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
+    // Busca no banco de dados pelo ID do exercício
     const resultado = await query('SELECT * FROM exercicios WHERE exercicio_ID = ?', [id]);
 
     if (resultado.length === 0) {
@@ -305,12 +306,30 @@ app.get('/api/exercicios/:id', async (req, res) => {
     }
 
     const exercicio = resultado[0];
-    const alternativas = JSON.parse(exercicio.alternativas);
 
+    // Verifica se as alternativas existem e fazem sentido
+    let alternativas;
+    try {
+      alternativas = JSON.parse(exercicio.alternativas);
+    } catch (e) {
+      return res.status(500).json({ message: 'Formato de alternativas inválido' });
+    }
+
+    // Verifica se todas as alternativas estão presentes
+    if (!alternativas["1"] || !alternativas["2"] || !alternativas["3"] || !alternativas["4"]) {
+      return res.status(500).json({ message: 'Alternativas incompletas ou inválidas' });
+    }
+
+    // Encontra a chave da alternativa correta
     const resposta_correta = Object.keys(alternativas).find(
       key => alternativas[key] === exercicio.resposta_correta
     );
 
+    if (!resposta_correta) {
+      return res.status(500).json({ message: 'Resposta correta não encontrada nas alternativas' });
+    }
+
+    // Responde com os dados do exercício
     res.json({
       titulo: exercicio.titulo,
       enunciado: exercicio.enunciado,
@@ -318,7 +337,7 @@ app.get('/api/exercicios/:id', async (req, res) => {
       alternativa_2: alternativas["2"],
       alternativa_3: alternativas["3"],
       alternativa_4: alternativas["4"],
-      resposta_correta: Number(resposta_correta),
+      resposta_correta: Number(resposta_correta),  // Garante que a resposta seja convertida para número
       nivel: exercicio.nivel,
       posicao_trilha: exercicio.posicao_trilha
     });
@@ -327,6 +346,7 @@ app.get('/api/exercicios/:id', async (req, res) => {
     res.status(500).json({ message: 'Erro ao buscar exercício' });
   }
 });
+
 
 /*---------------------------------------------------------------------------------*/
 // Rota - Sessões
