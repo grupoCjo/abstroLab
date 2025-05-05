@@ -279,7 +279,7 @@ app.post('/api/exercicios/lote', async (req, res) => {
 });
 
 // Buscar todos os exercícios
-app.get('/api/exercicios', async (req, res) => {
+app.get('/exercicios', async (req, res) => {
   try {
     const resultados = await query('SELECT * FROM exercicios ORDER BY posicao_trilha ASC');
     if (resultados.length > 0) {
