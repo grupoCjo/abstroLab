@@ -2,13 +2,14 @@ const winston = require("winston");
 const path = require("path");
 require("dotenv").config();
 const express = require("express");
-//const cors = require("cors");
+const cors = require("cors");
 const { query, closeConnection } = require('./backEndRepository/dbConnection');
 const PORT = process.env.PORT || 3000;
 
 const app = express();
+app.use(cors());
 app.use(express.json());
-//app.use(cors());
+
 
 const mysql = require('mysql2');
 
@@ -32,24 +33,127 @@ connection.connect((err) => {
 // Exportar a conexão (opcional)
 module.exports = connection;
 
+app.get('/trilha', (req, res) => {
+  res.sendFile(__dirname + '/frontEndRepository/trilha.html');
+});
+
 
 //gera novo ID para usuário. aqui foi feito um select para pegar o último ID cadastrado e incrementar 1 para gerar novo ID.
-const gerarUsuarioID = async () => {
-    try {
-        const resultado = await query("SELECT MAX(usuario_ID) AS ultimoID FROM usuarios");
-        const ultimoID = resultado[0].ultimoID;
+// POST /api/usuarios/criar
+app.post('/api/usuarios/criar', async (req, res) => {
+  try {
+    const { usuario_nome, usuario_data_nascimento, usuario_email } = req.body;
 
-        if (!ultimoID) {
-            return "U000001";
-        }
+    const sql = `
+      INSERT INTO usuarios (usuario_nome, usuario_data_nascimento, usuario_email) 
+      VALUES (?, ?, ?)
+    `;
 
-        const numero = parseInt(ultimoID.substring(1)) + 1;
-        return `U${numero.toString().padStart(6, "0")}`;
-    } catch (error) {
-        console.error("Erro ao gerar ID:", error);
-        throw error;
-    }
+    const result = await db.query(sql, [usuario_nome, usuario_data_nascimento, usuario_email]);
+
+    // Pega o ID gerado pelo AUTO_INCREMENT
+    res.status(201).json({ message: 'Usuário criado com sucesso', usuario_ID: result.insertId });
+  } catch (error) {
+    console.error('Erro ao criar usuário:', error);
+    res.status(500).json({ error: 'Erro ao criar usuário' });
+  }
+});
+
+//endpoint para gerar o ID dos exercícios, sequencial e único
+//PARA EXERCÍCIOS COM ID = XXXX (INT)
+const gerarExercicioID = async () => {
+  try {
+      const resultado = await query("SELECT MAX(exercicio_ID) AS ultimoID FROM exercicios");
+      const ultimoID = resultado[0].ultimoID;
+
+      if (!ultimoID) {
+          return "0001";
+      }
+
+      const numero = parseInt(ultimoID) + 1; //
+      return numero.toString().padStart(4, "0"); 
+  } catch (error) {
+      console.error("Erro ao gerar ID do exercício:", error);
+      throw error;
+  }
 };
+
+/*PARA EXERCÍCIOS COMID EX001
+  const gerarExercicioID = async () => {
+  try {
+      const resultado = await query("SELECT MAX(exercicio_ID) AS ultimoID FROM exercicios");
+      const ultimoID = resultado[0].ultimoID;
+
+      if (!ultimoID) {
+          return "0001";
+      }
+
+      const numero = parseInt(ultimoID.substring(2)) + 1;
+      return `${numero.toString().padStart(3, "0")}`;
+  } catch (error) {
+      console.error("Erro ao gerar ID do exercício:", error);
+      throw error;
+  }
+};*/
+
+//endpoint que permite subir arquivos em lote
+app.post('/api/exercicios/criar', async (req, res) => {
+  const exercicios = req.body;
+
+  if (!Array.isArray(exercicios) || exercicios.length === 0) {
+      return res.status(400).json({ error: 'Envie uma lista de exercícios!' });
+  }
+
+  try {
+      for (const exercicio of exercicios) {
+          // Validação básica
+          if (!exercicio.posicao_trilha || !exercicio.titulo || !exercicio.enunciado ||
+              !exercicio.alternativas || !exercicio.resposta_correta || !exercicio.nivel) {
+              return res.status(400).json({ error: 'Todos os campos são necessários em cada exercício' });
+          }
+
+          const novoID = await gerarExercicioID();
+
+          const querySQL = `
+              INSERT INTO exercicios (exercicio_ID, posicao_trilha, titulo, enunciado, alternativas, resposta_correta, nivel)
+              VALUES (?, ?, ?, ?, ?, ?, ?)`;
+
+          await query(querySQL, [
+              novoID,
+              exercicio.posicao_trilha,
+              exercicio.titulo,
+              exercicio.enunciado,
+              JSON.stringify(exercicio.alternativas),
+              exercicio.resposta_correta,
+              exercicio.nivel
+          ]);
+      }
+
+      res.status(201).json({ message: 'Exercícios criados com sucesso!' });
+  } catch (error) {
+      console.error("Erro ao inserir exercícios:", error);
+      res.status(500).json({ error: 'Erro ao inserir exercícios', details: error });
+  }
+});
+// POST /api/sessoes/criar
+app.post('/api/sessoes/criar', async (req, res) => {
+  try {
+    const { usuario_ID, sessao_data_hora_inicio, sessao_data_hora_fim, sessao_duracao, sessao_status } = req.body;
+
+    const sql = `
+      INSERT INTO sessoes 
+      (usuario_ID, sessao_data_hora_inicio, sessao_data_hora_fim, sessao_duracao, sessao_status) 
+      VALUES (?, ?, ?, ?, ?)
+    `;
+
+    const result = await db.query(sql, [usuario_ID, sessao_data_hora_inicio, sessao_data_hora_fim, sessao_duracao, sessao_status]);
+
+    res.status(201).json({ message: 'Sessão criada com sucesso', sessao_ID: result.insertId });
+  } catch (error) {
+    console.error('Erro ao criar sessão:', error);
+    res.status(500).json({ error: 'Erro ao criar sessão' });
+  }
+});
 
 //endpoint de cadastro
 app.post("/cadastrar", async (req, res) => {
@@ -72,7 +176,25 @@ app.post("/cadastrar", async (req, res) => {
         res.status(500).json({ message: "Erro no servidor!" });
     }
 });
-  
+  // POST /api/progresso/registrar
+app.post('/api/progresso/registrar', async (req, res) => {
+  try {
+    const { usuario_ID, exercicio_ID } = req.body;
+
+    const sql = `
+      INSERT INTO progresso_exercicios (usuario_ID, exercicio_ID) 
+      VALUES (?, ?)
+    `;
+
+    await db.query(sql, [usuario_ID, exercicio_ID]);
+
+    res.status(201).json({ message: 'Progresso registrado com sucesso' });
+  } catch (error) {
+    console.error('Erro ao registrar progresso:', error);
+    res.status(500).json({ error: 'Erro ao registrar progresso' });
+  }
+});
+
 const logger = winston.createLogger({
     level: "info",
     format: winston.format.combine(
@@ -85,6 +207,55 @@ const logger = winston.createLogger({
         new winston.transports.File({ filename: "logs/app.log" }),
         new winston.transports.Console()
     ]
+});
+
+
+// Rota para verificar o progresso de um exercício
+app.get('/api/progresso/:usuario_ID/:exercicio_ID', (req, res) => {
+  const { usuario_ID, exercicio_ID } = req.params;
+
+  db.query('SELECT * FROM progresso_exercicios WHERE usuario_ID = ? AND exercicio_ID = ?', 
+      [usuario_ID, exercicio_ID], (err, results) => {
+          if (err) {
+              return res.status(500).json({ error: 'Erro ao verificar progresso' });
+          }
+          if (results.length > 0) {
+              res.json(results[0]); // Retorna o progresso (ex: 1 ou 0)
+          } else {
+              res.json({ progresso: 0 }); // Se não tiver progresso, retorna 0
+          }
+      }
+  );
+});
+app.get('/exercicios', async (req, res) => {
+  try {
+      const resultados = await query('SELECT * FROM exercicios ORDER BY posicao_trilha ASC');
+      
+      if (resultados.length > 0) {
+          res.json(resultados);  // Retorna os exercícios em formato JSON
+      } else {
+          res.status(404).json({ message: "Nenhum exercício encontrado." });
+      }
+  } catch (error) {
+      console.error('Erro ao buscar exercícios:', error);
+      res.status(500).json({ message: "Erro interno do servidor." });
+  }
+});
+
+// Rota para buscar o exercício por ID
+app.get('/exercicio/:id', (req, res) => {
+  const exercicioID = req.params.id;
+
+  const query = 'SELECT dados_json FROM exercicios WHERE exercicio_ID = ?';
+  pool.query(query, [exercicioID], (err, results) => {
+      if (err) {
+          return res.status(500).json({ message: 'Erro ao buscar exercício' });
+      }
+      if (results.length === 0) {
+          return res.status(404).json({ message: 'Exercício não encontrado' });
+      }
+      res.json(results[0].dados_json); // Retorna o JSON do exercício
+  });
 });
 
 app.use((req, res, next) => {
@@ -118,8 +289,6 @@ app.get("/fechar", (req, res) => {
 });
 
 //Endpoint dos exercicios
-
-
 app.post('/api/exercicios/criar', (req, res) => {
     const exercicio = req.body;
   
@@ -267,4 +436,70 @@ app.post("/progresso", (req, res) => {
         res.json({ message: "Progresso registrado com sucesso!" });
     });
 });
-  
+
+/*app.get('/exercicios/:codigo', (req, res) => {
+  const codigo = req.params.codigo;
+  // Aqui você buscaria o exercício real no banco de dados
+  const exemplo = {
+    titulo: "Quantas maçãs há na cesta?",
+    enunciado: "Olhe para a imagem da cesta de frutas e conte quantas maçãs estão nela.",
+    alternativa_1: "2",
+    alternativa_2: "3",
+    alternativa_3: "4",
+    alternativa_4: "5",
+    resposta_correta: 2
+  };
+  res.json(exemplo);
+});
+
+app.get('/exercicios/:codigo', (req, res) => {
+  const codigo = req.params.codigo;
+
+ const exercicio = exercicios.find(e => e.exercicio_codigo === codigo);
+
+  if (exercicio) {
+    res.json(exercicio);
+  } else {
+    res.status(404).json({ erro: 'Exercício não encontrado' });
+  }
+});*/
+
+app.get('/exercicios/:codigo', (req, res) => {
+  const { codigo } = req.params;
+
+  if (!exercicios || !Array.isArray(exercicios)) {
+    return res.status(500).json({ erro: 'Lista de exercícios não está disponível' });
+  }
+
+  const exercicio = exercicios.find(e => e.exercicio_codigo === codigo);
+
+  if (!exercicio) {
+    return res.status(404).json({ erro: 'Exercício não encontrado' });
+  }
+
+  try {
+    const alternativas = JSON.parse(exercicio.alternativas); // Faz o parse do JSON em string
+    const alternativa_1 = alternativas["1"];
+    const alternativa_2 = alternativas["2"];
+    const alternativa_3 = alternativas["3"];
+    const alternativa_4 = alternativas["4"];
+
+    const resposta_correta = Object.keys(alternativas).find(
+      key => alternativas[key] === exercicio.resposta_correta
+    );
+
+    res.json({
+      titulo: exercicio.titulo,
+      enunciado: exercicio.enunciado,
+      alternativa_1,
+      alternativa_2,
+      alternativa_3,
+      alternativa_4,
+      resposta_correta: Number(resposta_correta)
+    });
+
+  } catch (error) {
+    console.error("Erro ao processar exercício:", error);
+    res.status(500).json({ erro: "Erro interno ao processar o exercício" });
+  }
+});

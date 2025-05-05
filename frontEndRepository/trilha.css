@@ -1,0 +1,60 @@
+/* Estilos Gerais */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 15px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin-right: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Estilos da seção trilha */
+.trilha {
+    padding: 20px;
+}
+
+.bolinhas-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* Estilos das bolinhas */
+.bolinha {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #3498db;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.bolinha:hover {
+    background-color: #2980b9;
+}
+
+.bolinha:active {
+    background-color: #1abc9c;
+}
