@@ -38,14 +38,6 @@ app.get('/trilha', (req, res) => {
 });
 
 
-// Servir arquivos estáticos (CSS, JS, imagens)
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Rota para a página inicial
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'pagina-inicial.html'));
-});
-
 //gera novo ID para usuário. aqui foi feito um select para pegar o último ID cadastrado e incrementar 1 para gerar novo ID.
 // POST /api/usuarios/criar
 app.post('/api/usuarios/criar', async (req, res) => {
