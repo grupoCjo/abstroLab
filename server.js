@@ -293,49 +293,43 @@ app.get('/exercicios', async (req, res) => {
   }
 });
 
-/// Buscar exercício específico por ID
+// Buscar exercício específico por ID
 app.get('/api/exercicios/:id', async (req, res) => {
   const { id } = req.params;
 
+  if (!id || isNaN(Number(id))) {
+    return res.status(400).json({ message: 'ID inválido' });
+  }
+
   try {
-    console.log("ID recebido:", id);
     const resultado = await query('SELECT * FROM exercicios WHERE exercicio_ID = ?', [id]);
-  
+
     if (resultado.length === 0) {
       return res.status(404).json({ message: 'Exercício não encontrado' });
     }
-  
+
     const exercicio = resultado[0];
-    console.log("Exercício encontrado:", exercicio);
-  
+
     let alternativas;
     try {
-      console.log("Alternativas brutas:", exercicio.alternativas);
       alternativas = JSON.parse(exercicio.alternativas);
-    } catch (e) {
-      console.error("Erro ao fazer parse de alternativas:", e.message);
-      return res.status(500).json({ message: 'Formato de alternativas inválido' });
+    } catch {
+      return res.status(500).json({ message: 'Formato inválido de alternativas (JSON inválido)' });
     }
-  
-    if (
-      alternativas["1"] == null ||
-      alternativas["2"] == null ||
-      alternativas["3"] == null ||
-      alternativas["4"] == null
-    ) {
-      console.error("Alternativas incompletas:", alternativas);
-      return res.status(500).json({ message: 'Alternativas incompletas ou inválidas' });
+
+    const alternativasValidas = ["1", "2", "3", "4"].every(key => alternativas[key] != null);
+    if (!alternativasValidas) {
+      return res.status(500).json({ message: 'Alternativas incompletas ou ausentes' });
     }
-  
-    const resposta_correta = Object.keys(alternativas).find(
-      key => String(alternativas[key]) === String(exercicio.resposta_correta)
-    );
-  
-    if (!resposta_correta) {
-      console.error("Resposta correta não encontrada:", exercicio.resposta_correta, alternativas);
+
+    const respostaCorretaKey = Object.entries(alternativas).find(
+      ([key, value]) => String(value) === String(exercicio.resposta_correta)
+    )?.[0];
+
+    if (!respostaCorretaKey) {
       return res.status(500).json({ message: 'Resposta correta não encontrada nas alternativas' });
     }
-  
+
     return res.json({
       titulo: exercicio.titulo,
       enunciado: exercicio.enunciado,
@@ -343,15 +337,15 @@ app.get('/api/exercicios/:id', async (req, res) => {
       alternativa_2: alternativas["2"],
       alternativa_3: alternativas["3"],
       alternativa_4: alternativas["4"],
-      resposta_correta: Number(resposta_correta),
+      resposta_correta: Number(respostaCorretaKey),
       nivel: exercicio.nivel,
       posicao_trilha: exercicio.posicao_trilha
     });
+
   } catch (error) {
-    console.error("Erro ao buscar exercício:", error, error.stack);
-    res.status(500).json({ message: 'Erro ao buscar exercício' });
+    console.error("Erro ao buscar exercício:", error);
+    res.status(500).json({ message: 'Erro interno ao buscar exercício' });
   }
-  
 });
 
 /*---------------------------------------------------------------------------------*/
@@ -432,7 +426,18 @@ app.get('/api/progresso/:usuario_ID/:exercicio_ID', (req, res) => {
   );
 });
 
+//Req/Post - Registrar progresso de um exercício
+app.post("/progresso", (req, res) => {
+  const { usuario_ID, exercicio_ID } = req.body;
 
+  db.query(
+    "INSERT INTO progresso_exercicios (usuario_ID, exercicio_ID) VALUES (?, ?)",
+    [usuario_ID, exercicio_ID],
+    (err, result) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ message: "Progresso registrado com sucesso!" });
+  });
+});
 /*---------------------------------------------------------------------------------*/
 // Rota - Configurações de User
 /*---------------------------------------------------------------------------------*/  
@@ -483,19 +488,6 @@ app.get("/progresso/:id", (req, res) => {
     });
 });
   
-//Req/Post - Registrar progresso de um exercício
-app.post("/progresso", (req, res) => {
-    const { usuario_ID, exercicio_ID } = req.body;
-  
-    db.query(
-      "INSERT INTO progresso_exercicios (usuario_ID, exercicio_ID) VALUES (?, ?)",
-      [usuario_ID, exercicio_ID],
-      (err, result) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json({ message: "Progresso registrado com sucesso!" });
-    });
-});
-
 /*---------------------------------------------------------------------------------*/
 // Rotas páginas
 /*---------------------------------------------------------------------------------*/
@@ -515,23 +507,7 @@ app.get('/inicio', (req, res) => {
 app.get('/cadastro', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'cadastro.html'));
 });
-/*
-app.get('/funcionalidades', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'funcionalidades.html'));
-});*/
 
 app.get('/trilha', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'trilha.html'));
 });
-/*
-app.get('/sobre', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'sobre.html'));
-});
-
-app.get('/depoimentos', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'depoimentos.html'));
-});
-
-app.get('/contato', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'contato.html'));
-});*/
