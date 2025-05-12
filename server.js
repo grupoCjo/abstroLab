@@ -498,22 +498,22 @@ app.get("/progresso/:id", (req, res) => {
 // Rotas páginas
 /*---------------------------------------------------------------------------------*/
 // Serve arquivos estáticos (CSS, JS, imagens, etc.)
-app.use(express.static(path.join(__dirname, 'frontEndRepository\views')));
+app.use(express.static(path.join(__dirname, 'frontEndRepository')));
 
 // Página principal
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname,'views', 'index.html'));
 });
 
 // Endpoints para as seções da nav bar
 app.get('/inicio', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname,'views', 'index.html'));
 });
 
 app.get('/cadastro', (req, res) => {
-  res.sendFile(path.join(__dirname, 'cadastro.html'));
+  res.sendFile(path.join(__dirname,'views', 'cadastro.html'));
 });
 
 app.get('/trilha', (req, res) => {
-  res.sendFile(path.join(__dirname, 'trilha.html'));
+  res.sendFile(path.join(__dirname,'views', 'trilha.html'));
 });
