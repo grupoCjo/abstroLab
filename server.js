@@ -498,7 +498,7 @@ app.get("/progresso/:id", (req, res) => {
 // Rotas páginas
 /*---------------------------------------------------------------------------------*/
 // Serve arquivos estáticos (CSS, JS, imagens, etc.)
-app.use(express.static(path.join(__dirname, 'frontEndRepository')));
+app.use(express.static(path.join(__dirname, 'frontEndRepository/views')));
 
 // Página principal
 app.get('/', (req, res) => {
@@ -507,13 +507,13 @@ app.get('/', (req, res) => {
 
 // Endpoints para as seções da nav bar
 app.get('/inicio', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.get('/cadastro', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'cadastro.html'));
+  res.sendFile(path.join(__dirname, 'cadastro.html'));
 });
 
 app.get('/trilha', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'trilha.html'));
+  res.sendFile(path.join(__dirname, 'trilha.html'));
 });
