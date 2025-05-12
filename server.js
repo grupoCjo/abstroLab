@@ -498,7 +498,7 @@ app.get("/progresso/:id", (req, res) => {
 // Rotas páginas
 /*---------------------------------------------------------------------------------*/
 // Serve arquivos estáticos (CSS, JS, imagens, etc.)
-app.use(express.static(path.join(__dirname, 'frontEndRepository/views')));
+app.use(express.static(path.join(__dirname, 'frontEndRepository\views')));
 
 // Página principal
 app.get('/', (req, res) => {
