@@ -166,6 +166,10 @@ body {
     width: 100%;
     background-color: #333;
     color: white;
+    display: flex;
+    position: absolute;
+    justify-content: baseline;
+    bottom: 0;
     padding: 20px;
     border-radius: 10px;
     text-align: center;
