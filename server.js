@@ -500,20 +500,24 @@ app.get("/progresso/:id", (req, res) => {
 // Serve arquivos estáticos (CSS, JS, imagens, etc.)
 app.use(express.static(path.join(__dirname, 'frontEndRepository')));
 
-// Página principal
+/// Página principal
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname,'views', 'index.html'));
+  res.sendFile(path.join(__dirname, 'frontEndRepository', 'views', 'index.html'));
 });
 
-// Endpoints para as seções da nav bar
+// Endpoints da nav bar
 app.get('/inicio', (req, res) => {
-  res.sendFile(path.join(__dirname,'views', 'index.html'));
+  res.sendFile(path.join(__dirname, 'frontEndRepository', 'views', 'index.html'));
 });
 
 app.get('/cadastro', (req, res) => {
-  res.sendFile(path.join(__dirname,'views', 'cadastro.html'));
+  res.sendFile(path.join(__dirname, 'frontEndRepository', 'views', 'cadastro.html'));
 });
 
 app.get('/trilha', (req, res) => {
-  res.sendFile(path.join(__dirname,'views', 'trilha.html'));
+  res.sendFile(path.join(__dirname, 'frontEndRepository', 'views', 'trilha.html'));
+});
+
+app.get('/exercicio', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontEndRepository', 'views', 'exercicio.html'));
 });
