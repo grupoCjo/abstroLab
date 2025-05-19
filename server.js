@@ -294,48 +294,43 @@ app.get('/exercicios', async (req, res) => {
 });
 
 // Buscar exercício específico por ID
-app.get('/api/exercicios/:id', async (req, res) => {
+/*app.get('/exercicios/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    console.log("ID recebido:", id);
-    const resultado = await query('SELECT * FROM exercicios WHERE exercicio_ID = ?', [id]);
-  
-    if (resultado.length === 0) {
+    console.log("Buscando exercício com ID:", id);
+    const [exercicio] = await query('SELECT * FROM exercicios WHERE exercicio_ID = ?', [id]);
+
+    if (!exercicio) {
       return res.status(404).json({ message: 'Exercício não encontrado' });
     }
-  
-    const exercicio = resultado[0];
-    console.log("Exercício encontrado:", exercicio);
-  
+
     let alternativas;
     try {
-      console.log("Alternativas brutas:", exercicio.alternativas);
       alternativas = JSON.parse(exercicio.alternativas);
+      console.log("Alternativas carregadas:", alternativas);
     } catch (e) {
       console.error("Erro ao fazer parse de alternativas:", e.message);
       return res.status(500).json({ message: 'Formato de alternativas inválido' });
     }
-  
-    if (
-      alternativas["1"] == null ||
-      alternativas["2"] == null ||
-      alternativas["3"] == null ||
-      alternativas["4"] == null
-    ) {
+
+    const opcoesValidas = ["1", "2", "3", "4"].every(key => alternativas[key] != null);
+    if (!opcoesValidas) {
       console.error("Alternativas incompletas:", alternativas);
       return res.status(500).json({ message: 'Alternativas incompletas ou inválidas' });
     }
-  
-    const resposta_correta = Object.keys(alternativas).find(
-      key => String(alternativas[key]) === String(exercicio.resposta_correta)
+
+    const respostaCorreta = Object.entries(alternativas).find(
+      ([_, valor]) => String(valor) === String(exercicio.resposta_correta)
     );
-  
-    if (!resposta_correta) {
-      console.error("Resposta correta não encontrada:", exercicio.resposta_correta, alternativas);
+
+    if (!respostaCorreta) {
+      console.error("Resposta correta não corresponde a nenhuma alternativa:", exercicio.resposta_correta);
       return res.status(500).json({ message: 'Resposta correta não encontrada nas alternativas' });
     }
-  
+
+    const numeroRespostaCorreta = Number(respostaCorreta[0]);
+
     return res.json({
       titulo: exercicio.titulo,
       enunciado: exercicio.enunciado,
@@ -343,16 +338,67 @@ app.get('/api/exercicios/:id', async (req, res) => {
       alternativa_2: alternativas["2"],
       alternativa_3: alternativas["3"],
       alternativa_4: alternativas["4"],
-      resposta_correta: Number(resposta_correta),
+      resposta_correta: numeroRespostaCorreta,
       nivel: exercicio.nivel,
       posicao_trilha: exercicio.posicao_trilha
     });
+
   } catch (error) {
-    console.error("Erro ao buscar exercício:", error, error.stack);
-    res.status(500).json({ message: 'Erro ao buscar exercício' });
+    console.error("Erro ao buscar exercício:", error);
+    return res.status(500).json({ message: 'Erro ao buscar exercício' });
   }
-  
+});*/
+
+app.get('/api/exercicios/codigo/:codigo', async (req, res) => {
+  const { codigo } = req.params;
+
+  try {
+    console.log("Código recebido:", codigo);
+    const [exercicio] = await query('SELECT * FROM exercicios WHERE exercicio_codigo = ?', [codigo]);
+
+    if (!exercicio) {
+      return res.status(404).json({ message: 'Exercício não encontrado' });
+    }
+
+    let alternativas;
+    try {
+      alternativas = JSON.parse(exercicio.alternativas);
+    } catch (e) {
+      console.error("Erro ao fazer parse de alternativas:", e.message);
+      return res.status(500).json({ message: 'Formato de alternativas inválido' });
+    }
+
+    const opcoesValidas = ["1", "2", "3", "4"].every(key => alternativas[key] != null);
+    if (!opcoesValidas) {
+      return res.status(500).json({ message: 'Alternativas incompletas ou inválidas' });
+    }
+
+    const respostaCorreta = Object.entries(alternativas).find(
+      ([_, valor]) => String(valor) === String(exercicio.resposta_correta)
+    );
+
+    if (!respostaCorreta) {
+      return res.status(500).json({ message: 'Resposta correta não encontrada nas alternativas' });
+    }
+
+    return res.json({
+      titulo: exercicio.titulo,
+      enunciado: exercicio.enunciado,
+      alternativa_1: alternativas["1"],
+      alternativa_2: alternativas["2"],
+      alternativa_3: alternativas["3"],
+      alternativa_4: alternativas["4"],
+      resposta_correta: Number(respostaCorreta[0]),
+      nivel: exercicio.nivel,
+      posicao_trilha: exercicio.posicao_trilha
+    });
+
+  } catch (error) {
+    console.error("Erro ao buscar exercício:", error);
+    return res.status(500).json({ message: 'Erro ao buscar exercício' });
+  }
 });
+
 
 /*---------------------------------------------------------------------------------*/
 // Rota - Sessões
