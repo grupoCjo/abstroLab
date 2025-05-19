@@ -1,26 +1,40 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="../css/style.css">
-  
+  <meta charset="UTF-8">
   <title>Exercício</title>
-  
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .alternativa {
+      margin-bottom: 10px;
+    }
+    #resultado {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    #proximo {
+      margin-top: 20px;
+      display: none; /* Mostra só se houver próximo exercício */
+    }
+  </style>
 </head>
+<body>
+  <h2 id="titulo">Carregando título...</h2>
+  <p id="enunciado">Carregando enunciado...</p>
 
-  <body>
+  <div class="alternativa"><label><input type="radio" name="resposta" value="1"> <span id="alt1"></span></label></div>
+  <div class="alternativa"><label><input type="radio" name="resposta" value="2"> <span id="alt2"></span></label></div>
+  <div class="alternativa"><label><input type="radio" name="resposta" value="3"> <span id="alt3"></span></label></div>
+  <div class="alternativa"><label><input type="radio" name="resposta" value="4"> <span id="alt4"></span></label></div>
 
-  <h2 id="titulo"></h2>
-  <p id="enunciado"></p>
-
-  <div id="imagem">[imagem do exercício aqui]</div>
-
-  <div id="alternativas"></div>
-
-  <button id="verificar">Verificar resposta</button>
+  <button id="verificar">Verificar Resposta</button>
   <p id="resultado"></p>
 
-  <script src="../js/exercicio.js"></script>
+  <button id="proximo">Próximo Exercício</button>
+
+  <script src="exercicio.js"></script>
 </body>
 </html>
