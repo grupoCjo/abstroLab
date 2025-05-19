@@ -10,27 +10,8 @@
 </head>
 
 <body>
-    <header>
-        <nav class="navbar">
-            <div class="logo">
-                <a href="#">AbstroLab</a>
-            </div>
-            <ul class="nav-links">
-                <li><a href="#inicio">Início</a></li>
-                <li><a href="#funcionalidades">Funcionalidades</a></li>
-                <li><a href="trilha.html">Trilha</a></li>
-                <li><a href="#sobre">Sobre</a></li>
-                <li><a href="#depoimentos">Depoimentos</a></li>
-                <li><a href="#contato">Contato</a></li>
-            </ul>
-            <div class="hamburger" id="hamburger">
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-            </div>
-        </nav>
-    </header>
-
+    <!--navbar aqui-->
+    <div id="navbar"></div>
     <section class="hero" id="inicio">
         <div class="hero-content">
             <h1>Bem-vindo ao AbstroLab!</h1>
@@ -72,6 +53,14 @@
         <p>&copy; 2025 AbstroLab. Todos os direitos reservados.</p>
     </footer>
     <script src="../js/script.js"></script>
+    <script>
+        fetch('navbar.html')
+            .then(res => res.text())
+            .then(data => {
+            document.getElementById('navbar').innerHTML = data;
+            });
+    </script>
+
 </body>
 
 </html>

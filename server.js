@@ -510,7 +510,7 @@ app.get('/', (req, res) => {
 });
 
 // Endpoints da nav bar
-app.get('/inicio', (req, res) => {
+app.get('/index', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontEndRepository', 'views', 'index.html'));
 });
 
