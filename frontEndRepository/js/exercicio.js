@@ -1,60 +1,71 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const alternativasDiv = document.getElementById('alternativas');
-  
-  if (!alternativasDiv) {
-    console.error("Elemento com id 'alternativas' não encontrado.");
+document.addEventListener('DOMContentLoaded', async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const codigo = urlParams.get('codigo');
+
+  if (!codigo) {
+    console.error('Código do exercício não informado na URL');
     return;
   }
 
-  const codigo = obterCodigoDaURL();
-  const endpoint = `http://localhost:3000/exercicios/${codigo}`;
+  try {
+    // Busca o exercício atual
+    const response = await fetch(`http://localhost:3000/api/exercicios/codigo/${codigo}`);
+    if (!response.ok) {
+      const erro = await response.json();
+      console.error('Erro ao buscar exercício:', erro.message);
+      return;
+    }
+    const exercicio = await response.json();
 
-  fetch(endpoint)
-    .then(res => {
-      if (!res.ok) throw new Error('Erro ao carregar o exercício.');
-      return res.json();
-    })
-    .then(exercicio => {
-      document.getElementById('titulo').textContent = exercicio.titulo;
-      document.getElementById('enunciado').textContent = exercicio.enunciado;
+    // Preenche os elementos da página
+    document.getElementById('titulo').textContent = exercicio.titulo;
+    document.getElementById('enunciado').textContent = exercicio.enunciado;
+    document.getElementById('alt1').textContent = exercicio.alternativa_1;
+    document.getElementById('alt2').textContent = exercicio.alternativa_2;
+    document.getElementById('alt3').textContent = exercicio.alternativa_3;
+    document.getElementById('alt4').textContent = exercicio.alternativa_4;
 
-      for (let i = 1; i <= 4; i++) {
-        const btn = document.createElement('button');
-        btn.textContent = exercicio[`alternativa_${i}`];
-        btn.classList.add('alternativa');
-        btn.dataset.indice = i;
+    // Verificação da resposta
+    document.getElementById('verificar').addEventListener('click', () => {
+      const selecionada = document.querySelector('input[name="resposta"]:checked');
+      const resultado = document.getElementById('resultado');
 
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('.alternativa').forEach(b => b.classList.remove('selecionada'));
-          btn.classList.add('selecionada');
-        });
-
-        alternativasDiv.appendChild(btn);
+      if (!selecionada) {
+        resultado.textContent = "Selecione uma resposta!";
+        resultado.style.color = "orange";
+        return;
       }
 
-      document.getElementById('verificar').addEventListener('click', () => {
-        const resultado = document.getElementById('resultado');
-        if (alternativaSelecionada === null) {
-          resultado.textContent = "Selecione uma alternativa.";
-          resultado.style.color = "orange";
-        } else if (alternativaSelecionada === exercicio.resposta_correta) {
-          resultado.textContent = "Resposta correta! 🎉";
-          resultado.style.color = "green";
-        } else {
-          resultado.textContent = "Resposta incorreta. 😞";
-          resultado.style.color = "red";
-        }
-      });
-
-    })
-    .catch(error => {
-      document.getElementById('titulo').textContent = "Erro ao carregar exercício.";
-      console.error(error);
+      const respostaEscolhida = Number(selecionada.value);
+      if (respostaEscolhida === exercicio.resposta_correta) {
+        resultado.textContent = "Correto!";
+        resultado.style.color = "green";
+      } else {
+        resultado.textContent = "Incorreto. Tente novamente.";
+        resultado.style.color = "red";
+      }
     });
-});
 
-// Função auxiliar para obter o código do exercício pela URL (?codigo=123)
-function obterCodigoDaURL() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get('codigo') || '1'; // fallback para '1' se não houver código
-}
+    // Buscar todos os exercícios para encontrar o próximo
+    const todosResponse = await fetch('http://localhost:3000/exercicios');
+    const todosExercicios = await todosResponse.json();
+
+    // Ordena por posicao_trilha
+    const ordenados = todosExercicios.sort((a, b) => a.posicao_trilha - b.posicao_trilha);
+
+    // Encontra índice do exercício atual
+    const indiceAtual = ordenados.findIndex(e => e.exercicio_codigo === codigo);
+
+    if (indiceAtual !== -1 && indiceAtual < ordenados.length - 1) {
+      const proximoExercicio = ordenados[indiceAtual + 1];
+      const botaoProximo = document.getElementById('proximo');
+      botaoProximo.style.display = 'inline-block';
+      botaoProximo.addEventListener('click', () => {
+        window.location.href = `exercicio.html?codigo=${proximoExercicio.exercicio_codigo}`;
+      });
+    }
+
+  } catch (error) {
+    console.error('Erro ao carregar o exercício:', error);
+  }
+});

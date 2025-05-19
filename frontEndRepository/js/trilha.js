@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // Adiciona evento de clique para redirecionar ao exercício
             bolinha.addEventListener('click', () => {
-              window.location.href = `exercicio.html?codigo=${exercicio.exercicio_codigo}`;
+                window.location.href = `exercicio.html?codigo=${exercicio.exercicio_codigo}`;
             });
 
             // Adiciona a bolinha ao container
@@ -31,3 +31,4 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Erro ao carregar os exercícios:', error);
     }
 });
+
