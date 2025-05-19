@@ -14,6 +14,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Middleware para servir arquivos estáticos (CSS e JS)
+app.use('/css', express.static(path.join(__dirname, 'frontEndRepository/css')));
+app.use('/js', express.static(path.join(__dirname, 'frontEndRepository/js')));
+
+// Rota para servir páginas HTM
+app.get('/exercicio.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontEndRepository/views/exercicio.html'));
+});
+
+
 
 const mysql = require('mysql2');
 
