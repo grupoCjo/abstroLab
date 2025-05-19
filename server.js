@@ -14,7 +14,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Middleware para servir arquivos estáticos (CSS e JS)
+/*-----------------------------------------------------------------------------------------------------*/
+/*Sem essas rotas de middleware e p html a automação da página de exercícios não funciona! 
+Ninguém mexe aqui por favor!
+-Bea */
+
+// Middleware para servir arquivos estáticos
 app.use('/css', express.static(path.join(__dirname, 'frontEndRepository/css')));
 app.use('/js', express.static(path.join(__dirname, 'frontEndRepository/js')));
 
@@ -22,8 +27,7 @@ app.use('/js', express.static(path.join(__dirname, 'frontEndRepository/js')));
 app.get('/exercicio.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontEndRepository/views/exercicio.html'));
 });
-
-
+/*-----------------------------------------------------------------------------------------------------*/
 
 const mysql = require('mysql2');
 
