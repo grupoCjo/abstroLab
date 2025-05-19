@@ -6,6 +6,11 @@
     font-family: Arial, sans-serif;
 }
 
+header{
+    border-bottom: 15px;
+    margin-bottom: 20px;
+}
+
 body {
     background: linear-gradient(to right, #f8c6d2, #e0f7fa);
     color: #333;
@@ -162,34 +167,23 @@ body {
 .carousel-next { right: 10px; }
 
 /* Footer */
-.footer, footer {
+footer, .footer {
     width: 100%;
     background-color: #333;
     color: white;
     display: flex;
-    position: absolute;
-    justify-content: baseline;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
     bottom: 0;
+    left: 0;
     padding: 20px;
-    border: 20px;
-    border-radius: 10px;
+    border-radius: 10px 10px 0 0;
     text-align: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 100;
 }
 
-.astrolab {
-    color: white;
-    font-size: 2rem;
-    font-weight: bold;
-    text-decoration: none;
-    padding: 20px;
-    display: inline-block;
-}
-
-.astrolab:hover {
-    color: #fda8c4;
-    text-shadow: 0 0 5px white;
-}
 
 /* Cadastro/Login Cards */
 .main-container {
@@ -441,4 +435,73 @@ button#verificar:hover {
         flex-direction: column;
         align-items: center;
     }
+}
+/*página de exercícios*/
+/* Página de Exercícios */
+.exercicio-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 40px 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+.exercicio-container h2#titulo {
+    font-size: 2rem;
+    color: #5d6a79;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.exercicio-container p#enunciado {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 25px;
+    text-align: justify;
+}
+
+.exercicio-container .alternativa {
+    background-color: #f9f9f9;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 12px 20px;
+    margin-bottom: 15px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.exercicio-container .alternativa:hover {
+    background-color: #eef6ff;
+    border-color: #007BFF;
+}
+
+.exercicio-container input[type="radio"] {
+    margin-right: 10px;
+    transform: scale(1.2);
+}
+
+#verificar, #proximo {
+    width: 100%;
+    padding: 14px;
+    font-size: 1.1rem;
+    margin-top: 20px;
+    border-radius: 8px;
+    border: none;
+    background-color: #5cb85c;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#verificar:hover, #proximo:hover {
+    background-color: #449d44;
+}
+
+#resultado {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    color: #333;
+    text-align: center;
 }
