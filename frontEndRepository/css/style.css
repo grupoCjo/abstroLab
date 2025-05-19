@@ -177,6 +177,20 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+.astrolab {
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 20px;
+    display: inline-block;
+}
+
+.astrolab:hover {
+    color: #fda8c4;
+    text-shadow: 0 0 5px white;
+}
+
 /* Cadastro/Login Cards */
 .main-container {
     display: flex;
