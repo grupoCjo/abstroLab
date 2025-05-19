@@ -1,5 +1,18 @@
-//script em js p menu
-    
+  // Carrega o header
+     fetch('../views/header.html')
+        .then(response => response.text())
+        .then(headerHTML => {
+        document.querySelector('body').insertAdjacentHTML('afterbegin', headerHTML);
+    });
+
+  // Carrega o footer
+  fetch('../views/footer.html')
+    .then(response => response.text())
+    .then(footerHTML => {
+      document.querySelector('body').insertAdjacentHTML('beforeend', footerHTML);
+    });
+
+//script em js p menu    
 document.getElementById('hamburger').addEventListener('click', function() {
     const navLinks = document.querySelector('.nav-links');
     navLinks.classList.toggle('active'); 

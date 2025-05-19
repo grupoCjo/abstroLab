@@ -1,40 +1,29 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Exercício</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-    .alternativa {
-      margin-bottom: 10px;
-    }
-    #resultado {
-      margin-top: 15px;
-      font-weight: bold;
-    }
-    #proximo {
-      margin-top: 20px;
-      display: none; /* Mostra só se houver próximo exercício */
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercicios</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body>
-  <h2 id="titulo">Carregando título...</h2>
-  <p id="enunciado">Carregando enunciado...</p>
+  <body>
+    <div class="exercicio-container">
+      <h2 id="titulo">Carregando título...</h2>
+      <p id="enunciado">Carregando enunciado...</p>
 
-  <div class="alternativa"><label><input type="radio" name="resposta" value="1"> <span id="alt1"></span></label></div>
-  <div class="alternativa"><label><input type="radio" name="resposta" value="2"> <span id="alt2"></span></label></div>
-  <div class="alternativa"><label><input type="radio" name="resposta" value="3"> <span id="alt3"></span></label></div>
-  <div class="alternativa"><label><input type="radio" name="resposta" value="4"> <span id="alt4"></span></label></div>
+      <div class="alternativa"><label><input type="radio" name="resposta" value="1"> <span id="alt1"></span></label></div>
+      <div class="alternativa"><label><input type="radio" name="resposta" value="2"> <span id="alt2"></span></label></div>
+      <div class="alternativa"><label><input type="radio" name="resposta" value="3"> <span id="alt3"></span></label></div>
+      <div class="alternativa"><label><input type="radio" name="resposta" value="4"> <span id="alt4"></span></label></div>
 
-  <button id="verificar">Verificar Resposta</button>
-  <p id="resultado"></p>
+      <button id="verificar">Verificar Resposta</button>
+      <p id="resultado"></p>
+      <button id="proximo">Próximo Exercício</button>
+    </div>
 
-  <button id="proximo">Próximo Exercício</button>
-
-  <script src="/js/exercicio.js"></script>
-</body>
+    <script src="/js/exercicio.js"></script>
+    <script src="../js/script.js"></script>
+  </body>
 </html>
