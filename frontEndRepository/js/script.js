@@ -1,4 +1,6 @@
-  // Carrega o header
+ import { carregarPaginaInicial } from './paginaInicial.js'; // importa o arquivo de pagina inicial para ser chamado após efetuar cadastro/login
+ 
+ // Carrega o header
      fetch('../views/header.html')
         .then(response => response.text())
         .then(headerHTML => {
@@ -62,35 +64,77 @@ document.querySelector('.carousel-next').addEventListener('click', () => moveCar
 //Criação de endpoint para INSERT no banco com dados do --CADASTRO--
 
 document.querySelector(".btnCadastro").addEventListener("click", async () => {
-    const nome = document.getElementById("nome").value;
-    const email = document.getElementById("email").value;
-    const senha = document.getElementById("senha").value;
-    const confirmarSenha = document.getElementById("confirmarSenha").value;
-    const dataNascimento = document.getElementById("dataNascimento").value; // Novo campo
+  const nome = document.getElementById("nome").value;
+  const email = document.getElementById("email").value;
+  const senha = document.getElementById("senha").value;
+  const confirmarSenha = document.getElementById("confirmarSenha").value;
+  const dataNascimento = document.getElementById("dataNascimento").value;
 
-    // Validação básica dos campos de senha
-    if (senha !== confirmarSenha) {
-        document.getElementById("erroSenha").innerText = "As senhas não coincidem!";
-        document.getElementById("erroSenha").style.display = "block";
-        return;
-    } else {
-        document.getElementById("erroSenha").style.display = "none";
+  if (senha !== confirmarSenha) {
+    document.getElementById("erroSenha").innerText = "As senhas não coincidem!\nPor favor, tente novamente.";
+    document.getElementById("erroSenha").style.display = "block";
+    return;
+  } else {
+    document.getElementById("erroSenha").style.display = "none";
+  }
+
+  const dados = { nome, email, senha, dataNascimento };
+
+  try {
+    const response = await fetch("http://localhost:3000/cadastrar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dados),
+    });
+
+    const resultado = await response.json();
+    alert(resultado.message);
+
+    if (response.ok) {
+      carregarPaginaInicial(); // <-- Chama a função da nova página que está no arquivo paginaInicial.js
     }
 
-    const dados = { nome, email, senha, dataNascimento };
-
-    try {
-        const response = await fetch("http://localhost:3000/cadastrar", { //chama o endpoint cadastrar (VEJA O ARQUIVO server.js, o endpoint está lá) e executa o método POST para enviar os dados para o BD.
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(dados),
-        });
-
-        const resultado = await response.json();
-        alert(resultado.message);
-    } catch (error) {
-        console.error("Erro ao cadastrar:", error);
-        alert("Erro ao cadastrar usuário.");
-    }
+  } catch (error) {
+    console.error("Erro ao cadastrar:", error);
+    alert("Erro ao cadastrar usuário.");
+  }
 });
+
+document.getElementById("entrarBtn").addEventListener("click", async () => {
+  const email = document.getElementById("emailLogin").value;
+  const senha = document.getElementById("senhaLogin").value;
+
+  const erroLogin = document.getElementById("erroLogin");
+
+  if (!email || !senha) {
+    erroLogin.innerText = "Por favor, preencha todos os campos.";
+    erroLogin.style.display = "block";
+    return;
+  }
+
+  try {
+    const response = await fetch("http://localhost:3000/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, senha }),
+    });
+
+    const resultado = await response.json();
+
+    if (response.ok) {
+      alert("Login efetuado com sucesso!");
+      // Redireciona após login
+      carregarPaginaInicial(); // <-- Chama a função da nova página que está no arquivo paginaInicial.js";
+    } else {
+      erroLogin.innerText = resultado.message || "Email ou senha inválidos.";
+      erroLogin.style.display = "block";
+    }
+
+  } catch (error) {
+    console.error("Erro ao fazer login:", error);
+    erroLogin.innerText = "Erro na conexão com o servidor.";
+    erroLogin.style.display = "block";
+  }
+});
+
 
