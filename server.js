@@ -448,6 +448,7 @@ app.post("/progresso", (req, res) => {
       res.json({ message: "Progresso registrado com sucesso!" });
   });
 });
+
 /*---------------------------------------------------------------------------------*/
 // Rota - Configurações de User
 /*---------------------------------------------------------------------------------*/  
@@ -524,4 +525,55 @@ app.get('/trilha', (req, res) => {
 
 app.get('/exercicio', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontEndRepository', 'views', 'exercicio.html'));
+});
+
+app.post("/login", (req, res) => {
+  const { email, senha } = req.body;
+
+  if (!email || !senha) {
+    return res.status(400).json({ message: "Email e senha são obrigatórios." });
+  }
+
+  const query = "SELECT * FROM usuarios WHERE email = ? AND senha = ?";
+  db.query(query, [email, senha], (err, results) => {
+    if (err) {
+      console.error("Erro no login:", err);
+      return res.status(500).json({ message: "Erro interno no servidor." });
+    }
+
+    if (results.length > 0) {
+      const usuario = results[0];
+      res.status(200).json({
+        message: "Login bem-sucedido.",
+        usuario: {
+          id: usuario.id,
+          nome: usuario.nome,
+          email: usuario.email
+        }
+      });
+    } else {
+      res.status(401).json({ message: "Email ou senha incorretos." });
+    }
+  });
+});
+
+app.post("/cadastrar", (req, res) => {
+  const { nome, email, senha, dataNascimento } = req.body;
+
+  if (!nome || !email || !senha || !dataNascimento) {
+    return res.status(400).json({ message: "Todos os campos são obrigatórios." });
+  }
+
+  const query = "INSERT INTO usuarios (nome, email, senha, dataNascimento) VALUES (?, ?, ?, ?)";
+  db.query(query, [nome, email, senha, dataNascimento], (err, result) => {
+    if (err) {
+      if (err.code === "ER_DUP_ENTRY") {
+        return res.status(409).json({ message: "E-mail já cadastrado." });
+      }
+      console.error("Erro ao cadastrar:", err);
+      return res.status(500).json({ message: "Erro ao cadastrar usuário." });
+    }
+
+    res.status(201).json({ message: "Usuário cadastrado com sucesso!" });
+  });
 });
