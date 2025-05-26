@@ -1,7 +1,7 @@
 // Função para carregar os exercícios e criar as bolinhas
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const response = await fetch('http://localhost:3000/exercicios');
+        const response = await fetch('https://abstrolab.onrender.com/exercicios');
         const exercicios = await response.json();
 
         if (exercicios.length === 0) {

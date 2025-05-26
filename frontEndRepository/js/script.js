@@ -68,7 +68,7 @@ document.getElementById(".btnCadastro").addEventListener("click", async () => {
   const dados = { nome, email, senha, dataNascimento };
 
   try {
-    const response = await fetch("http://localhost:3000/cadastrar", {
+    const response = await fetch("https://abstrolab.onrender.com/cadastrar", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(dados),
@@ -100,7 +100,7 @@ document.getElementById("entrarBtn").addEventListener("click", async () => {
   }
 
   try {
-    const response = await fetch("http://localhost:3000/login", {
+    const response = await fetch("https://abstrolab.onrender.com/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, senha }),
