@@ -1,0 +1,170 @@
+/* Reset e Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: linear-gradient(to right, #f8c6d2, #e0f7fa);
+  color: #333;
+  animation: fadeIn 1s ease-in-out;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* NAVBAR */
+header {
+  padding: 20px 0;
+}
+
+.navbar {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.logo a {
+  font-weight: bold;
+  font-size: 28px;
+  color: #333;
+  text-decoration: none;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  align-items: center;
+}
+
+.nav-links li {
+  margin-left: 20px;
+}
+
+.btn-sair {
+  background-color: red;
+  border: 2px solid #333;
+  color: #333;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-sair:hover {
+  background-color: #333;
+  color: #ff003c;
+}
+
+/* CONTAINER PRINCIPAL */
+.container {
+  max-width: 1200px;
+  max-height: 800px;
+  margin: 0 auto;
+  display: flex;
+  gap: 30px;
+  flex: 1;
+  padding: 30px 20px;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 280px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  color: #333;
+}
+
+.user-info,
+.score-info,
+.phase-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 18px;
+}
+
+.user-info img,
+.score-info img,
+.phase-info img {
+  width: 32px;
+  height: 32px;
+}
+
+/* CONTEÚDO PRINCIPAL */
+.main-content {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Centralização da info da tela inicial */
+.top-info {
+  text-align: center;
+  max-width: 500px;
+}
+
+.titulo-jogo {
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 18px;
+  color: #333;
+}
+
+.top-info p {
+  font-size: 18px;
+  margin-bottom: 25px;
+  color: #444;
+}
+
+.botoes-jogo {
+  display: flex;
+  justify-content: center;
+}
+
+.botao-acao {
+  padding: 12px 28px;
+  font-weight: 700;
+  border-radius: 8px;
+  border: 2px solid #333;
+  background-color: rgb(255, 149, 230);
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.botao-acao:hover {
+  background-color: #333;
+  color: #f8c6d2;
+}
+
+/* RODAPÉ DIREITOS */
+.footer-direitos {
+  margin-top: 30px;
+  font-size: 14px;
+  color: #444;
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+/* Animação simples */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AbstroLab - Página Inicial</title>
+  <link rel="stylesheet" href="../css/paginaInicial.css" />
+</head>
+
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo">
+        <a href="../views/index.html">AbstroLab</a>
+      </div>
+      <ul class="nav-links">
+        <li><button id="btnSair" class="btn-sair">Sair</button></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="container">
+    <aside class="sidebar">
+      <div class="user-info">
+        <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Usuário" />
+        <span>Jogador: <strong id="nomeUsuario">Teste</strong></span>
+      </div>
+      <div class="score-info">
+        <img src="https://cdn-icons-png.flaticon.com/512/1828/1828884.png" alt="Score" />
+        <span>Pontuação: <strong id="pontuacao">0</strong></span>
+      </div>
+      <div class="phase-info">
+        <img src="https://cdn-icons-png.flaticon.com/512/1828/1828802.png" alt="Fase" />
+        <span>Fase Atual: <strong id="fase">15</strong></span>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <section class="top-info" id="topInfo">
+       <div style="font-size: 80px; text-align: center; margin-top: -1cm;">💖</div>
+        <h1 class="titulo-jogo">Estamos felizes que você está aqui!</h1>
+        <p>Pronto para mais um desafio? Clique no botão abaixo para iniciar sua jornada!</p>
+        <div class="botoes-jogo">
+          <button class="botao-acao" id="btnCarregarTrilha">Iniciar</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer-direitos">
+    <p>&copy; 2025 AbstroLab. Todos os direitos reservados.</p>
+  </footer>
+
+  <script>
+    function carregarTrilha() {
+      window.location.href = "trilha.html";
+    }
+
+    function sairDoJogo() {
+      const confirmacao = confirm("Tem certeza que deseja sair do jogo?");
+      if (confirmacao) {
+        window.location.href = "cadastro.html";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("btnCarregarTrilha").addEventListener("click", carregarTrilha);
+      document.getElementById("btnSair").addEventListener("click", sairDoJogo);
+    });
+  </script>
+</body>
+
+</html>
