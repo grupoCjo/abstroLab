@@ -24,23 +24,6 @@ document.getElementById('hamburger').addEventListener('click', function() {
         bar.classList.toggle('active'); 
     });
 });
-        
-// Carrossel! ! !
-document.addEventListener("DOMContentLoaded", () => {
-    let index = 0;
-
-    function moveCarousel(step) {
-        const carouselItems = document.querySelector('.carousel-items');
-        const total = document.querySelectorAll('.carousel-items .feature-card').length;
-        index = (index + step + total) % total;
-        carouselItems.style.transform = `translateX(-${index * 100}%)`;
-    }
-
-    document.querySelector('.carousel-prev').addEventListener('click', () => moveCarousel(-1));
-    document.querySelector('.carousel-next').addEventListener('click', () => moveCarousel(1));
-});
-
-
 
 //enviar o cadastro p DB
 
@@ -67,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 //Criação de endpoint para INSERT no banco com dados do --CADASTRO--
 
-document.querySelector(".btnCadastro").addEventListener("click", async () => {
+document.getElementById(".btnCadastro").addEventListener("click", async () => {
   const nome = document.getElementById("nome").value;
   const email = document.getElementById("email").value;
   const senha = document.getElementById("senha").value;
@@ -141,6 +124,3 @@ document.getElementById("entrarBtn").addEventListener("click", async () => {
   }
 });
 
-document.getElementById("begin").addEventListener("click", () => {
-    window.location.href = "cadastro.html";
-})
