@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   try {
     // Busca o exercício atual
-    const response = await fetch(`http://localhost:3000/api/exercicios/codigo/${codigo}`);
+    const response = await fetch(`https://abstrolab.onrender.com/api/exercicios/codigo/${codigo}`);
     if (!response.ok) {
       const erro = await response.json();
       console.error('Erro ao buscar exercício:', erro.message);
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // Buscar todos os exercícios para encontrar o próximo
-    const todosResponse = await fetch('http://localhost:3000/exercicios');
+    const todosResponse = await fetch('https://abstrolab.onrender.com/exercicios');
     const todosExercicios = await todosResponse.json();
 
     // Ordena por posicao_trilha
