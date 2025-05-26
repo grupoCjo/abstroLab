@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AbstroLab - Transformando o aprendizado</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+
+<header>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="../views/index.html">AbstroLab</a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="../views/index.html">Início</a></li>
+            <li><a href="#funcionalidades">Funcionalidades</a></li>
+            <li><a href="../views/sobre.html">Sobre</a></li>
+            <li><a href="#depoimentos">Depoimentos</a></li>
+            <li><a href="#contato">Contato</a></li>
+        </ul>
+        <div class="hamburger" id="hamburger">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+    </nav>
+</header>
+
+<body>
+    <section class="sobre">
+  <div class="sobre-content">
+    <h1>Sobre o AbstroLab</h1>
+    <p>
+      O <strong>AbstroLab</strong> é uma plataforma educacional criada para ajudar alunos — especialmente aqueles com <strong>Transtorno do Espectro Autista (TEA)</strong> — a desenvolverem suas habilidades de <strong>abstração matemática</strong> de forma mais acessível, visual e divertida.
+    </p>
+    <p>
+      Sabemos que muitos estudantes enfrentam dificuldades ao lidar com conceitos abstratos da matemática. Pensando nisso, o AbstroLab foi projetado para transformar o aprendizado em uma jornada leve e intuitiva, utilizando recursos como <strong>jogos educativos</strong>, <strong>pictogramas</strong>, <strong>trilhas personalizadas</strong> e <strong>atividades práticas</strong> que aproximam a matemática do mundo real.
+    </p>
+    <p>
+      Nosso objetivo é tornar o conteúdo matemático mais claro e envolvente, respeitando o tempo de cada aluno e oferecendo apoio visual e interativo que facilita a compreensão.
+    </p>
+    <ul>
+      <li>✔️ Trilhas de aprendizado com níveis (básico, intermediário e avançado)</li>
+      <li>✔️ Exercícios interativos e visuais</li>
+      <li>✔️ Gamificação, com pontos e conquistas para motivar</li>
+      <li>✔️ Apoio a pais e professores, que podem acompanhar o progresso dos alunos</li>
+    </ul>
+    <p>
+      O AbstroLab acredita que <strong>todo aluno pode aprender</strong>, desde que tenha as ferramentas certas e um ambiente que respeite suas particularidades.
+    </p>
+    <p>
+      Seja bem-vindo! Vamos juntos tornar a matemática mais acessível, divertida e significativa. ✨
+    </p>
+  </div>
+</section>
+
+
+    <section class="features" id="funcionalidades">
+        <div class="carousel-container">
+            <div class="carousel">
+                <div class="carousel-items">
+                    <div class="feature-card">
+                        <i class="fas fa-gamepad"></i>
+                        <h3>Aprendizado Interativo</h3>
+                        <p>Jogos que ajudam as crianças a entenderem conceitos matemáticos de maneira divertida.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-users"></i>
+                        <h3>Interação e Suporte</h3>
+                        <p>Pais e educadores podem acompanhar o progresso do aprendizado.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-cogs"></i>
+                        <h3>Customização</h3>
+                        <p>As atividades estão separadas em trilhas com níveis graduais.</p>
+                    </div>
+                </div>
+                <button class="carousel-prev">&#10094;</button>
+                <button class="carousel-next">&#10095;</button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2025 AbstroLab. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Botão começar redireciona para cadastro.html
+        document.getElementById("begin").addEventListener("click", () => {
+          window.location.href = "cadastro.html";
+        });
+
+        // Carrossel
+        let index = 0;
+
+        function moveCarousel(step) {
+          const carouselItems = document.querySelector('.carousel-items');
+          const total = document.querySelectorAll('.carousel-items .feature-card').length;
+          index = (index + step + total) % total;
+          carouselItems.style.transform = `translateX(-${index * 100}%)`;
+        }
+
+        document.querySelector('.carousel-prev').addEventListener('click', () => moveCarousel(-1));
+        document.querySelector('.carousel-next').addEventListener('click', () => moveCarousel(1));
+      });
+    </script>
+</body>
+
+</html>
