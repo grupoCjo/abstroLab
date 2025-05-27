@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AbstroLab - Contato</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="../views/index.html">AbstroLab</a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="../views/index.html">Início</a></li>
+            <li><a href="#funcionalidades">Funcionalidades</a></li>
+            <li><a href="../views/sobre.html">Sobre</a></li>
+            <li><a href="#depoimentos">Depoimentos</a></li>
+            <li><a href="#contato">Contato</a></li>
+        </ul>
+        <div class="hamburger" id="hamburger">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <section class="sobre">
+        <div class="sobre-content">
+            <h1>Entre em Contato</h1>
+            <p>
+                Se você tem dúvidas, sugestões ou quer saber mais sobre o <strong>AbstroLab</strong>, preencha os campos abaixo e entraremos em contato.
+            </p>
+            <hr class="my-2 text-primary">
+        </div>
+    </section>
+
+    <section class="contato-form">
+        <div class="form-container">
+            <form id="contatoForm">
+                <div class="form-group">
+                    <label for="nome"><i class="fas fa-user"></i> Nome</label>
+                    <input type="text" id="nome" name="nome" required placeholder="Seu nome">
+                </div>
+                <div class="form-group">
+                    <label for="email"><i class="fas fa-envelope"></i> E-mail</label>
+                    <input type="email" id="email" name="email" required placeholder="Seu e-mail">
+                </div>
+                <div class="form-group">
+                    <label for="telefone"><i class="fas fa-phone"></i> Telefone</label>
+                    <input type="text" id="telefone" name="telefone" required placeholder="Seu telefone">
+                </div>
+                <div class="form-group">
+                    <label for="mensagem"><i class="fas fa-comment-dots"></i> Mensagem</label>
+                    <textarea id="mensagem" name="mensagem" required placeholder="Digite sua mensagem"></textarea>
+                </div>
+                <button type="submit" class="btn-enviar"><i class="fas fa-paper-plane"></i> Enviar</button>
+            </form>
+            <p id="resultado" class="mensagem-feedback"></p>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <p>&copy; 2025 AbstroLab. Todos os direitos reservados.</p>
+</footer>
+
+<script>
+document.getElementById('contatoForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const contato = {
+        nome: document.getElementById('nome').value,
+        email: document.getElementById('email').value,
+        telefone: document.getElementById('telefone').value,
+        mensagem: document.getElementById('mensagem').value
+    };
+
+    fetch('http://localhost:8080/contatos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(contato)
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('resultado').innerText = "Mensagem enviada com sucesso!";
+        document.getElementById('contatoForm').reset();
+    })
+    .catch(error => {
+        document.getElementById('resultado').innerText = "Erro ao enviar mensagem.";
+        console.error('Erro:', error);
+    });
+});
+</script>
+
+</body>
+</html>
