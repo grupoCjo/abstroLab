@@ -1,170 +1,252 @@
-/* Reset e Base */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
+:root {
+    --primary-color: #ff8fab;
+    --secondary-color: #81d4fa;
+    --text-color: #4A4A4A;
+    --text-light: #6c757d;
+    --background-color: #f4f7fc;
+    --white-color: #FFFFFF;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+    --border-radius: 16px;
+    --font-family: 'Poppins', sans-serif;
 }
 
+/* --- ESTRUTURA BASE --- */
 body {
-  background: linear-gradient(to right, #f8c6d2, #e0f7fa);
-  color: #333;
-  animation: fadeIn 1s ease-in-out;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
 }
 
-/* NAVBAR */
-header {
-  padding: 20px 0;
+.dashboard-wrapper {
+    display: flex;
+    min-height: 100vh;
 }
 
-.navbar {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
+/* --- SIDEBAR --- */
+.sidebar {
+    width: 260px;
+    background-color: var(--white-color);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #e9ecef;
 }
 
-.logo a {
-  font-weight: bold;
-  font-size: 28px;
-  color: #333;
-  text-decoration: none;
+.logo {
+    font-weight: 700;
+    font-size: 28px;
+    color: var(--primary-color);
+    margin-bottom: 40px;
 }
 
-.nav-links {
-  list-style: none;
-  display: flex;
-  align-items: center;
+.user-profile {
+    text-align: center;
+    margin-bottom: 30px;
 }
 
-.nav-links li {
-  margin-left: 20px;
+.user-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 4px solid var(--primary-color);
+    margin-bottom: 10px;
 }
+
+.user-profile h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-grow: 1; /* Empurra o botão de sair para baixo */
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 15px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--text-light);
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.nav-item:hover, .nav-item.active {
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    color: var(--white-color);
+}
+
+.icon { font-style: normal; }
 
 .btn-sair {
-  background-color: red;
-  border: 2px solid #333;
-  color: #333;
-  padding: 8px 16px;
-  cursor: pointer;
-  font-weight: bold;
-  border-radius: 8px;
-  transition: background-color 0.3s ease, color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: none;
+    background-color: #ffebee;
+    color: #c62828;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 .btn-sair:hover {
-  background-color: #333;
-  color: #ff003c;
+    background-color: #c62828;
+    color: var(--white-color);
 }
 
-/* CONTAINER PRINCIPAL */
-.container {
-  max-width: 1200px;
-  max-height: 800px;
-  margin: 0 auto;
-  display: flex;
-  gap: 30px;
-  flex: 1;
-  padding: 30px 20px;
-}
-
-/* SIDEBAR */
-.sidebar {
-  width: 280px;
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-  color: #333;
-}
-
-.user-info,
-.score-info,
-.phase-info {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  font-size: 18px;
-}
-
-.user-info img,
-.score-info img,
-.phase-info img {
-  width: 32px;
-  height: 32px;
-}
-
-/* CONTEÚDO PRINCIPAL */
+/* --- CONTEÚDO PRINCIPAL --- */
 .main-content {
-  flex: 1;
-  background: rgba(255, 255, 255, 0.85);
-  border-radius: 12px;
-  padding: 25px;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
 }
 
-/* Centralização da info da tela inicial */
-.top-info {
-  text-align: center;
-  max-width: 500px;
+.main-header h1 { font-size: 2.5rem; }
+.main-header p { font-size: 1.1rem; color: var(--text-light); }
+
+/* Card de Ação Principal */
+.main-action-card {
+    background: linear-gradient(120deg, var(--primary-color), var(--secondary-color));
+    border-radius: var(--border-radius);
+    padding: 40px;
+    margin-top: 30px;
+    color: var(--white-color);
+    box-shadow: var(--shadow);
 }
 
-.titulo-jogo {
-  font-size: 30px;
-  font-weight: 700;
-  margin-bottom: 18px;
-  color: #333;
+.main-action-card h2 { font-size: 1.8rem; }
+.main-action-card p { font-size: 1.1rem; opacity: 0.9; margin: 10px 0 25px; }
+.btn-continuar {
+    background-color: var(--white-color);
+    color: var(--primary-color);
+    padding: 15px 35px;
+    border-radius: 50px;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.btn-continuar:hover { transform: scale(1.05); }
+
+/* Grid de Estatísticas */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
 }
 
-.top-info p {
-  font-size: 18px;
-  margin-bottom: 25px;
-  color: #444;
+.stat-card {
+    background-color: var(--white-color);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    box-shadow: var(--shadow);
+}
+.stat-card h3 { font-size: 1rem; color: var(--text-light); margin-bottom: 15px; }
+.stat-card p, .stat-card span { font-size: 2rem; font-weight: 700; }
+
+.progress-bar-container {
+    width: 100%;
+    height: 12px;
+    background-color: #e9ecef;
+    border-radius: 6px;
+    margin: 10px 0;
+}
+.progress-bar {
+    width: 0%; /* Alterado por JS */
+    height: 100%;
+    background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+    border-radius: 6px;
+    transition: width 0.5s ease-in-out;
 }
 
-.botoes-jogo {
-  display: flex;
-  justify-content: center;
+/* --- Animação de Carregamento (Skeleton) --- */
+.skeleton {
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+.skeleton-text { height: 20px; margin-bottom: 10px; }
+.skeleton-button { height: 50px; width: 180px; border-radius: 50px; }
+
+@keyframes pulse {
+    0% { background-color: #e0e0e0; }
+    50% { background-color: #f0f0f0; }
+    100% { background-color: #e0e0e0; }
 }
 
-.botao-acao {
-  padding: 12px 28px;
-  font-weight: 700;
-  border-radius: 8px;
-  border: 2px solid #333;
-  background-color: rgb(255, 149, 230);
-  color: #333;
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
+/* --- RESPONSIVIDADE --- */
+@media (max-width: 992px) {
+    .dashboard-wrapper { flex-direction: column; }
+    .sidebar { width: 100%; border-right: none; border-bottom: 1px solid #e9ecef; }
 }
 
-.botao-acao:hover {
-  background-color: #333;
-  color: #f8c6d2;
+/* --- ESTILOS PARA A TELA DE BOAS-VINDAS --- */
+.welcome-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(244, 247, 252, 0.95);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    transition: opacity 0.5s ease-in-out;
+    opacity: 1;
 }
 
-/* RODAPÉ DIREITOS */
-.footer-direitos {
-  margin-top: 30px;
-  font-size: 14px;
-  color: #444;
-  text-align: center;
-  padding-bottom: 10px;
+.welcome-box {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-color);
 }
 
-/* Animação simples */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.welcome-box h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.welcome-box p {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    margin: 15px 0 30px;
+}
+
+.btn-start-journey {
+    padding: 15px 35px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 700;
+    color: var(--white-color);
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-start-journey:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.welcome-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
 }
