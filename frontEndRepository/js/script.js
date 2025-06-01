@@ -1,5 +1,4 @@
  import { carregarPaginaInicial } from './paginaInicial.js'; // importa o arquivo de pagina inicial para ser chamado após efetuar cadastro/login
- 
  // Carrega o header
      fetch('../views/header.html')
         .then(response => response.text())

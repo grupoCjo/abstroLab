@@ -577,3 +577,131 @@ app.post("/cadastrar", (req, res) => {
     res.status(201).json({ message: "Usuário cadastrado com sucesso!" });
   });
 });
+
+/*---------------------------------------------------------------------------------*/
+// Rota da API - PICTOGRAMAS (ARASAAC)
+/*---------------------------------------------------------------------------------*/
+const axios = require('axios'); // Certifique-se de que o axios está importado no topo do arquivo
+
+app.get('/api/pictogramas/:busca', async (req, res) => {
+    const { busca } = req.params;
+    try {
+        const url = `https://api.arasaac.org/api/pictograms/pt/search/${encodeURIComponent(busca)}`;
+        const response = await axios.get(url);
+
+        res.json(response.data);
+
+    } catch (error) {
+        logger.error(`Erro ao buscar pictograma para "${busca}":`, { stack: error.stack });
+        if (error.response && error.response.status === 404) {
+            return res.json([]);
+        }
+        res.status(500).json({ message: 'Erro ao buscar pictograma.' });
+    }
+});
+
+/*---------------------------------------------------------------------------------*/
+// Rota da API - LÓGICA DE PROGRESSO
+/*---------------------------------------------------------------------------------*/
+
+// NOVO ENDPOINT: Retorna o próximo exercício que o usuário deve fazer
+app.get('/api/progresso/proximo/:usuario_ID', async (req, res) => {
+    const { usuario_ID } = req.params;
+    try {
+        // 1. Descobrir a última posição na trilha que o usuário completou
+        const progressoSql = `
+            SELECT MAX(e.posicao_trilha) as ultimaPosicao
+            FROM progresso_exercicios pe
+            JOIN exercicios e ON pe.exercicio_ID = e.exercicio_ID
+            WHERE pe.usuario_ID = ?
+        `;
+        const progressoResult = await query(progressoSql, [usuario_ID]);
+        const ultimaPosicao = progressoResult[0].ultimaPosicao || 0;
+
+        // 2. Encontrar o exercício com a posição imediatamente seguinte
+        const proximoExercicioSql = `
+            SELECT * FROM exercicios 
+            WHERE posicao_trilha > ? 
+            ORDER BY posicao_trilha ASC 
+            LIMIT 1
+        `;
+        const proximoExercicioResult = await query(proximoExercicioSql, [ultimaPosicao]);
+
+        if (proximoExercicioResult.length > 0) {
+            res.json(proximoExercicioResult[0]);
+        } else {
+            // Se não houver próximo, pode ser o primeiro exercício ou o final da trilha
+            const primeiroExercicioSql = `SELECT * FROM exercicios ORDER BY posicao_trilha ASC LIMIT 1`;
+            const primeiroExercicioResult = await query(primeiroExercicioSql);
+            // Se o usuário completou todos, retorna uma mensagem de conclusão
+            if(ultimaPosicao >= primeiroExercicioResult[0].total_exercicios) {
+                 return res.status(404).json({ message: 'Trilha concluída! Parabéns!' });
+            }
+            res.json(primeiroExercicioResult[0]);
+        }
+
+    } catch (error) {
+        logger.error(`Erro ao buscar próximo exercício para o usuário ${usuario_ID}:`, { stack: error.stack });
+        res.status(500).json({ message: 'Erro ao calcular próximo exercício.' });
+    }
+});
+
+/*---------------------------------------------------------------------------------*/
+// Rota da API - ATUALIZAÇÃO DE USUÁRIO E CONFIGS
+/*---------------------------------------------------------------------------------*/
+
+// ATUALIZAR PARCIALMENTE O USUÁRIO (ex: apenas o nome)
+app.put("/api/usuarios/:id", async (req, res) => {
+    const { id } = req.params;
+    // Pega apenas os campos que foram enviados no corpo da requisição
+    const { usuario_nome } = req.body;
+
+    // Validação para garantir que algo está sendo enviado para atualização
+    if (!usuario_nome) {
+        return res.status(400).json({ message: "Nenhum dado para atualizar foi fornecido." });
+    }
+
+    try {
+        const sql = "UPDATE usuarios SET usuario_nome = ? WHERE usuario_ID = ?";
+        const result = await query(sql, [usuario_nome, id]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "Usuário não encontrado." });
+        }
+        res.json({ message: "Usuário atualizado com sucesso!" });
+
+    } catch (error) {
+        logger.error(`Erro ao atualizar usuário com ID ${id}:`, { stack: error.stack });
+        res.status(500).json({ message: "Erro interno no servidor." });
+    }
+});
+
+
+// ATUALIZAR OU CRIAR CONFIGURAÇÕES DO USUÁRIO (TEMA)
+app.put('/api/configuracoes/:usuario_ID', async (req, res) => {
+    const { usuario_ID } = req.params;
+    const { tema } = req.body;
+
+    if (!tema) {
+        return res.status(400).json({ message: "O tema é obrigatório." });
+    }
+
+    try {
+        // Esta query usa "INSERT ... ON DUPLICATE KEY UPDATE",
+        // que insere um novo registro se não existir, ou atualiza o existente.
+        // Requer uma chave primária ou única na tabela (config_ID ou usuario_ID se for unique).
+        // Para isso funcionar, vamos assumir que usuario_ID na tabela 'configuracoes_usuario' é UNIQUE.
+        // ALTER TABLE configuracoes_usuario ADD UNIQUE (usuario_ID);
+        const sql = `
+            INSERT INTO configuracoes_usuario (usuario_ID, tema) 
+            VALUES (?, ?) 
+            ON DUPLICATE KEY UPDATE tema = ?
+        `;
+        await query(sql, [usuario_ID, tema, tema]);
+        res.json({ message: 'Tema salvo com sucesso!' });
+
+    } catch (error) {
+        logger.error(`Erro ao salvar tema para o usuário ${usuario_ID}:`, { stack: error.stack });
+        res.status(500).json({ message: "Erro ao salvar configurações." });
+    }
+});

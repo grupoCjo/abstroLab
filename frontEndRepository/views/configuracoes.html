@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AbstroLab - Configurações</title>
+    <link rel="stylesheet" href="../css/configuracoes.css">
+</head>
+<body class="theme-light">
+    <div class="settings-wrapper">
+        <header class="settings-header">
+            <a href="./paginaInicial.html" class="back-link">&larr; Voltar para o Dashboard</a>
+            <h1>Configurações</h1>
+            <p>Personalize sua experiência no AbstroLab.</p>
+        </header>
+        <main class="settings-content">
+            <section class="settings-card">
+                <h2><i class="icon">👤</i> Perfil</h2>
+                <div class="form-group">
+                    <label for="input-nome">Nome de Usuário</label>
+                    <input type="text" id="input-nome" placeholder="Seu novo nome">
+                    <button id="btn-salvar-nome" class="btn btn-primary">Salvar</button>
+                </div>
+                <div id="feedback-nome" class="feedback-message"></div>
+            </section>
+            <section class="settings-card">
+                <h2><i class="icon">🎨</i> Aparência</h2>
+                <div class="form-group">
+                    <label>Tema do Dashboard</label>
+                    <div class="theme-switcher">
+                        <button class="theme-option" data-theme="light">Claro</button>
+                        <button class="theme-option" data-theme="dark">Escuro</button>
+                        <button class="theme-option" data-theme="pink">Rosa</button>
+                    </div>
+                </div>
+            </section>
+            <section class="settings-card">
+                <h2><i class="icon">🔊</i> Som</h2>
+                <div class="form-group">
+                    <label for="volume-slider">Volume dos Efeitos e Música</label>
+                    <input type="range" id="volume-slider" min="0" max="1" step="0.1">
+                </div>
+                 <div class="form-group" style="margin-top: 20px;">
+                    <button id="btn-mute" class="btn btn-secondary">Silenciar Tudo</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const SoundManager = {
+                sounds: {},
+                music: null,
+                volume: 0.5,
+                isMuted: false,
+                isMusicPlaying: false,
+                soundUrls: {
+                    click: 'https://cdn.pixabay.com/audio/2022/03/15/audio_2c63821366.mp3',
+                    correct: 'https://cdn.pixabay.com/audio/2022/03/10/audio_c3b184b72f.mp3',
+                    incorrect: 'https://cdn.pixabay.com/audio/2021/08/04/audio_a46cf2f010.mp3',
+                    levelComplete: 'https://cdn.pixabay.com/audio/2022/08/31/audio_145d2e4684.mp3'
+                },
+                musicUrl: 'https://cdn.pixabay.com/audio/2024/05/13/audio_baf7a7f45a.mp3',
+                init() {
+                    this.isMuted = localStorage.getItem('abstrolab_muted') === 'true';
+                    this.volume = parseFloat(localStorage.getItem('abstrolab_volume') || '0.5');
+                    for (const key in this.soundUrls) {
+                        this.sounds[key] = new Audio(this.soundUrls[key]);
+                        this.sounds[key].volume = this.volume;
+                    }
+                    this.music = new Audio(this.musicUrl);
+                    this.music.loop = true;
+                    this.music.volume = this.volume;
+                    if (this.isMuted) { this.mute(); }
+                },
+                play(soundName) {
+                    if (!this.isMuted && this.sounds[soundName]) {
+                        this.sounds[soundName].currentTime = 0;
+                        this.sounds[soundName].play().catch(e => console.error("Erro ao tocar som:", e));
+                    }
+                },
+                startMusic() { /* ... */ },
+                stopMusic() { /* ... */ },
+                setVolume(value) {
+                    this.volume = value;
+                    localStorage.setItem('abstrolab_volume', this.volume);
+                    if (!this.isMuted) {
+                         for (const key in this.sounds) { this.sounds[key].volume = this.volume; }
+                        if (this.music) { this.music.volume = this.volume; }
+                    }
+                },
+                toggleMute() {
+                    this.isMuted = !this.isMuted;
+                    localStorage.setItem('abstrolab_muted', this.isMuted);
+                    this.isMuted ? this.mute() : this.unmute();
+                    return this.isMuted;
+                },
+                mute() {
+                    for (const key in this.sounds) { this.sounds[key].volume = 0; }
+                    if (this.music) { this.music.volume = 0; }
+                },
+                unmute() { this.setVolume(this.volume); }
+            };
+            SoundManager.init();
+            const USUARIO_ID = 1;
+            const inputNome = document.getElementById("input-nome");
+            const btnSalvarNome = document.getElementById("btn-salvar-nome");
+            const feedbackNome = document.getElementById("feedback-nome");
+            const volumeSlider = document.getElementById("volume-slider");
+            const themeOptions = document.querySelectorAll(".theme-option");
+            const btnMute = document.getElementById("btn-mute");
+            const body = document.body;
+            const backLink = document.querySelector('.back-link');
+
+            function showFeedback(element, message, type = 'success') {
+                element.textContent = message;
+                element.className = `feedback-message ${type}`;
+                setTimeout(() => { element.textContent = ''; }, 3000);
+            }
+
+            btnSalvarNome.addEventListener("click", async () => {
+                SoundManager.play('click');
+                const novoNome = inputNome.value.trim();
+                if (!novoNome) {
+                    showFeedback(feedbackNome, "Por favor, insira um nome.", "error");
+                    return;
+                }
+                try {
+                    const response = await fetch(`/api/usuarios/${USUARIO_ID}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ usuario_nome: novoNome })
+                    });
+                    const result = await response.json();
+                    if (!response.ok) throw new Error(result.message);
+                    showFeedback(feedbackNome, "Nome alterado com sucesso!", "success");
+                } catch (error) {
+                    showFeedback(feedbackNome, `Erro: ${error.message}`, "error");
+                }
+            });
+
+            function applyTheme(themeName) {
+                body.className = `theme-${themeName}`;
+                themeOptions.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.theme === themeName);
+                });
+                localStorage.setItem('abstrolab_theme', themeName);
+            }
+
+            themeOptions.forEach(button => {
+                button.addEventListener("click", async () => {
+                    SoundManager.play('click');
+                    const selectedTheme = button.dataset.theme;
+                    applyTheme(selectedTheme);
+                    try {
+                        await fetch(`/api/configuracoes/${USUARIO_ID}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ tema: selectedTheme })
+                        });
+                    } catch (error) { console.error("Erro ao salvar o tema:", error); }
+                });
+            });
+
+            function updateMuteButtonText() {
+                btnMute.textContent = SoundManager.isMuted ? 'Ativar Som' : 'Silenciar Tudo';
+            }
+
+            volumeSlider.addEventListener("input", (e) => {
+                SoundManager.setVolume(e.target.value);
+                SoundManager.play('click');
+            });
+
+            btnMute.addEventListener("click", () => {
+                SoundManager.toggleMute();
+                updateMuteButtonText();
+            });
+            
+            backLink.addEventListener('click', () => SoundManager.play('click'));
+
+            function loadSettings() {
+                const savedTheme = localStorage.getItem('abstrolab_theme') || 'light';
+                applyTheme(savedTheme);
+                volumeSlider.value = SoundManager.volume;
+                updateMuteButtonText();
+            }
+
+            loadSettings();
+        });
+    </script>
+</body>
+</html>
