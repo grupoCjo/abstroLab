@@ -40,72 +40,65 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelector('.carousel-prev')?.addEventListener('click', () => moveCarousel(-1));
   document.querySelector('.carousel-next')?.addEventListener('click', () => moveCarousel(1));
 
-  // Cadastro
   const btnCadastro = document.querySelector(".btnCadastro");
-  if (btnCadastro) {
-    btnCadastro.addEventListener("click", async (e) => {
-      e.preventDefault();
+if (btnCadastro) {
+  btnCadastro.addEventListener("click", async (e) => {
+    e.preventDefault();
 
-      const nome = document.getElementById("nome").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const senha = document.getElementById("senha").value;
-      const confirmarSenha = document.getElementById("confirmarSenha").value;
-      const idadeStr = document.getElementById("idade").value.trim();
-      const erroSenha = document.getElementById("erroSenha");
+    const nome = document.getElementById("nome").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const senha = document.getElementById("senha").value;
+    const confirmarSenha = document.getElementById("confirmarSenha").value;
+    const dataNascimento = document.getElementById("dataNascimento").value;
+    const erroSenha = document.getElementById("erroSenha");
 
-      if (!nome || !email || !idadeStr || !senha || !confirmarSenha) {
-        alert("Preencha todos os campos!");
-        return;
-      }
+    if (!nome || !email || !dataNascimento || !senha || !confirmarSenha) {
+      alert("Preencha todos os campos!");
+      return;
+    }
 
-      if (senha !== confirmarSenha) {
-        erroSenha.innerText = "As senhas não coincidem.";
-        erroSenha.style.display = "block";
-        return;
+    if (senha !== confirmarSenha) {
+      erroSenha.innerText = "As senhas não coincidem.";
+      erroSenha.style.display = "block";
+      return;
+    } else {
+      erroSenha.style.display = "none";
+    }
+
+    // Verificação de data válida (simples)
+    if (isNaN(Date.parse(dataNascimento))) {
+      alert("Informe uma data de nascimento válida.");
+      return;
+    }
+
+    const dados = {
+      usuario_nome: nome,
+      usuario_email: email,
+      usuario_data_nascimento: dataNascimento, // formato YYYY-MM-DD
+      usuario_senha: senha
+    };
+
+    try {
+      const response = await fetch("/api/usuarios", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dados)
+      });
+
+      const resultado = await response.json();
+
+      if (response.ok) {
+        alert("Cadastro realizado com sucesso!");
+        window.location.href = "paginaInicial.html";
       } else {
-        erroSenha.style.display = "none";
+        alert("Erro: " + (resultado.message || "Erro desconhecido"));
       }
-
-      const idade = parseInt(idadeStr);
-      if (isNaN(idade) || idade <= 0 || idade > 150) {
-        alert("Informe uma idade válida.");
-        return;
-      }
-
-      // Converte idade para data de nascimento - considera 1º de janeiro do ano de nascimento
-      const anoAtual = new Date().getFullYear();
-      const anoNascimento = anoAtual - idade;
-      const dataNascimento = `${anoNascimento}-01-01`;
-
-      const dados = {
-        nome,
-        email,
-        senha,
-        idade,           // enviando a idade como número
-        dataNascimento   // e a data calculada como string YYYY-MM-DD
-      };
-
-      try {
-        const response = await fetch("/api/usuarios", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(dados)
-        });
-
-        const resultado = await response.json();
-
-        if (response.ok) {
-          alert("Cadastro realizado com sucesso!");
-          window.location.href = "paginaInicial.html";
-        } else {
-          alert("Erro: " + (resultado.message || "Erro desconhecido"));
-        }
-      } catch (error) {
-        console.error("Erro ao cadastrar:", error);
-        alert("Erro ao conectar com o servidor.");
-      }
-    });
-  }
+    } catch (error) {
+      console.error("Erro ao cadastrar:", error);
+      alert("Erro ao conectar com o servidor.");
+    }
+  });
+}
 
   // Login
   const btnEntrar = document.getElementById("btnEntrar");

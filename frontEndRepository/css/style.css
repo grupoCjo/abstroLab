@@ -276,7 +276,10 @@ h2 {
     justify-content: center;
     margin-top: 10px;
 }
-
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  cursor: pointer;
+}
 .gender-options label {
     display: flex;
     align-items: center;
