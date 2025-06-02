@@ -9,6 +9,8 @@ const express = require("express");
 const cors = require("cors");
 const { query, closeConnection } = require('./backEndRepository/dbConnection');
 const PORT = process.env.PORT || 3000;
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 const app = express();
 app.use(cors());
@@ -114,20 +116,35 @@ const gerarUsuarioID = async () => {
 
 // CRIAR USUÁRIO (com ID manual ou auto_increment)
 app.post("/api/usuarios", async (req, res) => {
-  const { usuario_nome, usuario_email, usuario_data_nascimento } = req.body;
+  const { usuario_nome, usuario_email, usuario_data_nascimento, usuario_senha } = req.body;
 
-  if (!usuario_nome || !usuario_email || !usuario_data_nascimento) {
+  if (!usuario_nome || !usuario_email || !usuario_data_nascimento || !usuario_senha) {
     return res.status(400).json({ message: "Preencha todos os campos obrigatórios!" });
   }
 
+  // Validação simples de e-mail
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(usuario_email)) {
+    return res.status(400).json({ message: "E-mail inválido!" });
+  }
+
   try {
-    //AUTO_INCREMENT:
-    const sql = "INSERT INTO usuarios (usuario_nome, usuario_email, usuario_data_nascimento) VALUES (?, ?, ?)";
-    const result = await query(sql, [usuario_nome, usuario_email, usuario_data_nascimento]);
+    const hashedSenha = await bcrypt.hash(usuario_senha, saltRounds);
+
+    const sql = `
+      INSERT INTO usuarios (usuario_nome, usuario_email, usuario_data_nascimento, usuario_senha)
+      VALUES (?, ?, ?, ?)
+    `;
+    const result = await query(sql, [
+      usuario_nome,
+      usuario_email,
+      usuario_data_nascimento,
+      hashedSenha
+    ]);
 
     res.status(201).json({
       message: "Usuário cadastrado com sucesso!",
-      usuario_ID: result.insertId || usuario_ID // depende da estratégia
+      usuario_ID: result.insertId
     });
   } catch (error) {
     console.error("Erro ao cadastrar usuário:", error);
