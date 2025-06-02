@@ -1,31 +1,20 @@
- document.addEventListener("DOMContentLoaded", () => {
-    // Botão começar redireciona para cadastro.html
-    document.getElementById("begin").addEventListener("click", () => {
-    window.location.href = "cadastro.html";
-});
+document.addEventListener("DOMContentLoaded", () => {
+  // Carrega o header
+  fetch('../views/header.html')
+    .then(response => response.text())
+    .then(headerHTML => {
+      document.querySelector('body').insertAdjacentHTML('afterbegin', headerHTML);
 
-// Carrossel
-let index = 0;
+      // Ativa o menu hamburger depois de inserir o header
+      document.getElementById('hamburger')?.addEventListener('click', function () {
+        const navLinks = document.querySelector('.nav-links');
+        navLinks.classList.toggle('active');
 
-function moveCarousel(step) {
-    const carouselItems = document.querySelector('.carousel-items');
-    const total = document.querySelectorAll('.carousel-items .feature-card').length;
-    index = (index + step + total) % total;
-    carouselItems.style.transform = `translateX(-${index * 100}%)`;
-}
-
-document.querySelector('.carousel-prev').addEventListener('click', () => moveCarousel(-1));
-document.querySelector('.carousel-next').addEventListener('click', () => moveCarousel(1));
-});
-
-// importa o arquivo de pagina inicial para ser chamado após efetuar cadastro/login
- import { carregarPaginaInicial } from './paginaInicial.js'; 
-
- // Carrega o header
-     fetch('../views/header.html')
-        .then(response => response.text())
-        .then(headerHTML => {
-        document.querySelector('body').insertAdjacentHTML('afterbegin', headerHTML);
+        const bars = document.querySelectorAll('.hamburger .bar');
+        bars.forEach(bar => {
+          bar.classList.toggle('active');
+        });
+      });
     });
 
   // Carrega o footer
@@ -35,15 +24,26 @@ document.querySelector('.carousel-next').addEventListener('click', () => moveCar
       document.querySelector('body').insertAdjacentHTML('beforeend', footerHTML);
     });
 
-//script em js p menu    
-document.getElementById('hamburger').addEventListener('click', function() {
-    const navLinks = document.querySelector('.nav-links');
-    navLinks.classList.toggle('active'); 
-
-    const bars = document.querySelectorAll('.hamburger .bar');
-    bars.forEach(bar => {
-        bar.classList.toggle('active'); 
+  // Botão Começar redireciona p cadastro.html
+  const beginBtn = document.getElementById("begin");
+  if (beginBtn) {
+    beginBtn.addEventListener("click", () => {
+      window.location.href = "cadastro.html";
     });
+  }
+
+  // Carrossel
+  let index = 0;
+  function moveCarousel(step) {
+    const carouselItems = document.querySelector('.carousel-items');
+    const total = document.querySelectorAll('.carousel-items .feature-card').length;
+    index = (index + step + total) % total;
+    carouselItems.style.transform = `translateX(-${index * 100}%)`;
+  }
+
+  document.querySelector('.carousel-prev')?.addEventListener('click', () => moveCarousel(-1));
+  document.querySelector('.carousel-next')?.addEventListener('click', () => moveCarousel(1));
+
 });
 
 //enviar o cadastro p DB
