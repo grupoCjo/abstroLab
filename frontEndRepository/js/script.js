@@ -46,102 +46,66 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-//enviar o cadastro p DB
+//Cadastro de usuário
+document.addEventListener("DOMContentLoaded", () => {
+  const btnCadastro = document.querySelector(".btnCadastro");
 
-    // Função de validação de senha
-    // function validarSenhas() {
-    //     const senha = document.getElementById('senha').value;
-    //     const confirmarSenha = document.getElementById('confirmarSenha').value;
-    //     const mensagemErro = document.getElementById('erroSenha');
+  if (btnCadastro) {
+    btnCadastro.addEventListener("click", async (e) => {
+      e.preventDefault();
 
-    //     if (senha !== confirmarSenha) {
-    //         mensagemErro.style.display = 'block';
-    //         mensagemErro.innerText = '*As senhas não coincidem';
-    //     } else {
-    //         mensagemErro.style.display = 'none'; 
-    //         // colocar aqui o cod p enviar p bd
-    //         console.log("As senhas coincidem. Enviar para o banco de dados.");
-    //     }
-    // }
+      const nome = document.getElementById("nome").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const senha = document.getElementById("senha").value;
+      const confirmarSenha = document.getElementById("confirmarSenha").value;
+      const idade = document.getElementById("idade").value.trim();
+      const erroSenha = document.getElementById("erroSenha");
 
-    // document.querySelector('.btnCadastro').addEventListener('click', function(e) {
-    //     e.preventDefault(); 
-    //     validarSenhas(); 
-    // });
+      if (!nome || !email || !idade || !senha || !confirmarSenha) {
+        alert("Preencha todos os campos!");
+        return;
+      }
 
-//Criação de endpoint para INSERT no banco com dados do --CADASTRO--
+      if (senha !== confirmarSenha) {
+        erroSenha.innerText = "As senhas não coincidem.";
+        erroSenha.style.display = "block";
+        return;
+      } else {
+        erroSenha.style.display = "none";
+      }
 
-document.getElementById(".btnCadastro").addEventListener("click", async () => {
-  const nome = document.getElementById("nome").value;
-  const email = document.getElementById("email").value;
-  const senha = document.getElementById("senha").value;
-  const confirmarSenha = document.getElementById("confirmarSenha").value;
-  const dataNascimento = document.getElementById("dataNascimento").value;
+      const anoAtual = new Date().getFullYear();
+      const anoNascimento = anoAtual - parseInt(idade);
+      const dataNascimento = `${anoNascimento}-01-01`;
 
-  if (senha !== confirmarSenha) {
-    document.getElementById("erroSenha").innerText = "As senhas não coincidem!\nPor favor, tente novamente.";
-    document.getElementById("erroSenha").style.display = "block";
-    return;
-  } else {
-    document.getElementById("erroSenha").style.display = "none";
-  }
+      const dados = {
+        usuario_nome: nome,
+        usuario_email: email,
+        usuario_data_nascimento: dataNascimento
+      };
 
-  const dados = { nome, email, senha, dataNascimento };
+      try {
+        const response = await fetch("/api/usuarios", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(dados)
+        });
 
-  try {
-    const response = await fetch("https://abstrolab.onrender.com/cadastrar", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(dados),
+        const resultado = await response.json();
+
+        if (response.ok) {
+          alert("Cadastro realizado com sucesso!");
+          window.location.href = "paginaInicial.html";
+        } else {
+          alert("Erro: " + resultado.message);
+        }
+      } catch (error) {
+        console.error("Erro ao cadastrar:", error);
+        alert("Erro ao conectar com o servidor.");
+      }
     });
-
-    const resultado = await response.json();
-    alert(resultado.message);
-
-    if (response.ok) {
-      carregarPaginaInicial(); // <-- Chama a função da nova página que está no arquivo paginaInicial.js
-    }
-
-  } catch (error) {
-    console.error("Erro ao cadastrar:", error);
-    alert("Erro ao cadastrar usuário.");
-  }
-});
-
-document.getElementById("entrarBtn").addEventListener("click", async () => {
-  const email = document.getElementById("emailLogin").value;
-  const senha = document.getElementById("senhaLogin").value;
-
-  const erroLogin = document.getElementById("erroLogin");
-
-  if (!email || !senha) {
-    erroLogin.innerText = "Por favor, preencha todos os campos.";
-    erroLogin.style.display = "block";
-    return;
-  }
-
-  try {
-    const response = await fetch("https://abstrolab.onrender.com/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, senha }),
-    });
-
-    const resultado = await response.json();
-
-    if (response.ok) {
-      alert("Login efetuado com sucesso!");
-      // Redireciona após login
-      carregarPaginaInicial(); // <-- Chama a função da nova página que está no arquivo paginaInicial.js";
-    } else {
-      erroLogin.innerText = resultado.message || "Email ou senha inválidos.";
-      erroLogin.style.display = "block";
-    }
-
-  } catch (error) {
-    console.error("Erro ao fazer login:", error);
-    erroLogin.innerText = "Erro na conexão com o servidor.";
-    erroLogin.style.display = "block";
   }
 });
 
