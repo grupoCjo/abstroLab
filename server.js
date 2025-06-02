@@ -216,57 +216,32 @@ const gerarExercicioID = async () => {
   }
 };
 
-// Criar exercício único
+// Combinação das rotas para aceitar 1 ou N exercícios
 app.post('/api/exercicios', async (req, res) => {
-  const exercicio = req.body;
+  let exercicios = req.body;
 
-  if (!exercicio.posicao_trilha || !exercicio.titulo || !exercicio.enunciado ||
-      !exercicio.alternativas || !exercicio.resposta_correta || !exercicio.nivel) {
-    return res.status(400).json({
-      error: 'Todos os campos são necessários (posicao_trilha, titulo, enunciado, alternativas, resposta_correta, nivel)'
-    });
+  // Se for um único exercício, transforma em array
+  if (!Array.isArray(exercicios)) {
+    exercicios = [exercicios];
   }
 
-  try {
-    const novoID = await gerarExercicioID();
+  // Validação geral
+  for (const exercicio of exercicios) {
+    const camposObrigatorios = ['posicao_trilha', 'titulo', 'enunciado', 'alternativas', 'resposta_correta', 'nivel'];
 
-    const querySQL = `
-      INSERT INTO exercicios (exercicio_ID, posicao_trilha, titulo, enunciado, alternativas, resposta_correta, nivel)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `;
-
-    await query(querySQL, [
-      novoID,
-      exercicio.posicao_trilha,
-      exercicio.titulo,
-      exercicio.enunciado,
-      JSON.stringify(exercicio.alternativas),
-      exercicio.resposta_correta,
-      exercicio.nivel
-    ]);
-
-    res.status(201).json({ message: 'Exercício criado com sucesso!', exercicio_ID: novoID });
-  } catch (error) {
-    console.error("Erro ao criar exercício:", error);
-    res.status(500).json({ error: 'Erro ao inserir exercício', details: error });
-  }
-});
-
-// Criar exercícios em lote
-app.post('/api/exercicios/lote', async (req, res) => {
-  const exercicios = req.body;
-
-  if (!Array.isArray(exercicios) || exercicios.length === 0) {
-    return res.status(400).json({ error: 'Envie uma lista de exercícios!' });
-  }
-
-  try {
-    for (const exercicio of exercicios) {
-      if (!exercicio.posicao_trilha || !exercicio.titulo || !exercicio.enunciado ||
-          !exercicio.alternativas || !exercicio.resposta_correta || !exercicio.nivel) {
-        return res.status(400).json({ error: 'Todos os campos são necessários em cada exercício' });
+    for (const campo of camposObrigatorios) {
+      if (!exercicio[campo]) {
+        return res.status(400).json({
+          error: `Campo obrigatório ausente: ${campo}`
+        });
       }
+    }
+  }
 
+  try {
+    const resultados = [];
+
+    for (const exercicio of exercicios) {
       const novoID = await gerarExercicioID();
 
       const querySQL = `
@@ -283,12 +258,14 @@ app.post('/api/exercicios/lote', async (req, res) => {
         exercicio.resposta_correta,
         exercicio.nivel
       ]);
+
+      resultados.push({ exercicio_ID: novoID, titulo: exercicio.titulo });
     }
 
-    res.status(201).json({ message: 'Exercícios criados com sucesso!' });
+    res.status(201).json({ message: 'Exercício(s) criado(s) com sucesso!', criados: resultados });
   } catch (error) {
-    console.error("Erro ao inserir exercícios:", error);
-    res.status(500).json({ error: 'Erro ao inserir exercícios', details: error });
+    console.error("Erro ao criar exercício(s):", error);
+    res.status(500).json({ error: 'Erro ao inserir exercício(s)', details: error });
   }
 });
 
