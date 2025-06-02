@@ -436,7 +436,6 @@ button#verificar:hover {
         align-items: center;
     }
 }
-/*página de exercícios*/
 /* Página de Exercícios */
 .exercicio-container {
     max-width: 600px;
@@ -549,4 +548,61 @@ button#verificar:hover {
     content: "✔️";
     position: absolute;
     left: 0;
+}
+.trilha-bolinhas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px; /* Espaço entre bolinha e linha */
+  margin: 30px 0;
+}
+
+.bolinha {
+  width: 28px;
+  height: 28px;
+  background-color: #0d6efd;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(13, 110, 253, 0.5);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  flex-shrink: 0; /* para não encolher */
+}
+
+.bolinha:hover {
+  background-color: #084cd6;
+}
+
+.linha {
+  flex-grow: 1;
+  height: 4px;
+  background: linear-gradient(to right, transparent, #0d6efd, transparent);
+  border-radius: 2px;
+}
+#bolinhas-container {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr); /* 7 colunas iguais */
+  gap: 20px 15px; /* espaçamento vertical e horizontal */
+  align-items: center;
+  justify-items: center;
+  padding: 10px 0;
+}
+
+.bolinha {
+  width: 60px;    /* bolinhas maiores */
+  height: 60px;
+  background-color: #0d6efd;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  font-size: 1.3rem;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(13, 110, 253, 0.5);
+  transition: background-color 0.3s ease;
+}
+
+.bolinha:hover {
+  background-color: #084cd6;
 }

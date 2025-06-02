@@ -341,7 +341,12 @@ app.get('/api/exercicios/codigo/:codigo', async (req, res) => {
 // POST /api/sessoes/criar
 app.post('/api/sessoes/criar', async (req, res) => {
   try {
-    const { usuario_ID, sessao_data_hora_inicio, sessao_data_hora_fim, sessao_duracao, sessao_status } = req.body;
+    const { usuario_ID } = req.body;
+
+    const sessao_data_hora_inicio = new Date(); // Agora
+    const sessao_data_hora_fim = null;
+    const sessao_duracao = null;
+    const sessao_status = 'ativa';
 
     const sql = `
       INSERT INTO sessoes 
@@ -349,29 +354,23 @@ app.post('/api/sessoes/criar', async (req, res) => {
       VALUES (?, ?, ?, ?, ?)
     `;
 
-    const result = await db.query(sql, [usuario_ID, sessao_data_hora_inicio, sessao_data_hora_fim, sessao_duracao, sessao_status]);
+    const result = await db.query(sql, [
+      usuario_ID,
+      sessao_data_hora_inicio,
+      sessao_data_hora_fim,
+      sessao_duracao,
+      sessao_status
+    ]);
 
-    res.status(201).json({ message: 'Sessão criada com sucesso', sessao_ID: result.insertId });
+    res.status(201).json({
+      message: 'Sessão criada com sucesso',
+      sessao_ID: result.insertId
+    });
   } catch (error) {
     console.error('Erro ao criar sessão:', error);
     res.status(500).json({ error: 'Erro ao criar sessão' });
   }
 });
-
-//Req/Post - Criar uma nova sessão
-app.post("/sessoes", (req, res) => {
-    const { sessao_ID, usuario_ID, sessao_data_hora_inicio, sessao_data_hora_fim, sessao_duracao, sessao_status } = 
-    req.body;
-  
-    db.query(
-      "INSERT INTO sessoes (sessao_ID, usuario_ID, sessao_data_hora_inicio, sessao_data_hora_fim, sessao_duracao, sessao_status) VALUES (?, ?, ?, ?, ?, ?)",
-      [sessao_ID, usuario_ID, sessao_data_hora_inicio, sessao_data_hora_fim, sessao_duracao, sessao_status],
-      (err, result) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json({ message: "Sessão criada com sucesso!" });
-    });
-});
-
 /*---------------------------------------------------------------------------------*/
 // Rota - Progresso/Registro
 /*---------------------------------------------------------------------------------*/
@@ -504,36 +503,34 @@ app.get('/exercicio', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontEndRepository', 'views', 'exercicio.html'));
 });
 
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
   const { email, senha } = req.body;
+  console.log('Login:', email, senha); 
 
-  if (!email || !senha) {
-    return res.status(400).json({ message: "Email e senha são obrigatórios." });
+  try {
+    const [usuarios] = await db.query("SELECT * FROM usuarios WHERE usuario_email = ?", [email]);
+    const usuario = usuarios[0];
+    
+    if (!usuario) {
+      return res.status(401).json({ message: "Email inválido" });
+    }
+
+    if (usuario.usuario_senha !== senha) {
+      return res.status(401).json({ message: "Senha inválida" });
+    }
+
+    res.status(200).json({
+      message: "Login realizado com sucesso!",
+      usuario_ID: usuario.usuario_ID
+    });
+
+  } catch (error) {
+    console.error("Erro no login:", error);
+    res.status(500).json({ message: "Erro no servidor" });
   }
-
-  const query = "SELECT * FROM usuarios WHERE email = ? AND senha = ?";
-  db.query(query, [email, senha], (err, results) => {
-    if (err) {
-      console.error("Erro no login:", err);
-      return res.status(500).json({ message: "Erro interno no servidor." });
-    }
-
-    if (results.length > 0) {
-      const usuario = results[0];
-      res.status(200).json({
-        message: "Login bem-sucedido.",
-        usuario: {
-          id: usuario.id,
-          nome: usuario.nome,
-          email: usuario.email
-        }
-      });
-    } else {
-      res.status(401).json({ message: "Email ou senha incorretos." });
-    }
-  });
 });
 
+  
 app.post("/cadastrar", (req, res) => {
   const { nome, email, senha, dataNascimento } = req.body;
 
@@ -541,8 +538,9 @@ app.post("/cadastrar", (req, res) => {
     return res.status(400).json({ message: "Todos os campos são obrigatórios." });
   }
 
-  const query = "INSERT INTO usuarios (nome, email, senha, dataNascimento) VALUES (?, ?, ?, ?)";
-  db.query(query, [nome, email, senha, dataNascimento], (err, result) => {
+  const query = "INSERT INTO usuarios (usuario_nome, usuario_email, usuario_data_nascimento, senha) VALUES (?, ?, ?, ?)";
+
+  db.query(query, [nome, email, dataNascimento, senha], (err, result) => {
     if (err) {
       if (err.code === "ER_DUP_ENTRY") {
         return res.status(409).json({ message: "E-mail já cadastrado." });
