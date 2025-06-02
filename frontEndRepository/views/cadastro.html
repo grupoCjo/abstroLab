@@ -2,12 +2,16 @@
 <html lang="pt-br">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Cadastro / Login</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
 </head>
+
 <body>
     <div class="text-center">
         <h2 class="mainTitle">BEM-VINDO DE VOLTA!</h2>
@@ -23,71 +27,149 @@
                 <!-- Campo Nome -->
                 <div class="input-group">
                     <i class="fa fa-user input-icon"></i>
-                    <input type="text" id="nome" name="nome" placeholder="Nome Completo" class="form-control">
+                    <input
+                      type="text"
+                      id="nome"
+                      name="nome"
+                      placeholder="Nome Completo"
+                      class="form-control"
+                    />
                 </div>
 
                 <!-- Campo E-mail -->
                 <div class="input-group mt-3">
                     <i class="fa fa-envelope input-icon"></i>
-                    <input type="email" id="email" name="email" placeholder="E-mail" class="form-control">
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      placeholder="E-mail"
+                      class="form-control"
+                    />
                 </div>
+
                 <!-- Campo Senha -->
                 <div class="input-group mt-3">
                     <i class="fa fa-lock input-icon"></i>
-                    <input type="password" id="senha" name="senha" placeholder="Senha" class="form-control">
+                    <input
+                      type="password"
+                      id="senha"
+                      name="senha"
+                      placeholder="Senha"
+                      class="form-control"
+                    />
                 </div>
+
                 <!-- Campo Confirmar Senha -->
                 <div class="input-group mt-3">
                     <i class="fa fa-lock input-icon"></i>
-                    <input type="password" id="confirmarSenha" name="confirmarSenha" placeholder="Confirmar Senha" class="form-control">
+                    <input
+                      type="password"
+                      id="confirmarSenha"
+                      name="confirmarSenha"
+                      placeholder="Confirmar Senha"
+                      class="form-control"
+                    />
                 </div>
+
                 <!-- Mensagem de erro -->
-                <div id="erroSenha" style="display: none; color: red; font-size: 0.9rem;"></div>
+                <div
+                  id="erroSenha"
+                  style="display: none; color: red; font-size: 0.9rem;"
+                ></div>
+
                 <!-- Campo Idade -->
                 <div class="input-group mt-3">
                     <i class="fa fa-calendar input-icon"></i>
-                    <input type="text" id="idade" name="idade" placeholder="Idade" class="form-control">
+                    <input
+                      type="text"
+                      id="idade"
+                      name="idade"
+                      placeholder="Idade"
+                      class="form-control"
+                    />
                 </div>
+
                 <!-- Campo Gênero -->
                 <div class="input-group mt-3">
                     <i class="fa fa-venus-mars input-icon"></i>
                     <div class="gender-options">
                         <label>
-                            <input type="radio" id="feminino" name="genero" value="feminino" class="gender-input"> F
+                            <input
+                              type="radio"
+                              id="feminino"
+                              name="genero"
+                              value="feminino"
+                              class="gender-input"
+                            />
+                            F
                         </label>
                         <label>
-                            <input type="radio" id="masculino" name="genero" value="masculino" class="gender-input"> M
+                            <input
+                              type="radio"
+                              id="masculino"
+                              name="genero"
+                              value="masculino"
+                              class="gender-input"
+                            />
+                            M
                         </label>
                         <label>
-                            <input type="radio" id="outro" name="genero" value="outro" class="gender-input"> Outro
+                            <input
+                              type="radio"
+                              id="outro"
+                              name="genero"
+                              value="outro"
+                              class="gender-input"
+                            />
+                            Outro
                         </label>
                     </div>
                 </div>
+
                 <button class="btnCadastro">Cadastrar-se</button>
-             </div>
+            </div>
         </div>
-                <!-- Container de Login -->
-                <div id="container-login" class="cardLogin">
-                    <div class="card-body">
-                        <div class = "LoginTitle">
-                            <h2>Entrar</h2> 
-                        </div>
-                        <div class="line-divider my-4"></div>
-                        <div class="input-group">
-                            <i class="fa fa-user input-icon"></i>
-                            <input type="text" id="email" name="email" placeholder="E-mail ou nome de usuário" class="form-control">
-                        </div>
-                        <div class="input-group mt-3">
-                            <i class="fa fa-lock input-icon"></i>
-                            <input type="password" id="senha" name="senha" placeholder="Senha" class="form-control">
-                        </div>
-                        <div class="btnEntrar">
-                            <button class="entrarBtn">Entrar</button>
-                        </div>
-                    </div>
+
+        <!-- Container de Login -->
+        <div id="container-login" class="cardLogin">
+            <div class="card-body">
+                <div class="LoginTitle">
+                    <h2>Entrar</h2>
                 </div>
-        
+                <div class="line-divider my-4"></div>
+
+                <div class="input-group">
+                    <i class="fa fa-user input-icon"></i>
+                    <input
+                      type="text"
+                      id="emailLogin"
+                      name="emailLogin"
+                      placeholder="E-mail ou nome de usuário"
+                      class="form-control"
+                    />
+                </div>
+
+                <div class="input-group mt-3">
+                    <i class="fa fa-lock input-icon"></i>
+                    <input
+                      type="password"
+                      id="senhaLogin"
+                      name="senhaLogin"
+                      placeholder="Senha"
+                      class="form-control"
+                    />
+                </div>
+
+                <div class="btnEntrar">
+                    <button id="btnEntrar" class="entrarBtn">Entrar</button>
+                </div>
+
+                <div id="erroLogin" style="color:red; display:none; margin-top:10px;"></div>
+            </div>
+        </div>
     </div>
+
     <script type="module" src="../js/script.js"></script>
 </body>
 
