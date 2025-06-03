@@ -12,14 +12,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const bars = document.querySelectorAll('.hamburger .bar');
         bars.forEach(bar => bar.classList.toggle('active'));
       });
+        inicializarPagina();
     });
 
   // Carrega o footer
   fetch('../views/footer.html')
-    .then(response => response.text())
-    .then(footerHTML => {
-      document.querySelector('body').insertAdjacentHTML('beforeend', footerHTML);
-    });
+  .then(response => response.text())
+  .then(footerHTML => {
+    document.querySelector('body').insertAdjacentHTML('beforeend', footerHTML);
+  });
 
   // Botão Começar redireciona p ../views/cadastro.html
   const beginBtn = document.getElementById("begin");
@@ -30,6 +31,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Carrossel
+if (document.querySelector('.carousel-items')) {
+
   let index = 0;
   function moveCarousel(step) {
     const carouselItems = document.querySelector('.carousel-items');
@@ -39,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   document.querySelector('.carousel-prev')?.addEventListener('click', () => moveCarousel(-1));
   document.querySelector('.carousel-next')?.addEventListener('click', () => moveCarousel(1));
-
+}
   const btnCadastro = document.querySelector(".btnCadastro");
 if (btnCadastro) {
   btnCadastro.addEventListener("click", async (e) => {
