@@ -7,26 +7,35 @@
     <link rel="stylesheet" href="../css/exercicio-style.css">
 </head>
 <body>
-    <div class="exercicio-wrapper">
-        <div class="progress-bar-container">
-            <div class="progress-bar" id="progressBar"></div>
-        </div>
-        <div class="exercicio-container">
-            <h2 id="titulo">Carregando...</h2>
-            <div id="pictograma-container"></div>
-            <p id="enunciado"></p>
-            <div class="alternativas-grid" id="alternativas-container">
-                </div>
-            <div class="action-buttons">
-                <button id="verificar" class="btn-action" disabled>Verificar</button>
-                <button id="proximo" class="btn-action" style="display: none;">Próximo</button>
-            </div>
-            <div class="feedback-container" id="feedback-container" style="display: none;">
-                <img id="feedback-icon" src="" alt="Feedback">
-                <p id="resultado"></p>
-            </div>
-        </div>
-    </div>
+    <main class="exercicios-page">
+  <div class="exercicio-wrapper" role="main" aria-label="Área de exercícios">
+    <section class="progress-bar-container" aria-label="Barra de progresso do exercício">
+      <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+    </section>
+
+    <section class="exercicio-container" aria-live="polite" aria-atomic="true">
+      <h2 id="titulo">Carregando...</h2>
+
+      <div id="pictograma-container" aria-label="Pictograma relacionado ao exercício" role="img"></div>
+
+      <p id="enunciado"></p>
+
+      <form id="alternativas-container" class="alternativas-grid" aria-label="Opções de resposta">
+        <!-- alternativas serão inseridas aqui dinamicamente -->
+      </form>
+
+      <div class="action-buttons">
+        <button id="verificar" class="btn-action" disabled aria-disabled="true">Verificar</button>
+        <button id="proximo" class="btn-action" style="display:none;">Próximo</button>
+      </div>
+
+      <div class="feedback-container" id="feedback-container" style="display:none;" role="alert" aria-live="assertive">
+        <img id="feedback-icon" src="" alt="" aria-hidden="true" />
+        <p id="resultado"></p>
+      </div>
+    </section>
+  </div>
+</main>
 
     <script>
         const SoundManager = {
@@ -258,12 +267,12 @@
 
             try {
                 // Carrega todos os exercícios para a barra de progresso e navegação
-                const todosResponse = await fetch('/api/exercicios');
+                const todosResponse = await fetch('/exercicios');
                 if (!todosResponse.ok) throw new Error('Falha ao carregar lista de exercícios.');
                 todosExercicios = await todosResponse.json();
                 
                 // Carrega os detalhes do exercício atual
-                const exercicioResponse = await fetch(`/api/exercicios/codigo/${codigo}`);
+                const exercicioResponse = await fetch(`/exercicios/codigo/${codigo}`);
                 if (!exercicioResponse.ok) {
                     const erro = await exercicioResponse.json();
                     throw new Error(erro.message || 'Falha ao carregar dados do exercício.');
