@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let exercicioAtual = null;
 
     try {
-        const todosResponse = await fetch('http://localhost:3000/api/exercicios');
+        const todosResponse = await fetch('http://localhost:3000/exercicios');
         todosExercicios = await todosResponse.json();
         
         const indiceAtual = todosExercicios.findIndex(e => e.exercicio_codigo === codigo);
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const progressoPercentual = ((indiceAtual + 1) / todosExercicios.length) * 100;
         progressBar.style.width = `${progressoPercentual}%`;
 
-        const response = await fetch(`http://localhost:3000/api/exercicios/codigo/${codigo}`);
+        const response = await fetch(`http://localhost:3000/exercicios/codigo/${codigo}`);
         if (!response.ok) {
             const erro = await response.json();
             throw new Error(erro.message);
