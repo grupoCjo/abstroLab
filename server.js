@@ -529,7 +529,7 @@ app.post("/login", async (req, res) => {
     const [usuarios] = await db.query("SELECT * FROM usuarios WHERE usuario_email = ?", [email]);
     const usuario = usuarios[0];
     
-    if (!usuario) {
+    if (!usuario_email) {
       return res.status(401).json({ message: "Email inválido" });
     }
 
