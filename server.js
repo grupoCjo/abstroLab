@@ -525,6 +525,7 @@ app.post("/login", async (req, res) => {
   console.log('Login:', email, senha); 
 
   try {
+    const db = require("./backEndRepository/dbConnection")
     const [usuarios] = await db.query("SELECT * FROM usuarios WHERE usuario_email = ?", [email]);
     const usuario = usuarios[0];
     
