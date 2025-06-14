@@ -44,9 +44,8 @@ CREATE TABLE exercicios (
     enunciado TEXT,
     alternativas TEXT,
     resposta_correta VARCHAR(255) NOT NULL,
-    nivel ENUM('iniciante', 'intermediario', 'avancado') DEFAULT 'iniciante',
-    codigo LONGTEXT
-);
+    nivel ENUM('iniciante', 'intermediario', 'avancado') DEFAULT 'iniciante'
+    );
 DELIMITER //
 
 CREATE TRIGGER before_insert_exercicios
