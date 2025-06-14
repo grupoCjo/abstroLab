@@ -1,3 +1,86 @@
+const SoundManager = {
+    sounds: {},
+    music: null,
+    volume: 0.5,
+    isMuted: false,
+    isMusicPlaying: false,
+    soundUrls: {
+        click: 'https://cdn.pixabay.com/audio/2022/03/15/audio_2c63821366.mp3',
+        correct: 'https://cdn.pixabay.com/audio/2022/03/10/audio_c3b184b72f.mp3',
+        incorrect: 'https://cdn.pixabay.com/audio/2021/08/04/audio_a46cf2f010.mp3',
+        levelComplete: 'https://cdn.pixabay.com/audio/2022/08/31/audio_145d2e4684.mp3'
+    },
+    musicUrl: 'https://cdn.pixabay.com/audio/2024/05/13/audio_baf7a7f45a.mp3',
+
+    init() {
+        this.isMuted = localStorage.getItem('abstrolab_muted') === 'true';
+        this.volume = parseFloat(localStorage.getItem('abstrolab_volume') || '0.5');
+
+        for (const key in this.soundUrls) {
+            this.sounds[key] = new Audio(this.soundUrls[key]);
+            this.sounds[key].volume = this.volume;
+        }
+
+        this.music = new Audio(this.musicUrl);
+        this.music.loop = true;
+        this.music.volume = this.volume;
+
+        if (this.isMuted) this.mute();
+    },
+
+    play(soundName) {
+        if (!this.isMuted && this.sounds[soundName]) {
+            this.sounds[soundName].currentTime = 0;
+            this.sounds[soundName].play().catch(e => console.error("Erro ao tocar som:", e));
+        }
+    },
+
+    startMusic() {
+        if (!this.isMusicPlaying && !this.isMuted) {
+            const playPromise = this.music.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => { this.isMusicPlaying = true; })
+                    .catch(() => console.log("Música aguardando interação do usuário para iniciar."));
+            }
+        }
+    },
+
+    stopMusic() {
+        if (this.music) {
+            this.music.pause();
+            this.music.currentTime = 0;
+        }
+        this.isMusicPlaying = false;
+    },
+
+    setVolume(value) {
+        this.volume = parseFloat(value);
+        localStorage.setItem('abstrolab_volume', this.volume.toString());
+        if (!this.isMuted) {
+            for (const key in this.sounds) this.sounds[key].volume = this.volume;
+            if (this.music) this.music.volume = this.volume;
+        }
+    },
+
+    toggleMute() {
+        this.isMuted = !this.isMuted;
+        localStorage.setItem('abstrolab_muted', this.isMuted.toString());
+        this.isMuted ? this.mute() : this.unmute();
+        return this.isMuted;
+    },
+
+    mute() {
+        for (const key in this.sounds) this.sounds[key].volume = 0;
+        if (this.music) this.music.volume = 0;
+    },
+
+    unmute() {
+        this.setVolume(parseFloat(localStorage.getItem('abstrolab_volume') || '0.5'));
+    }
+};
+
+SoundManager.init();
+
 document.addEventListener('DOMContentLoaded', async () => {
     const tituloEl = document.getElementById('titulo');
     const enunciadoEl = document.getElementById('enunciado');
@@ -10,12 +93,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     const feedbackIconEl = document.getElementById('feedback-icon');
     const progressBar = document.getElementById('progressBar');
 
-    const iconCorrect = 'https://cdn-icons-png.flaticon.com/512/4315/4315445.png'; // Ícone de "joinha"
-    const iconIncorrect = 'https://cdn-icons-png.flaticon.com/512/4315/4315408.png'; // Ícone de "negativo"
-    const iconComplete = 'https://cdn-icons-png.flaticon.com/512/2920/2920325.png'; // Ícone de "troféu"
+    const iconCorrect = 'https://cdn-icons-png.flaticon.com/512/4315/4315445.png';
+    const iconIncorrect = 'https://cdn-icons-png.flaticon.com/512/4315/4315408.png';
+    const iconComplete = 'https://cdn-icons-png.flaticon.com/512/2920/2920325.png';
 
     const urlParams = new URLSearchParams(window.location.search);
     const codigo = urlParams.get('codigo');
+
+    let todosExercicios = [];
+    let exercicioAtual = null;
 
     if (!codigo) {
         tituloEl.textContent = 'Erro';
@@ -23,58 +109,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    let todosExercicios = [];
-    let exercicioAtual = null;
-
-    try {
-        const todosResponse = await fetch('http://localhost:3000/exercicios');
-        todosExercicios = await todosResponse.json();
-        
-        const indiceAtual = todosExercicios.findIndex(e => e.exercicio_codigo === codigo);
-        exercicioAtual = todosExercicios[indiceAtual];
-
-        if (!exercicioAtual) {
-            throw new Error('Exercício não encontrado.');
-        }
-
-        const progressoPercentual = ((indiceAtual + 1) / todosExercicios.length) * 100;
-        progressBar.style.width = `${progressoPercentual}%`;
-
-        const response = await fetch(`http://localhost:3000/exercicios/codigo/${codigo}`);
-        if (!response.ok) {
-            const erro = await response.json();
-            throw new Error(erro.message);
-        }
-        const exercicio = await response.json();
-        
-        renderizarExercicio(exercicio);
-
-    } catch (error) {
-        console.error('Erro ao carregar o exercício:', error);
-        tituloEl.textContent = 'Erro ao Carregar';
-        enunciadoEl.textContent = error.message;
-    }
+    document.body.addEventListener('click', () => SoundManager.startMusic(), { once: true });
 
     async function renderizarExercicio(exercicio) {
+        exercicioAtual = exercicio;
         tituloEl.textContent = exercicio.titulo;
         enunciadoEl.textContent = exercicio.enunciado;
-
         alternativasEl.innerHTML = '';
-        
-        const alternativas = [
-            exercicio.alternativa_1,
-            exercicio.alternativa_2,
-            exercicio.alternativa_3,
-            exercicio.alternativa_4,
-        ];
 
-        alternativas.forEach((alt, index) => {
+        const alternativasObj = JSON.parse(exercicio.alternativas);
+        Object.entries(alternativasObj).forEach(([key, alternativaTexto]) => {
             const card = document.createElement('div');
             card.className = 'alternativa-card';
-            card.innerHTML = `<input type="radio" name="resposta" id="alt${index + 1}" value="${index + 1}">
-                              <label for="alt${index + 1}">${alt}</label>`;
-            
+            card.innerHTML = `<input type="radio" name="resposta" value="${alternativaTexto}">
+                              <label>${alternativaTexto}</label>`;
+
             card.addEventListener('click', () => {
+                SoundManager.play('click');
                 document.querySelectorAll('.alternativa-card').forEach(c => c.classList.remove('selected'));
                 card.classList.add('selected');
                 card.querySelector('input').checked = true;
@@ -84,70 +135,107 @@ document.addEventListener('DOMContentLoaded', async () => {
             alternativasEl.appendChild(card);
         });
 
+        await buscarPictograma(exercicio.titulo);
 
-        buscarPictograma(exercicio.titulo);
+        verificarBtn.style.display = 'block';
+        proximoBtn.style.display = 'none';
+        feedbackEl.style.display = 'none';
+        verificarBtn.disabled = true;
     }
 
     async function buscarPictograma(titulo) {
+        if (!titulo) return;
         const palavrasChave = titulo.replace(/[?.,!]/g, '').split(" ");
         let palavraBusca = palavrasChave[palavrasChave.length - 1];
-        if (palavraBusca.length <= 2 && palavrasChave.length > 1) {
+        if (palavraBusca && palavraBusca.length <= 2 && palavrasChave.length > 1) {
             palavraBusca = palavrasChave[palavrasChave.length - 2];
         }
 
         try {
-            const pictogramaResponse = await fetch(`http://localhost:3000/api/pictogramas/${palavraBusca}`);
+            const pictogramaResponse = await fetch(`/api/pictogramas/${palavraBusca}`);
+            if (!pictogramaResponse.ok) throw new Error('Falha ao buscar pictograma');
+
             const pictogramas = await pictogramaResponse.json();
-            if (pictogramas.length > 0) {
-                const pictogramaURL = `https://api.arasaac.org/v1/pictograms/${pictogramas[0]._id}`;
-                pictogramaEl.innerHTML = `<img src="${pictogramaURL}" alt="${titulo}">`;
+            if (pictogramas.length > 0 && pictogramas[0]._id) {
+                const pictogramaURL = `https://api.arasaac.org/api/pictograms/${pictogramas[0]._id}?download=false`;
+                pictogramaEl.innerHTML = `<img src="${pictogramaURL}" alt="Pictograma para ${titulo}">`;
+            } else {
+                pictogramaEl.innerHTML = '';
             }
         } catch (error) {
             console.error("Erro ao buscar pictograma:", error);
+            pictogramaEl.innerHTML = '';
         }
     }
 
     verificarBtn.addEventListener('click', () => {
-        const selecionada = document.querySelector('input[name="resposta"]:checked');
-        if (!selecionada) return;
+        SoundManager.play('click');
+        const selecionadaInput = document.querySelector('input[name="resposta"]:checked');
+        if (!selecionadaInput) return;
 
-        const respostaEscolhida = Number(selecionada.value);
-        const respostaCorreta = exercicioAtual.resposta_correta;
-        
-        const alternativasDoExercicio = JSON.parse(exercicioAtual.alternativas);
-        const valorRespostaCorreta = exercicioAtual.resposta_correta;
-        const chaveCorreta = Object.keys(alternativasDoExercicio).find(key => alternativasDoExercicio[key] === valorRespostaCorreta);
+        const respostaEscolhida = selecionadaInput.value;
 
         feedbackEl.style.display = 'flex';
         verificarBtn.style.display = 'none';
         proximoBtn.style.display = 'block';
 
-        if (respostaEscolhida === Number(chaveCorreta)) {
+        if (respostaEscolhida === exercicioAtual.resposta_correta) {
+            SoundManager.play('correct');
             feedbackEl.className = 'feedback-container correct';
             resultadoEl.textContent = 'Muito bem!';
             feedbackIconEl.src = iconCorrect;
         } else {
+            SoundManager.play('incorrect');
             feedbackEl.className = 'feedback-container incorrect';
-            resultadoEl.textContent = `Quase! A resposta certa era: ${valorRespostaCorreta}`;
+            resultadoEl.textContent = `Quase! A resposta certa era: ${exercicioAtual.resposta_correta}`;
             feedbackIconEl.src = iconIncorrect;
         }
     });
 
     proximoBtn.addEventListener('click', () => {
-        const indiceAtual = todosExercicios.findIndex(e => e.exercicio_codigo === codigo);
+        SoundManager.play('click');
+        const indiceAtualNoArray = todosExercicios.findIndex(e => e.exercicio_codigo === codigo);
 
-        if (indiceAtual < todosExercicios.length - 1) {
-            const proximoExercicio = todosExercicios[indiceAtual + 1];
+        if (indiceAtualNoArray < todosExercicios.length - 1) {
+            const proximoExercicio = todosExercicios[indiceAtualNoArray + 1];
             window.location.href = `exercicio.html?codigo=${proximoExercicio.exercicio_codigo}`;
         } else {
-            
+            SoundManager.play('levelComplete');
+            SoundManager.stopMusic();
             tituloEl.textContent = "Trilha Concluída!";
-            pictogramaEl.innerHTML = `<img src="${iconComplete}" alt="Trilha Concluída">`;
-            enunciadoEl.textContent = "Parabéns! Você completou todos os exercícios desta trilha.";
+            pictogramaEl.innerHTML = `<img src="${iconComplete}" alt="Trilha Concluída" style="max-width:150px;">`;
+            enunciadoEl.innerHTML = "<p style='font-size:1.5em; font-weight:bold;'>Parabéns! Você completou todos os exercícios desta trilha.</p>";
             alternativasEl.style.display = 'none';
             verificarBtn.style.display = 'none';
-            proximoBtn.textContent = 'Voltar para a Trilha';
-            proximoBtn.addEventListener('click', () => { window.location.href = 'trilha.html'; });
+            proximoBtn.textContent = 'Voltar para Trilhas';
+            proximoBtn.onclick = () => {
+                SoundManager.play('click');
+                window.location.href = 'trilha.html';
+            };
         }
     });
+
+    try {
+        const todosResponse = await fetch('/exercicios');
+        if (!todosResponse.ok) throw new Error('Falha ao carregar lista de exercícios.');
+        todosExercicios = await todosResponse.json();
+
+        const exercicioDetalhado = todosExercicios.find(e => e.exercicio_codigo === codigo);
+        if (!exercicioDetalhado) throw new Error('Exercício não encontrado.');
+
+        const indiceAtual = todosExercicios.findIndex(e => e.exercicio_codigo === codigo);
+        if (indiceAtual !== -1 && todosExercicios.length > 0) {
+            const progressoPercentual = ((indiceAtual + 1) / todosExercicios.length) * 100;
+            progressBar.style.width = `${progressoPercentual}%`;
+        }
+
+        await renderizarExercicio(exercicioDetalhado);
+
+    } catch (error) {
+        console.error('Erro ao carregar o exercício:', error);
+        tituloEl.textContent = 'Erro ao Carregar';
+        enunciadoEl.innerHTML = `<p style="color:red;">${error.message}. Tente recarregar a página.</p>`;
+        alternativasEl.style.display = 'none';
+        verificarBtn.style.display = 'none';
+    }
 });

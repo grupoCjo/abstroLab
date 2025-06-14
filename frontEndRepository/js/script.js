@@ -13,7 +13,10 @@ function carregarHeaderFooter() {
     .then(html => {
       document.body.insertAdjacentHTML('afterbegin', html);
       setupHamburgerMenu();
-      inicializarPagina();
+      // Se a página tiver uma função global chamada inicializarPagina, executa
+      if (typeof window.inicializarPagina === 'function') {
+        window.inicializarPagina();
+      }
     });
 
   // Carrega o footer
