@@ -529,7 +529,7 @@ app.post("/login", async (req, res) => {
     const [usuarios] = await db.query("SELECT email, FROM usuarios WHERE usuario_email = ?", [email]);
     console.log("USUARIOS:: " + JSON.stringify(usuarios));
     const usuario = usuarios[0];
-    console.log("USER EMAIL:: " + usuario.usuario_email);
+    // console.log("USER EMAIL:: " + usuario.usuario_email);
   
     
     if (usuario.usuario_email !== email) {
