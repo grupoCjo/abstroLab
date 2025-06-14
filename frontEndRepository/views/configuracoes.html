@@ -48,62 +48,70 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
+        const SoundManager = {
+            sounds: {},
+            music: null,
+            volume: 0.5,
+            isMuted: false,
+            isMusicPlaying: false,
+            soundUrls: {
+                click: 'https://cdn.pixabay.com/audio/2022/03/15/audio_2c63821366.mp3',
+                correct: 'https://cdn.pixabay.com/audio/2022/03/10/audio_c3b184b72f.mp3',
+                incorrect: 'https://cdn.pixabay.com/audio/2021/08/04/audio_a46cf2f010.mp3',
+                levelComplete: 'https://cdn.pixabay.com/audio/2022/08/31/audio_145d2e4684.mp3'
+            },
+            musicUrl: 'https://cdn.pixabay.com/audio/2024/05/13/audio_baf7a7f45a.mp3',
+            init() {
+                this.isMuted = localStorage.getItem('abstrolab_muted') === 'true';
+                this.volume = parseFloat(localStorage.getItem('abstrolab_volume') || '0.5');
+                for (const key in this.soundUrls) {
+                    this.sounds[key] = new Audio(this.soundUrls[key]);
+                    this.sounds[key].volume = this.volume;
+                }
+                this.music = new Audio(this.musicUrl);
+                this.music.loop = true;
+                this.music.volume = this.volume;
+                if (this.isMuted) { this.mute(); }
+            },
+            play(soundName) {
+                if (!this.isMuted && this.sounds[soundName]) {
+                    this.sounds[soundName].currentTime = 0;
+                    this.sounds[soundName].play().catch(e => console.error("Erro ao tocar som:", e));
+                }
+            },
+            startMusic() { /* ... */ },
+            stopMusic() { /* ... */ },
+            setVolume(value) {
+                this.volume = value;
+                localStorage.setItem('abstrolab_volume', this.volume);
+                if (!this.isMuted) {
+                     for (const key in this.sounds) { this.sounds[key].volume = this.volume; }
+                    if (this.music) { this.music.volume = this.volume; }
+                }
+            },
+            toggleMute() {
+                this.isMuted = !this.isMuted;
+                localStorage.setItem('abstrolab_muted', this.isMuted);
+                this.isMuted ? this.mute() : this.unmute();
+                return this.isMuted;
+            },
+            mute() {
+                for (const key in this.sounds) { this.sounds[key].volume = 0; }
+                if (this.music) { this.music.volume = 0; }
+            },
+            unmute() { this.setVolume(this.volume); }
+        };
+        SoundManager.init();
 
-            const SoundManager = {
-                sounds: {},
-                music: null,
-                volume: 0.5,
-                isMuted: false,
-                isMusicPlaying: false,
-                soundUrls: {
-                    click: 'https://cdn.pixabay.com/audio/2022/03/15/audio_2c63821366.mp3',
-                    correct: 'https://cdn.pixabay.com/audio/2022/03/10/audio_c3b184b72f.mp3',
-                    incorrect: 'https://cdn.pixabay.com/audio/2021/08/04/audio_a46cf2f010.mp3',
-                    levelComplete: 'https://cdn.pixabay.com/audio/2022/08/31/audio_145d2e4684.mp3'
-                },
-                musicUrl: 'https://cdn.pixabay.com/audio/2024/05/13/audio_baf7a7f45a.mp3',
-                init() {
-                    this.isMuted = localStorage.getItem('abstrolab_muted') === 'true';
-                    this.volume = parseFloat(localStorage.getItem('abstrolab_volume') || '0.5');
-                    for (const key in this.soundUrls) {
-                        this.sounds[key] = new Audio(this.soundUrls[key]);
-                        this.sounds[key].volume = this.volume;
-                    }
-                    this.music = new Audio(this.musicUrl);
-                    this.music.loop = true;
-                    this.music.volume = this.volume;
-                    if (this.isMuted) { this.mute(); }
-                },
-                play(soundName) {
-                    if (!this.isMuted && this.sounds[soundName]) {
-                        this.sounds[soundName].currentTime = 0;
-                        this.sounds[soundName].play().catch(e => console.error("Erro ao tocar som:", e));
-                    }
-                },
-                startMusic() { /* ... */ },
-                stopMusic() { /* ... */ },
-                setVolume(value) {
-                    this.volume = value;
-                    localStorage.setItem('abstrolab_volume', this.volume);
-                    if (!this.isMuted) {
-                         for (const key in this.sounds) { this.sounds[key].volume = this.volume; }
-                        if (this.music) { this.music.volume = this.volume; }
-                    }
-                },
-                toggleMute() {
-                    this.isMuted = !this.isMuted;
-                    localStorage.setItem('abstrolab_muted', this.isMuted);
-                    this.isMuted ? this.mute() : this.unmute();
-                    return this.isMuted;
-                },
-                mute() {
-                    for (const key in this.sounds) { this.sounds[key].volume = 0; }
-                    if (this.music) { this.music.volume = 0; }
-                },
-                unmute() { this.setVolume(this.volume); }
-            };
-            SoundManager.init();
+        function applyTheme(themeName) {
+            document.body.className = `theme-${themeName}`;
+            document.querySelectorAll(".theme-option").forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.theme === themeName);
+            });
+            localStorage.setItem('abstrolab_theme', themeName);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
             const USUARIO_ID = 1;
             const inputNome = document.getElementById("input-nome");
             const btnSalvarNome = document.getElementById("btn-salvar-nome");
@@ -123,10 +131,12 @@
             btnSalvarNome.addEventListener("click", async () => {
                 SoundManager.play('click');
                 const novoNome = inputNome.value.trim();
+                
                 if (!novoNome) {
-                    showFeedback(feedbackNome, "Por favor, insira um nome.", "error");
+                    showFeedback(feedbackNome, "Nome de usuário não alterado. Campo vazio.", "info");
                     return;
                 }
+
                 try {
                     const response = await fetch(`/api/usuarios/${USUARIO_ID}`, {
                         method: 'PUT',
@@ -140,14 +150,6 @@
                     showFeedback(feedbackNome, `Erro: ${error.message}`, "error");
                 }
             });
-
-            function applyTheme(themeName) {
-                body.className = `theme-${themeName}`;
-                themeOptions.forEach(btn => {
-                    btn.classList.toggle('active', btn.dataset.theme === themeName);
-                });
-                localStorage.setItem('abstrolab_theme', themeName);
-            }
 
             themeOptions.forEach(button => {
                 button.addEventListener("click", async () => {
@@ -170,7 +172,6 @@
 
             volumeSlider.addEventListener("input", (e) => {
                 SoundManager.setVolume(e.target.value);
-                SoundManager.play('click');
             });
 
             btnMute.addEventListener("click", () => {
