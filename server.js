@@ -525,19 +525,17 @@ app.post("/login", async (req, res) => {
   console.log('Login:', email, senha); 
 
   try {
-    const db = require("./backEndRepository/dbConnection")
     const [usuarios] = await db.query("SELECT * FROM usuarios WHERE usuario_email = ?", [email]);
-    console.log("USUARIOS:: " + JSON.stringify(usuarios));
     const usuario = usuarios[0];
-    // console.log("USER EMAIL:: " + usuario.usuario_email);
-  
     
-    if (usuario.usuario_email !== email) {
-      return res.status(401).json({ message: "Email inválido" });
+    if (!usuario) {
+      return res.status(401).json({ message: "Email ou senha inválidos" });
     }
 
-    if (usuario.usuario_senha !== senha) {
-      return res.status(401).json({ message: "Senha inválida" });
+    const passwordIsValid = await bcrypt.compare(senha, usuario.usuario_senha);
+
+    if (!passwordIsValid) {
+      return res.status(401).json({ message: "Email ou senha inválidos" });
     }
 
     res.status(200).json({
