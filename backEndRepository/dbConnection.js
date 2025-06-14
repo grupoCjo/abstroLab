@@ -14,7 +14,8 @@ const pool = mysql.createPool({
   host: process.env.DB_HOST,            // Pega o host do banco de dados do arquivo .env
   user: process.env.DB_USER,            // Usuário do banco
   password: process.env.DB_PASSWORD,    // Senha do banco
-  database: process.env.DB_DATABASE,    // Nome do banco de dados
+  database: process.env.DB_DATABASE,  // Nome do banco de dados
+  port: process.env.PORT,   //PORTA DO DB
   waitForConnections: true,             // Fica aguardando caso as conexões estejam ocupadas
   connectionLimit: process.env.DB_CONNECTION_LIMIT, // Limite máximo de conexões simultâneas
   queueLimit: 0                         // Sem limite de fila para requisições pendentes
