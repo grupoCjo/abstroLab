@@ -533,6 +533,9 @@ app.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Email ou senha inválidos" });
     }
 
+    console.log('Senha do banco:' + usuario.usuario_senha);
+    console.log('Senha digitada:' + senha);
+
     const passwordIsValid = await bcrypt.compare(senha, usuario.usuario_senha);
 
     if (!passwordIsValid) {
