@@ -528,6 +528,8 @@ app.post("/login", async (req, res) => {
     const db = require("./backEndRepository/dbConnection")
     const [usuarios] = await db.query("SELECT * FROM usuarios WHERE usuario_email = ?", [email]);
     const usuario = usuarios[0];
+    console.log("USER EMAIL:: ", usuario.usuario_email);
+  
     
     if (usuario.usuario_email !== email) {
       return res.status(401).json({ message: "Email inválido" });
