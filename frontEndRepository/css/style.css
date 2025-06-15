@@ -309,25 +309,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     padding: 5px;
     border: 10px;
 }
-.bolinha {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin: 7px;
-    background-color: #E3218A;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    font-size: 18px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.bolinha:hover {
-   background-color: #e9e77b; 
-}
 
 #imagem {
     width: 100%;
@@ -562,18 +543,27 @@ button#verificar:hover {
 }
 
 .bolinha {
-  width: 28px;
-  height: 28px;
   background: linear-gradient(180deg, rgba(76, 170, 207, 1) 0%, rgba(255, 179, 179, 1) 100%);
   border-radius: 50%;
   box-shadow: 0 0 8px rgba(13, 110, 253, 0.5);
   cursor: pointer;
   transition: background-color 0.3s ease;
   flex-shrink: 0; /* para não encolher */
+  width: 60px;    
+  height: 60px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  font-size: 1.3rem;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(13, 110, 253, 0.5);
+  transition: background-color 0.3s ease;
 }
-
 .bolinha:hover {
-  background-color: #084cd6;
+    transition: background-color 0.3s ease;
+    background-color: #e9e77b; 
 }
 
 .linha {
@@ -591,22 +581,6 @@ button#verificar:hover {
   padding: 10px 0;
 }
 
-.bolinha {
-  width: 60px;    /* bolinhas maiores */
-  height: 60px;
-  background-color: #0d6efd;
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 700;
-  font-size: 1.3rem;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(13, 110, 253, 0.5);
-  transition: background-color 0.3s ease;
-}
 
-.bolinha:hover {
-  background-color: #084cd6;
-}
+
+
