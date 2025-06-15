@@ -1,0 +1,239 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+/* Variáveis de tema para a página da trilha */
+body.trilha-page.theme-light {
+    --trilha-bg-start: #f8c6d2;
+    --trilha-bg-end: #e0f7fa;
+    --trilha-card-bg: #FFFFFF;
+    --trilha-text-color: #4A4A4A;
+    --trilha-text-light: #6c757d;
+    --trilha-primary-bolinha: #ff8fab;
+    --trilha-secondary-bolinha: #81d4fa;
+    --trilha-bolinha-shadow: rgba(255, 139, 171, 0.4);
+    --trilha-bolinha-hover: #e0f2f7;
+    --trilha-bolinha-completed-bg: #d4edda;
+    --trilha-bolinha-completed-text: #155724;
+    --trilha-bolinha-completed-border: #28a745;
+}
+
+body.trilha-page.theme-dark {
+    --trilha-bg-start: #1a1a2e;
+    --trilha-bg-end: #22223b;
+    --trilha-card-bg: #2c2c47;
+    --trilha-text-color: #e0e0e0;
+    --trilha-text-light: #a0a0a0;
+    --trilha-primary-bolinha: #5c2c6d; /* Roxo escuro */
+    --trilha-secondary-bolinha: #2c5f7d; /* Azul acinzentado escuro */
+    --trilha-bolinha-shadow: rgba(92, 44, 109, 0.4);
+    --trilha-bolinha-hover: #3c3c5f;
+    --trilha-bolinha-completed-bg: #215e47;
+    --trilha-bolinha-completed-text: #e0e0e0;
+    --trilha-bolinha-completed-border: #5cb85c;
+}
+
+body.trilha-page.theme-pink {
+    --trilha-bg-start: #ffebee;
+    --trilha-bg-end: #fce4ec;
+    --trilha-card-bg: #ffffff;
+    --trilha-text-color: #c2185b;
+    --trilha-text-light: #f48fb1;
+    --trilha-primary-bolinha: #e91e63;
+    --trilha-secondary-bolinha: #ffc0cb;
+    --trilha-bolinha-shadow: rgba(233, 30, 99, 0.4);
+    --trilha-bolinha-hover: #ffcdd2;
+    --trilha-bolinha-completed-bg: #f8bbd0;
+    --trilha-bolinha-completed-text: #ad1457;
+    --trilha-bolinha-completed-border: #e91e63;
+}
+
+
+/* Estilos base para a página da trilha */
+.trilha-page {
+    background: linear-gradient(120deg, var(--trilha-bg-start), var(--trilha-bg-end));
+    font-family: var(--font-family);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding-top: 80px; /* Espaço para o header fixo */
+    color: var(--trilha-text-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.trilha-main-content {
+    flex-grow: 1;
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 60px; /* Espaço para o footer fixo */
+}
+
+.trilha-header {
+    margin-bottom: 50px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    padding-top: 20px;
+}
+
+.trilha-header .section-title {
+    font-size: 3em;
+    color: var(--trilha-primary-bolinha);
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.trilha-header p {
+    font-size: 1.2em;
+    color: var(--trilha-text-light);
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: var(--trilha-primary-bolinha);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.2s ease;
+}
+.back-link:hover {
+    color: var(--trilha-secondary-bolinha);
+}
+
+/* Container da Grade de Bolinhas */
+.trilha-grid-container {
+    background-color: var(--trilha-card-bg);
+    border-radius: var(--border-radius-main);
+    box-shadow: var(--shadow-strong);
+    padding: 40px;
+    width: 100%;
+    max-width: 900px; /* Ajuste a largura máxima conforme necessário */
+    display: flex; /* Usar flexbox para alinhar as bolinhas */
+    flex-wrap: wrap; /* Permitir que as bolinhas quebrem para a próxima linha */
+    justify-content: center; /* Centralizar as bolinhas */
+    gap: 25px; /* Espaçamento entre as bolinhas */
+}
+
+.bolinhas-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px; /* Espaçamento entre os itens */
+    width: 100%;
+}
+
+/* Estilo para cada bolinha de exercício */
+.bolinha {
+    width: 80px; /* Bolinhas maiores para melhor toque */
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--trilha-primary-bolinha), var(--trilha-secondary-bolinha));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.8rem; /* Tamanho do número maior */
+    cursor: pointer;
+    box-shadow: 0 4px 15px var(--trilha-bolinha-shadow);
+    transition: all 0.3s ease;
+    flex-shrink: 0; /* Não permite que as bolinhas encolham */
+    position: relative; /* Para a linha de conexão */
+}
+
+.bolinha:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 8px 25px var(--trilha-bolinha-shadow);
+}
+
+/* Indicador de exercício completo */
+.bolinha.completed {
+    background: var(--trilha-bolinha-completed-bg); /* Cor de fundo para completo */
+    color: var(--trilha-bolinha-completed-text); /* Cor do texto para completo */
+    border: 3px solid var(--trilha-bolinha-completed-border);
+}
+
+.bolinha.completed:hover {
+    background: var(--trilha-bolinha-completed-border);
+    color: white;
+}
+
+
+/* Esqueletos de carregamento */
+.skeleton-bolinha {
+    background-color: #e0e0e0;
+    animation: pulse 1.5s infinite ease-in-out;
+    cursor: default;
+    box-shadow: none;
+    pointer-events: none; /* Desabilita cliquess durante o carregamento */
+}
+
+@keyframes pulse {
+    0% { background-color: #e0e0e0; }
+    50% { background-color: #f0f0f0; }
+    100% { background-color: #e0e0e0; }
+}
+
+/* Mensagem de exercícios não disponíveis */
+.trilha-empty-message {
+    padding: 25px 30px;
+    font-size: 1.3em;
+    font-weight: 600;
+    text-align: center;
+    border-radius: var(--border-radius-main);
+    box-shadow: var(--shadow-light);
+    width: 100%;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .trilha-page {
+        padding-top: 70px;
+    }
+    .trilha-main-content {
+        padding: 20px 15px;
+    }
+    .trilha-header .section-title {
+        font-size: 2.5em;
+    }
+    .trilha-header p {
+        font-size: 1em;
+    }
+    .back-link {
+        top: 10px;
+        left: 10px;
+        font-size: 0.9em;
+    }
+    .trilha-grid-container {
+        padding: 25px;
+        gap: 15px;
+    }
+    .bolinha {
+        width: 65px;
+        height: 65px;
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .trilha-header .section-title {
+        font-size: 2em;
+    }
+    .bolinha {
+        width: 55px;
+        height: 55px;
+        font-size: 1.3rem;
+    }
+    .trilha-grid-container {
+        gap: 10px;
+    }
+}

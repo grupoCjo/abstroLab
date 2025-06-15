@@ -28,9 +28,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
         
       // CORREÇÃO AQUI: Adicionado o prefixo '../img/' para as imagens de avatar.
-      let avatarPath = "../img/boy.png"; // Padrão masculino
+      let avatarPath = "../img/boy.jpg"; // Padrão masculino
       if (usuario.usuario_genero === "feminino") {
-        avatarPath = "../img/girl.png";
+        avatarPath = "../img/girl.jpg";
       } else if (usuario.usuario_genero === "outro") {
         avatarPath = "../img/neutral.png"; // Usar uma imagem neutra local
       }

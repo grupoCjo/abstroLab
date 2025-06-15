@@ -1,13 +1,15 @@
-document.addEventListener("DOMContentLoaded", () => {
-  // Define as páginas que não devem carregar o header e o footer
-  const noHeaderFooterPages = ['configuracoes.html', 'paginaInicial.html']; // Adicionado paginaInicial.html
+document.addEventListener("DOMContentLoaded", async () => {
+  // Define as páginas que não devem carregar o header e o footer via JS (elas já têm no HTML)
+  // Mas todas devem aplicar o tema.
+  const noHeaderFooterPages = ['configuracoes.html', 'paginaInicial.html', 'exercicio.html', 'trilha.html', 'contato.html', 'sobre.html']; 
   const currentPage = window.location.pathname.split('/').pop();
 
+  // Aplica o tema imediatamente para todas as páginas que o suportam
+  await aplicarTemaSalvo();
+
+  // Carrega o header e footer apenas para as páginas que não são declaradas como "noHeaderFooterPages"
   if (!noHeaderFooterPages.includes(currentPage)) {
     carregarHeaderFooter();
-  } else {
-    // Para páginas sem header/footer, apenas aplica o tema salvo
-    aplicarTemaSalvo();
   }
 
   inicializarEventosGlobais();
@@ -25,7 +27,6 @@ function carregarHeaderFooter() {
     .then(html => {
       document.body.insertAdjacentHTML('afterbegin', html);
       setupHamburgerMenu();
-      aplicarTemaSalvo(); // Aplica o tema após o header ser carregado
     })
     .catch(error => console.error("Erro ao carregar o header:", error));
 
@@ -283,11 +284,11 @@ async function aplicarTemaSalvo() {
                 savedTheme = config.tema;
                 localStorage.setItem('abstrolab_theme', savedTheme); // Atualiza o localStorage com o tema do DB
             } else if (response.status === 404) {
-                // Se não houver configuração, usar o padrão 'light' e salvar no banco
+                // Se não houver configuração para o usuário no DB, define como 'light'
+                // e salva no localStorage. O salvamento no DB ocorrerá se o usuário
+                // for para a página de configurações e salvar suas preferências.
                 savedTheme = 'light';
-                // AQUI, NÃO SALVAMOS O TEMA NO DB DIRETAMENTE.
-                // O salvamento inicial de "light" acontecerá apenas quando o usuário salvar as configurações
-                // ou se a página inicial for carregada e detectar a ausência e tentar aplicar.
+                localStorage.setItem('abstrolab_theme', savedTheme);
             } else {
                 console.error("Erro ao buscar configurações do usuário:", await response.text());
                 // Fallback para o tema salvo localmente ou padrão
