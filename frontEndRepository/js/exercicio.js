@@ -10,9 +10,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const feedbackIconEl = document.getElementById('feedback-icon');
     const progressBar = document.getElementById('progressBar');
 
-    const iconCorrect = '../img/correct.png'; // Caminho local
-    const iconIncorrect = '../img/incorrect.png'; // Caminho local
-    const iconComplete = '../img/complete.png'; // Caminho local
+    const iconCorrect = '../img/correct.png';
+    const iconIncorrect = '../img/incorrect.png'; 
+    const iconComplete = '../img/complete.png'; 
 
     const urlParams = new URLSearchParams(window.location.search);
     const codigo = urlParams.get('codigo');
