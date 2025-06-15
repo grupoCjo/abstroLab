@@ -1,4 +1,71 @@
-/* Reset e Base */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+/* Base Variables */
+:root {
+    --primary-color: #ff8fab; /* Rosa vibrante */
+    --secondary-color: #81d4fa; /* Azul claro */
+    --text-dark: #333;
+    --text-light: #5d6a79;
+    --bg-gradient-start: #f8c6d2;
+    --bg-gradient-end: #e0f7fa;
+    --card-bg: #FFFFFF;
+    --shadow-light: 0 4px 10px rgba(0, 0, 0, 0.1);
+    --shadow-strong: 0 10px 30px rgba(0, 0, 0, 0.15);
+    --border-radius-main: 15px;
+    --border-radius-small: 8px;
+    --transition-speed: 0.3s;
+    --font-family: 'Poppins', sans-serif;
+    --input-border-color: #dee2e6; /* Cor padrão para bordas de input */
+    --input-bg: #fdfdfd; /* Cor padrão para background de input */
+    --error-color: #dc3545; /* Cor para mensagens de erro */
+    --success-color: #28a745; /* Cor para mensagens de sucesso */
+    --info-color: #2196f3; /* Cor para mensagens de informação */
+    --info-bg: #e3f2fd; /* Fundo para mensagens de informação */
+}
+
+/* Theme Fallback (for pages not explicitly setting theme in JS) */
+body.theme-light { /* Este é o tema padrão, então as variáveis já refletem isso */
+    /* Variáveis já definidas no :root para light, não precisam ser repetidas aqui */
+}
+
+body.theme-dark {
+    --primary-color: #5c2c6d; /* Roxo escuro */
+    --secondary-color: #2c5f7d; /* Azul acinzentado escuro */
+    --text-dark: #e0e0e0;
+    --text-light: #a0a0a0;
+    --bg-gradient-start: #1a1a2e; /* Azul muito escuro */
+    --bg-gradient-end: #22223b; /* Azul mais claro */
+    --card-bg: #22223b;
+    --shadow-light: 0 4px 10px rgba(0, 0, 0, 0.2);
+    --shadow-strong: 0 10px 30px rgba(0, 0, 0, 0.3);
+    --input-border-color: #444;
+    --input-bg: #2c2c47;
+    --error-color: #ff7043; /* Laranja para erros */
+    --success-color: #5cb85c; /* Verde para sucesso */
+    --info-color: #64b5f6; /* Azul para informações */
+    --info-bg: #2a3d54; /* Fundo para informações */
+}
+
+body.theme-pink {
+    --primary-color: #e91e63; /* Rosa forte */
+    --secondary-color: #ffc0cb; /* Rosa claro */
+    --text-dark: #c2185b;
+    --text-light: #f48fb1;
+    --bg-gradient-start: #ffebee; /* Rosa bem claro */
+    --bg-gradient-end: #fce4ec; /* Outro tom de rosa claro */
+    --card-bg: #ffffff;
+    --shadow-light: 0 4px 10px rgba(0, 0, 0, 0.05);
+    --shadow-strong: 0 10px 30px rgba(0, 0, 0, 0.1);
+    --input-border-color: #f48fb1;
+    --input-bg: #fff5f5;
+    --error-color: #d81b60; /* Rosa mais escuro para erros */
+    --success-color: #ef9a9a; /* Rosa para sucesso */
+    --info-color: #c2185b; /* Rosa para informações */
+    --info-bg: #f8bbd0; /* Fundo para informações */
+}
+
+
+/* Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
