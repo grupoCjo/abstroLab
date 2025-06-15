@@ -325,8 +325,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     transition: background-color 0.3s ease;
 }
 
-.bolinha:hover { background-color: #2980b9; }
-.bolinha:active { background-color: #1abc9c; }
+.bolinha:hover {
+   background-color: #e9e77b; 
+}
 
 #imagem {
     width: 100%;
@@ -563,7 +564,7 @@ button#verificar:hover {
 .bolinha {
   width: 28px;
   height: 28px;
-  background-color: #0d6efd;
+  background: linear-gradient(180deg, rgba(76, 170, 207, 1) 0%, rgba(255, 179, 179, 1) 100%);
   border-radius: 50%;
   box-shadow: 0 0 8px rgba(13, 110, 253, 0.5);
   cursor: pointer;
