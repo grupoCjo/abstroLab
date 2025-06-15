@@ -27,12 +27,11 @@ document.addEventListener("DOMContentLoaded", () => {
         this.userEmailElement.classList.remove("skeleton-text", "skeleton-text-md");
       }
         
-      // CORREÇÃO AQUI: Adicionado o prefixo '../img/' para as imagens de avatar.
-      let avatarPath = "../img/boy.jpg"; // Padrão masculino
+      let avatarPath = "../img/boy.jpg";
       if (usuario.usuario_genero === "feminino") {
         avatarPath = "../img/girl.jpg";
       } else if (usuario.usuario_genero === "outro") {
-        avatarPath = "../img/neutral.png"; // Usar uma imagem neutra local
+        avatarPath = "../img/neutral.png";
       }
       if (this.userAvatarElement) {
         this.userAvatarElement.src = avatarPath;
@@ -109,9 +108,9 @@ document.addEventListener("DOMContentLoaded", () => {
             "Nenhum Exercício Disponível!";
         if (this.nextExerciseDescriptionElement)
           this.nextExerciseDescriptionElement.textContent =
-            "Comece adicionando exercícios na base de dados para iniciar a trilha.";
+            "Ops! Parece que não encontramos a sua jornada, mas fique tranquilo(a)! Em breve você poderá voltar a aprender conosco.";
         if (this.btnIniciarExercicio)
-          this.btnIniciarExercicio.style.display = "none"; // Hide button if no exercises
+          this.btnIniciarExercicio.style.display = "none";
       }
       if (this.nextExerciseTitleElement)
         this.nextExerciseTitleElement.classList.remove(
@@ -145,9 +144,8 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         const response = await fetch(url);
         if (!response.ok) {
-          // Específico para /exercicios, onde 200 com array vazio é esperado para "nenhum exercício"
           if (url.includes("/exercicios") && response.status === 404) {
-             return []; // Retorna array vazio para indicar que não há exercícios
+             return [];
           }
           const errorData = await response.json();
           throw new Error(
@@ -159,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
       } catch (error) {
         console.error(`Falha ao buscar dados de ${url}:`, error);
         if (url.includes("/exercicios")) {
-          return []; // Retorna array vazio em caso de erro ao buscar exercícios
+          return [];
         }
         UI.renderError(`Não foi possível carregar os dados. Tente novamente.`);
         throw error;
@@ -185,9 +183,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      UI.clearMessages(); // Limpa mensagens de erro anteriores
+      UI.clearMessages();
 
-      // Fetch all data concurrently
       const [usuario, progresso, exercicios, proximoExercicio] = await Promise.all([
         API.getUsuario(usuarioID),
         API.getProgresso(usuarioID),
@@ -200,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const totalExercicios = exercicios ? exercicios.length : 0;
       if (progresso) UI.renderStats(progresso, totalExercicios);
-      else UI.renderStats([], totalExercicios); // Passa totalExercicios mesmo se progresso for nulo
+      else UI.renderStats([], totalExercicios);
 
       UI.renderProximoExercicio(proximoExercicio);
 
@@ -209,7 +206,6 @@ document.addEventListener("DOMContentLoaded", () => {
       UI.renderError(
         "Erro ao carregar dados do dashboard. Por favor, tente novamente."
       );
-      // Ensure skeletons are removed even on error
       UI.userNameElement?.classList.remove("skeleton-text", "skeleton-text-lg");
       UI.userEmailElement?.classList.remove("skeleton-text", "skeleton-text-md");
       document.getElementById("user-avatar-container")?.classList.remove("skeleton");
@@ -223,7 +219,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Handle welcome overlay
   const hasVisitedDashboard = sessionStorage.getItem('hasVisitedDashboard');
   if (!hasVisitedDashboard) {
       UI.welcomeOverlay.classList.remove('hidden');
@@ -240,7 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (confirm("Tem certeza que deseja sair?")) {
       localStorage.removeItem("loggedInUserId");
       localStorage.removeItem("loggedInSessionId");
-      sessionStorage.removeItem('hasVisitedDashboard'); // Limpar ao sair
+      sessionStorage.removeItem('hasVisitedDashboard');
       window.location.href = "cadastro.html";
     }
   });

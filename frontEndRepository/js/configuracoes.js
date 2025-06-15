@@ -15,19 +15,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    let currentTheme = 'light'; // Variável para armazenar o tema selecionado temporariamente
+    let currentTheme = localStorage.getItem('abstrolab_theme') || 'light';
 
     function showFeedback(element, message, type = 'success') {
         element.textContent = message;
         element.className = `feedback-message ${type}`;
-        element.style.display = 'block'; 
+        element.style.display = 'block';
         setTimeout(() => {
             element.textContent = '';
-            element.style.display = 'none'; 
+            element.style.display = 'none';
         }, 3000);
     }
 
-    // Carrega o nome de usuário ao iniciar a página
     async function loadUserName() {
         try {
             const response = await fetch(`/api/usuarios/${USUARIO_ID}`);
@@ -41,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.error("Erro na comunicação para carregar nome do usuário:", error);
         }
     }
-    loadUserName(); // Chama para carregar o nome ao carregar a página
+    loadUserName();
 
     btnSalvarNome.addEventListener("click", async () => {
         const novoNome = inputNome.value.trim();
@@ -49,25 +48,22 @@ document.addEventListener("DOMContentLoaded", async () => {
             showFeedback(feedbackNome, "Por favor, insira um nome.", "error");
             return;
         }
-        // O salvamento real será feito pelo botão "Salvar Alterações" principal
-        // Apenas para dar um feedback imediato (opcional)
         showFeedback(feedbackNome, "Nome pronto para ser salvo! Clique em 'Salvar Alterações'.", "info");
     });
 
     function applyTheme(themeName) {
-        body.className = ''; 
+        body.className = '';
         body.classList.add(`theme-${themeName}`);
         themeOptions.forEach(btn => {
             btn.classList.toggle('active', btn.dataset.theme === themeName);
         });
-        currentTheme = themeName; // Atualiza o tema selecionado
+        currentTheme = themeName;
     }
 
     themeOptions.forEach(button => {
         button.addEventListener("click", () => {
             const selectedTheme = button.dataset.theme;
             applyTheme(selectedTheme);
-            // Não salva no banco de dados aqui, apenas prepara para o botão "Salvar Alterações"
         });
     });
 
@@ -76,7 +72,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         let nameSaved = false;
         let themeSaved = false;
 
-        // Tenta salvar o nome
         if (novoNome) {
             try {
                 const response = await fetch(`/api/usuarios/${USUARIO_ID}`, {
@@ -98,7 +93,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             showFeedback(feedbackNome, "Nome não pode ser vazio.", "error");
         }
 
-        // Tenta salvar o tema
         try {
             const response = await fetch(`/api/configuracoes/${USUARIO_ID}`, {
                 method: 'PUT',
@@ -107,7 +101,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
             if (response.ok) {
                 themeSaved = true;
-                localStorage.setItem('abstrolab_theme', currentTheme); // Atualiza localStorage
+                localStorage.setItem('abstrolab_theme', currentTheme);
             } else {
                 const errorResult = await response.json();
                 showFeedback(feedbackGeral, `Erro ao salvar tema: ${errorResult.message}`, "error");
@@ -127,7 +121,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    // Carregar configurações do usuário ao iniciar a página
     async function loadUserSettings() {
         try {
             const response = await fetch(`/api/configuracoes/${USUARIO_ID}`);
@@ -135,12 +128,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const config = await response.json();
                 applyTheme(config.tema);
             } else if (response.status === 404) {
-                // Se não houver configuração no DB, aplicar o tema padrão
                 applyTheme('light');
-                // O tema 'light' será salvo no DB quando o usuário clicar em 'Salvar Alterações'
             } else {
                 console.error("Erro ao carregar configurações do usuário:", await response.text());
-                // Fallback para tema do localStorage se a API falhar
                 const savedTheme = localStorage.getItem('abstrolab_theme') || 'light';
                 applyTheme(savedTheme);
             }

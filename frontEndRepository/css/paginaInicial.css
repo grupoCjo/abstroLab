@@ -1,8 +1,9 @@
+/* abstroLab/frontEndRepository/css/paginaInicial.css */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 :root {
-    --primary-color: #ff8fab; /* Rosa */
-    --secondary-color: #81d4fa; /* Azul claro */
+    --primary-color: #ff8fab;
+    --secondary-color: #81d4fa;
     --text-color: #4A4A4A;
     --text-light: #6c757d;
     --background-color: #f4f7fc;
@@ -14,7 +15,6 @@
     --error-color: #dc3545;
 }
 
-/* Base Body Styles */
 .pagInicial {
     font-family: var(--font-family);
     background-color: var(--background-color);
@@ -22,11 +22,11 @@
     margin: 0;
     display: flex;
     min-height: 100vh;
-    overflow-x: hidden; /* Prevent horizontal scroll */
+    overflow-x: hidden;
     transition: background-color 0.3s, color 0.3s;
+    padding-top: 80px;
 }
 
-/* Theme Specific Variables - For dynamic theming */
 body.theme-light {
     --background-color: #f4f7fc;
     --card-bg: #FFFFFF;
@@ -66,50 +66,47 @@ body.theme-pink {
     --welcome-overlay-bg: rgba(255, 240, 245, 0.95);
 }
 
-
-/* Dashboard Layout */
 .pagInicial .dashboard-wrapper {
     display: flex;
     width: 100%;
 }
 
-/* Sidebar */
 .pagInicial .sidebar {
-    width: 280px; /* Slightly wider sidebar */
+    width: 280px;
     background-color: var(--sidebar-bg);
-    padding: 30px 20px; /* Adjusted padding */
+    padding: 30px 20px;
     display: flex;
     flex-direction: column;
-    border-right: 1px solid rgba(0, 0, 0, 0.05); /* Subtle border */
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.02);
     transition: background-color 0.3s;
 }
 
 .pagInicial .logo {
     font-weight: 700;
-    font-size: 32px; /* Larger logo */
+    font-size: 32px;
     color: var(--primary-color);
-    margin-bottom: 50px; /* More space below logo */
+    margin-bottom: 50px;
     text-align: center;
 }
 
 .pagInicial .user-profile {
     text-align: center;
-    margin-bottom: 40px; /* More space below profile */
+    margin-bottom: 40px;
 }
 
 .pagInicial #user-avatar-container {
-    width: 100px; /* Larger avatar */
+    width: 100px;
     height: 100px;
     border-radius: 50%;
-    border: 5px solid var(--primary-color); /* Thicker border */
+    border: 5px solid var(--primary-color);
     margin: 0 auto 12px auto;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #f0f0f0;
-    box-shadow: 0 0 15px rgba(var(--primary-color), 0.3); /* Add a glow */
+    box-shadow: 0 0 15px rgba(var(--primary-color), 0.3);
 }
 
 .pagInicial .user-avatar {
@@ -119,25 +116,23 @@ body.theme-pink {
 }
 
 .pagInicial .user-profile h2 {
-    font-size: 1.4rem; /* Larger name */
+    font-size: 1.4rem;
     font-weight: 600;
     color: var(--text-color);
     margin-bottom: 5px;
-    /* Reset text alignment */
     text-align: center;
 }
 
 .pagInicial .user-profile p {
-    font-size: 0.95rem; /* Email font size */
+    font-size: 0.95rem;
     color: var(--text-light);
-    /* Reset text alignment */
     text-align: center;
 }
 
 .pagInicial .sidebar-nav {
     display: flex;
     flex-direction: column;
-    gap: 15px; /* More space between nav items */
+    gap: 15px;
     flex-grow: 1;
 }
 
@@ -145,8 +140,8 @@ body.theme-pink {
     display: flex;
     align-items: center;
     gap: 15px;
-    padding: 14px 20px; /* Larger padding */
-    border-radius: 12px; /* More rounded corners */
+    padding: 14px 20px;
+    border-radius: 12px;
     text-decoration: none;
     color: var(--text-light);
     font-weight: 600;
@@ -162,7 +157,7 @@ body.theme-pink {
 }
 
 .pagInicial .icon {
-    font-size: 1.2em; /* Larger icons in nav */
+    font-size: 1.2em;
 }
 
 .pagInicial .btn-sair {
@@ -179,8 +174,8 @@ body.theme-pink {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    margin-top: 30px; /* Space above logout button */
-    justify-content: center; /* Centraliza o texto do botão Sair */
+    margin-top: 30px;
+    justify-content: center;
 }
 
 .pagInicial .btn-sair:hover {
@@ -190,7 +185,6 @@ body.theme-pink {
     transform: translateY(-2px);
 }
 
-/* Main Content Area */
 .pagInicial .main-content {
     flex: 1;
     padding: 40px;
@@ -203,17 +197,17 @@ body.theme-pink {
     margin-bottom: 40px;
 }
 .pagInicial .main-header h1 {
-    font-size: 3rem; /* Larger main title */
+    font-size: 3rem;
     color: var(--primary-color);
     margin-bottom: 10px;
     font-weight: 700;
-    text-align: left; /* Alinhar à esquerda */
+    text-align: left;
 }
 
 .pagInicial .main-header p {
     font-size: 1.2rem;
     color: var(--text-light);
-    text-align: left; /* Alinhar à esquerda */
+    text-align: left;
 }
 
 .pagInicial #message-area {
@@ -228,20 +222,20 @@ body.theme-pink {
 }
 
 .pagInicial .main-action-card {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); /* More distinct gradient */
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
     border-radius: var(--border-radius);
-    padding: 45px; /* More padding */
+    padding: 45px;
     margin-top: 30px;
     color: var(--white-color);
     box-shadow: var(--shadow);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    text-align: left; /* Alinhar textos à esquerda dentro do card */
+    text-align: left;
 }
 
 .pagInicial .main-action-card h2 {
-    font-size: 2.2rem; /* Larger heading in card */
+    font-size: 2.2rem;
     font-weight: 700;
     margin-bottom: 15px;
 }
@@ -256,7 +250,7 @@ body.theme-pink {
 .pagInicial .btn-start {
     background-color: var(--white-color);
     color: var(--primary-color);
-    padding: 18px 40px; /* Larger button */
+    padding: 18px 40px;
     border-radius: 50px;
     border: none;
     font-size: 1.2rem;
@@ -273,50 +267,49 @@ body.theme-pink {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
 
-/* Stats Grid */
-.pagInicial .stats-grid {
+.stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjusted grid columns */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 30px;
     margin-top: 40px;
 }
 
-.pagInicial .stat-card {
+.stat-card {
     background-color: var(--card-bg);
     border-radius: var(--border-radius);
-    padding: 30px; /* More padding */
+    padding: 30px;
     box-shadow: var(--shadow);
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Alinhar conteúdo à esquerda */
-    text-align: left; /* Alinhar texto à esquerda */
+    align-items: flex-start;
+    text-align: left;
 }
 
-.pagInicial .stat-card h3 {
+.stat-card h3 {
     font-size: 1.1rem;
     color: var(--text-light);
     margin-bottom: 15px;
     font-weight: 600;
 }
 
-.pagInicial .stat-card p,
-.pagInicial .stat-card span {
-    font-size: 2.5rem; /* Larger numbers */
+.stat-card p,
+.stat-card span {
+    font-size: 2.5rem;
     font-weight: 700;
     color: var(--text-color);
 }
 
-.pagInicial .progress-bar-container {
+.progress-bar-container {
     width: 100%;
-    height: 15px; /* Thicker progress bar */
+    height: 15px;
     background-color: #e9ecef;
-    border-radius: 8px; /* More rounded */
+    border-radius: 8px;
     margin: 10px 0;
     overflow: hidden;
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
 }
 
-.pagInicial .progress-bar {
+.progress-bar {
     width: 0%;
     height: 100%;
     background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
@@ -324,47 +317,45 @@ body.theme-pink {
     transition: width 0.5s ease-in-out;
 }
 
-/* Skeleton Loading States */
-.pagInicial .skeleton {
+.skeleton {
     background-color: #e0e0e0;
     border-radius: 4px;
     animation: pulse 1.5s infinite ease-in-out;
 }
 
-.pagInicial .skeleton-text {
-    color: transparent; /* Make text invisible */
+.skeleton-text {
+    color: transparent;
 }
-.pagInicial .skeleton-text-lg {
-    height: 28px; /* Ajuste a altura para corresponder ao h2 */
+.skeleton-text-lg {
+    height: 28px;
     width: 70%;
 }
-.pagInicial .skeleton-text-md {
-    height: 18px; /* Ajuste a altura para corresponder ao p */
+.skeleton-text-md {
+    height: 18px;
     width: 90%;
 }
-.pagInicial .skeleton-text-sm {
-    height: 24px; /* Ajuste a altura para corresponder ao p */
+.skeleton-text-sm {
+    height: 24px;
     width: 40px;
-    display: inline-block; /* Para spans */
+    display: inline-block;
 }
 
-
-.pagInicial .skeleton-text::before {
-    content: '\A0'; /* Adds a non-breaking space to maintain height */
+.skeleton-text::before {
+    content: '\A0';
 }
 
-.pagInicial .skeleton-button {
+.skeleton-button {
     height: 50px;
     width: 180px;
     border-radius: 50px;
-    color: transparent; /* Make text invisible */
+    color: transparent;
 }
 
-.pagInicial .skeleton-button::before {
-    content: '\A0'; /* Adds a non-breaking space to maintain height */
+.skeleton-button::before {
+    content: '\A0';
 }
 
-.pagInicial #user-avatar-container.skeleton {
+#user-avatar-container.skeleton {
     background-color: #e0e0e0;
     border: none;
     box-shadow: none;
@@ -376,8 +367,7 @@ body.theme-pink {
     100% { background-color: #e0e0e0; }
 }
 
-/* Welcome Overlay */
-.pagInicial .welcome-overlay {
+.welcome-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -393,42 +383,42 @@ body.theme-pink {
     opacity: 1;
 }
 
-.pagInicial .welcome-overlay.hidden {
+.welcome-overlay.hidden {
     opacity: 0;
-    pointer-events: none; /* Allows clicks on elements below once hidden */
+    pointer-events: none;
 }
 
-.pagInicial .welcome-box {
+.welcome-box {
     text-align: center;
-    padding: 50px; /* More padding */
+    padding: 50px;
     border-radius: var(--border-radius);
     background-color: var(--card-bg);
     box-shadow: var(--shadow);
     max-width: 600px;
     width: 90%;
     transform: translateY(0);
-    transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Bouncy transition */
+    transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
 }
 
-.pagInicial .welcome-overlay.hidden .welcome-box {
+.welcome-overlay.hidden .welcome-box {
     transform: translateY(-50px);
 }
 
-.pagInicial .welcome-box h1 {
-    font-size: 3.5rem; /* Larger welcome text */
+.welcome-box h1 {
+    font-size: 3.5rem;
     font-weight: 700;
     color: var(--primary-color);
     margin-bottom: 20px;
 }
 
-.pagInicial .welcome-box p {
+.welcome-box p {
     font-size: 1.3rem;
     color: var(--text-light);
     margin: 15px 0 40px;
 }
 
-.pagInicial .btn-start-journey {
-    padding: 18px 45px; /* Larger button */
+.btn-start-journey {
+    padding: 18px 45px;
     font-size: 1.3rem;
     border: none;
     border-radius: 50px;
@@ -440,13 +430,11 @@ body.theme-pink {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.pagInicial .btn-start-journey:hover {
+.btn-start-journey:hover {
     transform: scale(1.05) translateY(-3px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-
-/* Responsive Adjustments */
 @media (max-width: 992px) {
     .pagInicial .dashboard-wrapper {
         flex-direction: column;
@@ -481,11 +469,11 @@ body.theme-pink {
     }
     .pagInicial .user-profile h2 {
         font-size: 1.2rem;
-        text-align: left; /* Manter alinhamento à esquerda */
+        text-align: left;
     }
     .pagInicial .user-profile p {
         font-size: 0.85rem;
-        text-align: left; /* Manter alinhamento à esquerda */
+        text-align: left;
     }
     .pagInicial .sidebar-nav {
         flex-direction: row;
@@ -503,7 +491,7 @@ body.theme-pink {
         margin-top: 20px;
         font-size: 0.9rem;
         padding: 10px 15px;
-        justify-content: center; /* Centraliza o texto do botão Sair */
+        justify-content: center;
     }
 
     .pagInicial .main-content {
@@ -526,7 +514,7 @@ body.theme-pink {
         font-size: 1.1rem;
     }
     .pagInicial .stats-grid {
-        grid-template-columns: 1fr; /* Stack on smaller screens */
+        grid-template-columns: 1fr;
     }
     .pagInicial .stat-card {
         padding: 20px;
@@ -560,11 +548,11 @@ body.theme-pink {
         margin-top: 20px;
         width: 100%;
         justify-content: center;
-        text-align: center; /* Centraliza no modo coluna */
+        text-align: center;
     }
-    .pagInicial .user-profile h2, 
+    .pagInicial .user-profile h2,
     .pagInicial .user-profile p {
-        text-align: center; /* Centraliza texto do perfil */
+        text-align: center;
     }
     .pagInicial .sidebar-nav {
         flex-direction: column;

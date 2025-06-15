@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AbstroLab - Contato</title>
-    <link rel="stylesheet" href="../css/style.css"> 
-    <link rel="stylesheet" href="../css/contato.css"> 
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/contato.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body class="contato-page">
-<header></header> 
+<header></header>
 <main>
     <section class="contato-hero">
         <div class="hero-content">
@@ -59,16 +59,13 @@
             mensagem: document.getElementById('mensagem').value
         };
 
-        // Simulação de envio para o backend, já que a rota /contatos não está definida no server.js
-        // Em um cenário real, você teria uma rota POST /api/contatos no server.js para isso.
-        // Por enquanto, apenas mostraremos um feedback no frontend.
         console.log('Dados de contato enviados (simulado):', contato);
         document.getElementById('resultado').innerText = "Mensagem enviada com sucesso! (Simulado)";
         document.getElementById('resultado').style.color = 'var(--primary-color)';
         document.getElementById('contatoForm').reset();
         setTimeout(() => {
             document.getElementById('resultado').innerText = '';
-        }, 5000); // Limpa a mensagem após 5 segundos
+        }, 5000);
     });
 </script>
 
