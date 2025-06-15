@@ -1,65 +1,38 @@
-require('dotenv').config(); // Carrega as variáveis de ambiente do arquivo .env
-const mysql = require('mysql2'); // Importa a biblioteca mysql2 (permite conexão do Node.js com o MySQL)
+require('dotenv').config();
+const mysql = require('mysql2');
 
-
-/*-------------------------------------------------------------------------------------
-POOL def:
-agrupamento de recursos (como conexões de banco de dados, threads ou objetos) 
-que são mantidos disponíveis para reutilização, 
-evitando a necessidade de criar e destruir esses recursos constantemente
---------------------------------------------------------------------------------------*/
-
-// essa função pool é para pegar os dados do banco, tentar conectar e checar êxito
-const pool = mysql.createPool({ 
-  host: process.env.DB_HOST,            // Pega o host do banco de dados do arquivo .env
-  user: process.env.DB_USER,            // Usuário do banco
-  password: process.env.DB_PASSWORD,    // Senha do banco
-  database: process.env.DB_DATABASE,  // Nome do banco de dados
-  port: process.env.DB_PORT,   //PORTA DO DB
-  waitForConnections: true,             // Fica aguardando caso as conexões estejam ocupadas
-  connectionLimit: process.env.DB_CONNECTION_LIMIT, // Limite máximo de conexões simultâneas
-  queueLimit: 0,                       // Sem limite de fila para requisições pendentes
-  connectTimeout: 20000 // Tempo máximo de espera para conexão (20 segundos)
+const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+  port: process.env.DB_PORT,
+  waitForConnections: true,
+  connectionLimit: process.env.DB_CONNECTION_LIMIT || 10, // Definido um valor padrão
+  queueLimit: 0,
+  connectTimeout: 20000
 });
 
-
-const query = (sql, params) => { 
-  // Função para executar consultas no banco de dados. 
-  // Recebe um comando SQL e parâmetros para evitar SQL Injection.
-  return new Promise((resolve, reject) => { 
-    // Retorna uma Promise (algo que será resolvido ou rejeitado no futuro).
-    pool.query(sql, params, (err, results) => { 
-      // Executa a consulta usando o pool e verifica se há erro ou resultados.
+const query = (sql, params) => {
+  return new Promise((resolve, reject) => {
+    pool.query(sql, params, (err, results) => {
       if (err) {
-        reject(err); // Se der erro, rejeita a Promise
+        return reject(err);
       } else {
-        resolve(results); // Se der certo, resolve a Promise retornando os resultados
+        resolve(results);
       }
     });
   });
 };
 
-
-//Essa é para fechar a conexão
-const closeConnection = () => { 
-  pool.end(err => { // pool.end fecha todas as conexões abertas no pool
-    if (err) { 
-      console.log('Erro ao fechar a conexão:', err); 
+const closeConnection = () => {
+  pool.end(err => {
+    if (err) {
+      console.error('Erro ao fechar a conexão do pool:', err); // Usar console.error para erros
     } else {
-      console.log('Conexão com o banco de dados encerrada'); 
+      console.log('Conexão com o banco de dados encerrada');
     }
   });
 };
 
-
-module.exports = { query, closeConnection }; 
-// Exporta as funções permitindo que sejam usadas em outros arquivos
-/*
-essa última parte permite que qualquer outro arq utilize
----const db = require('dbconection.js');
-
-Vai poder usar:
---- db.query('SELECT * FROM usuarios') 
-ou 
---- db.closeConnection();
-*/
+module.exports = { query, closeConnection };

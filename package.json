@@ -13,9 +13,16 @@
   },
   "name": "abstrolablocal",
   "version": "1.0.0",
-  "description": "",
+  "description": "Plataforma educacional para abstração matemática focada em crianças autistas.",
   "main": "server.js",
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "educacao",
+    "autismo",
+    "matematica",
+    "abstracao",
+    "pictogramas",
+    "jogos"
+  ],
+  "author": "Tifany Luiza, Beatriz Helena",
   "license": "ISC"
 }

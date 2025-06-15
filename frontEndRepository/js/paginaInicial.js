@@ -1,167 +1,249 @@
 document.addEventListener("DOMContentLoaded", () => {
-            
-            const SoundManager = {
-                sounds: {},
-                music: null,
-                volume: 0.5,
-                isMuted: false,
-                isMusicPlaying: false,
-                soundUrls: {
-                    click: 'https://cdn.pixabay.com/audio/2022/03/15/audio_2c63821366.mp3',
-                    correct: 'https://cdn.pixabay.com/audio/2022/03/10/audio_c3b184b72f.mp3',
-                    incorrect: 'https://cdn.pixabay.com/audio/2021/08/04/audio_a46cf2f010.mp3',
-                    levelComplete: 'https://cdn.pixabay.com/audio/2022/08/31/audio_145d2e4684.mp3'
-                },
-                musicUrl: 'https://cdn.pixabay.com/audio/2024/05/13/audio_baf7a7f45a.mp3',
-                init() {
-                    this.isMuted = localStorage.getItem('abstrolab_muted') === 'true';
-                    this.volume = parseFloat(localStorage.getItem('abstrolab_volume') || '0.5');
-                    for (const key in this.soundUrls) {
-                        this.sounds[key] = new Audio(this.soundUrls[key]);
-                        this.sounds[key].volume = this.volume;
-                    }
-                    this.music = new Audio(this.musicUrl);
-                    this.music.loop = true;
-                    this.music.volume = this.volume;
-                    if (this.isMuted) { this.mute(); }
-                },
-                play(soundName) {
-                    if (!this.isMuted && this.sounds[soundName]) {
-                        this.sounds[soundName].currentTime = 0;
-                        this.sounds[soundName].play().catch(e => console.error("Erro ao tocar som:", e));
-                    }
-                },
-                startMusic() {
-                    if (!this.isMusicPlaying && !this.isMuted) {
-                        const playPromise = this.music.play();
-                        if (playPromise !== undefined) {
-                            playPromise.then(_ => { this.isMusicPlaying = true; })
-                                .catch(error => { console.log("Música aguardando interação do usuário para iniciar."); });
-                        }
-                    }
-                },
-                stopMusic() {
-                    this.music.pause();
-                    this.music.currentTime = 0;
-                    this.isMusicPlaying = false;
-                },
-                setVolume(value) {
-                    this.volume = value;
-                    localStorage.setItem('abstrolab_volume', this.volume);
-                    if (!this.isMuted) {
-                         for (const key in this.sounds) { this.sounds[key].volume = this.volume; }
-                        this.music.volume = this.volume;
-                    }
-                },
-                toggleMute() {
-                    this.isMuted = !this.isMuted;
-                    localStorage.setItem('abstrolab_muted', this.isMuted);
-                    this.isMuted ? this.mute() : this.unmute();
-                    return this.isMuted;
-                },
-                mute() { for (const key in this.sounds) { this.sounds[key].volume = 0; }; this.music.volume = 0; },
-                unmute() { this.setVolume(this.volume); }
+  const UI = {
+    userNameElement: document.getElementById("user-name"),
+    userEmailElement: document.getElementById("user-email"),
+    userAvatarElement: document.getElementById("user-avatar"),
+    totalExercisesElement: document.getElementById("total-exercises"),
+    completedExercisesElement: document.getElementById("completed-exercises"),
+    exerciseProgressElement: document.getElementById("exercise-progress"),
+    nextExerciseTitleElement: document.getElementById("next-exercise-title"),
+    nextExerciseDescriptionElement: document.getElementById(
+      "next-exercise-description"
+    ),
+    btnIniciarExercicio: document.getElementById("btn-iniciar-exercicio"),
+    messageArea: document.getElementById("message-area"),
+    btnSair: document.getElementById("btnSair"),
+    navLinks: document.querySelectorAll(".sidebar-link"),
+    welcomeOverlay: document.getElementById("welcome-overlay"),
+    startJourneyBtn: document.getElementById("btn-start-journey"),
+
+    renderUserInfo(usuario) {
+      if (this.userNameElement) {
+        this.userNameElement.textContent = usuario.usuario_nome || "Usuário";
+        this.userNameElement.classList.remove("skeleton-text", "skeleton-text-lg");
+      }
+      if (this.userEmailElement) {
+        this.userEmailElement.textContent = usuario.usuario_email || "";
+        this.userEmailElement.classList.remove("skeleton-text", "skeleton-text-md");
+      }
+        
+      // CORREÇÃO AQUI: Adicionado o prefixo '../img/' para as imagens de avatar.
+      let avatarPath = "../img/boy.png"; // Padrão masculino
+      if (usuario.usuario_genero === "feminino") {
+        avatarPath = "../img/girl.png";
+      } else if (usuario.usuario_genero === "outro") {
+        avatarPath = "../img/neutral.png"; // Usar uma imagem neutra local
+      }
+      if (this.userAvatarElement) {
+        this.userAvatarElement.src = avatarPath;
+        document.getElementById("user-avatar-container").classList.remove("skeleton");
+      }
+    },
+
+    renderStats(progresso, totalExercicios) {
+      const completedCount = progresso ? progresso.length : 0;
+      if (this.totalExercisesElement) {
+        this.totalExercisesElement.textContent = totalExercicios;
+        this.totalExercisesElement.classList.remove("skeleton-text", "skeleton-text-sm");
+      }
+      if (this.completedExercisesElement) {
+        this.completedExercisesElement.textContent = completedCount;
+        this.completedExercisesElement.classList.remove("skeleton-text", "skeleton-text-sm");
+      }
+
+      if (totalExercicios > 0 && this.exerciseProgressElement) {
+        const percentage = (completedCount / totalExercicios) * 100;
+        this.exerciseProgressElement.style.width = `${percentage}%`;
+        const percentTextElement = document.getElementById(
+          "stats-progresso-percent"
+        );
+        if (percentTextElement) {
+          percentTextElement.textContent = `${Math.round(percentage)}%`;
+          percentTextElement.classList.remove("skeleton-text", "skeleton-text-sm");
+        }
+      } else if (this.exerciseProgressElement) {
+        this.exerciseProgressElement.style.width = `0%`;
+        const percentTextElement = document.getElementById(
+          "stats-progresso-percent"
+        );
+        if (percentTextElement) {
+          percentTextElement.textContent = `0%`;
+          percentTextElement.classList.remove("skeleton-text", "skeleton-text-sm");
+        }
+      }
+      document.getElementById("stats-conquistas").classList.remove("skeleton-text", "skeleton-text-sm");
+    },
+
+    renderProximoExercicio(exercicio) {
+      if (exercicio && !exercicio.trilhaConcluida && exercicio.exercicio_ID) {
+        if (this.nextExerciseTitleElement)
+          this.nextExerciseTitleElement.textContent = exercicio.titulo;
+        if (this.nextExerciseDescriptionElement)
+          this.nextExerciseDescriptionElement.textContent = exercicio.descricao;
+        if (this.btnIniciarExercicio) {
+          this.btnIniciarExercicio.onclick = () => {
+            window.location.href = `exercicio.html?codigo=${exercicio.exercicio_codigo}`;
+          };
+          this.btnIniciarExercicio.textContent = "Iniciar Exercício";
+          this.btnIniciarExercicio.style.display = "inline-block";
+          this.btnIniciarExercicio.classList.remove("skeleton-button");
+        }
+      } else if (exercicio && exercicio.trilhaConcluida) {
+        if (this.nextExerciseTitleElement)
+          this.nextExerciseTitleElement.textContent = "Trilha Concluída!";
+        if (this.nextExerciseDescriptionElement)
+          this.nextExerciseDescriptionElement.textContent =
+            "Parabéns! Você completou todos os exercícios da trilha.";
+        if (this.btnIniciarExercicio) {
+            this.btnIniciarExercicio.textContent = "Ver Trilha Completa";
+            this.btnIniciarExercicio.onclick = () => {
+                window.location.href = `trilha.html`;
             };
-            SoundManager.init();
+            this.btnIniciarExercicio.style.display = "inline-block";
+            this.btnIniciarExercicio.classList.remove("skeleton-button");
+        }
+      }
+      else {
+        if (this.nextExerciseTitleElement)
+          this.nextExerciseTitleElement.textContent =
+            "Nenhum Exercício Disponível!";
+        if (this.nextExerciseDescriptionElement)
+          this.nextExerciseDescriptionElement.textContent =
+            "Comece adicionando exercícios na base de dados para iniciar a trilha.";
+        if (this.btnIniciarExercicio)
+          this.btnIniciarExercicio.style.display = "none"; // Hide button if no exercises
+      }
+      if (this.nextExerciseTitleElement)
+        this.nextExerciseTitleElement.classList.remove(
+          "skeleton-text",
+          "skeleton-text-lg"
+        );
+      if (this.nextExerciseDescriptionElement)
+        this.nextExerciseDescriptionElement.classList.remove(
+          "skeleton-text",
+          "skeleton-text-md"
+        );
+    },
 
-            const UI = {
-                nomeUsuario: document.getElementById("nomeUsuario"),
-                cardProximoExercicio: document.getElementById("card-proximo-exercicio"),
-                statsCompletos: document.getElementById("stats-completos"),
-                statsProgressoBarra: document.getElementById("stats-progresso-barra"),
-                statsProgressoPercent: document.getElementById("stats-progresso-percent"),
-                statsConquistas: document.getElementById("stats-conquistas"),
-                btnSair: document.getElementById("btnSair"),
-                navLinks: document.querySelectorAll(".nav-item"),
-                renderUserInfo(usuario) { this.nomeUsuario.textContent = usuario.usuario_nome; },
-                renderProximoExercicio(exercicio) {
-                    if (exercicio && exercicio.exercicio_codigo) {
-                        this.cardProximoExercicio.innerHTML = `
-                            <h2>Continue de onde parou</h2>
-                            <p>Seu próximo desafio é: <strong>${exercicio.titulo}</strong></p>
-                            <button class="btn-continuar" data-codigo="${exercicio.exercicio_codigo}">Começar Exercício</button>
-                        `;
-                        const btnContinuar = this.cardProximoExercicio.querySelector('.btn-continuar');
-                        btnContinuar.addEventListener('click', () => {
-                            SoundManager.play('click');
-                            window.location.href = `/exercicio?codigo=${btnContinuar.dataset.codigo}`;
-                        });
-                    } else {
-                         this.cardProximoExercicio.innerHTML = `
-                            <h2>Parabéns!</h2>
-                            <p>Você completou todos os exercícios da trilha. Bom trabalho!</p>
-                        `;
-                        SoundManager.play('levelComplete');
-                        SoundManager.stopMusic();
-                    }
-                },
-                renderStats(progresso, totalExercicios) {
-                    const numCompletos = progresso.length;
-                    const percentual = totalExercicios > 0 ? Math.round((numCompletos / totalExercicios) * 100) : 0;
-                    this.statsCompletos.textContent = numCompletos;
-                    this.statsCompletos.classList.remove('skeleton', 'skeleton-text');
-                    this.statsProgressoBarra.style.width = `${percentual}%`;
-                    this.statsProgressoPercent.textContent = `${percentual}%`;
-                    this.statsProgressoPercent.classList.remove('skeleton', 'skeleton-text');
-                    this.statsConquistas.textContent = percentual > 50 ? '🏆🏅' : '🏆';
-                    this.statsConquistas.classList.remove('skeleton', 'skeleton-text');
-                },
-                renderError(message) { this.cardProximoExercicio.innerHTML = `<p style="color: #c62828; font-weight: 600;">${message}</p>`; }
-            };
-            const API = {
-                async fetchData(url) {
-                    try {
-                        const response = await fetch(url);
-                        if (!response.ok) {
-                             const errorData = await response.json();
-                             throw new Error(errorData.message || `Erro na rede: ${response.statusText}`);
-                        }
-                        const text = await response.text();
-                        return text ? JSON.parse(text) : null;
-                    } catch (error) {
-                        console.error(`Falha ao buscar dados de ${url}:`, error);
-                        UI.renderError(`Não foi possível carregar os dados. Tente novamente.`);
-                        throw error;
-                    }
-                },
-                getUsuario: (id) => API.fetchData(`/api/usuarios/${id}`),
-                getProgresso: (id) => API.fetchData(`/api/progresso/${id}`),
-                getExercicios: () => API.fetchData('/api/exercicios'),
-                getProximoExercicio: (id) => API.fetchData(`/api/progresso/proximo/${id}`)
-            };
+    renderError(message) {
+      if (this.messageArea) {
+        this.messageArea.textContent = message;
+        this.messageArea.style.display = "block";
+      }
+    },
 
-            // --- Lógica de Inicialização ---
-            const welcomeOverlay = document.getElementById('welcome-overlay');
-            const startJourneyBtn = document.getElementById('btn-start-journey');
+    clearMessages() {
+      if (this.messageArea) {
+        this.messageArea.textContent = "";
+        this.messageArea.style.display = "none";
+      }
+    },
+  };
 
-            async function initDashboardData() {
-                const usuarioID = 1; 
-                try {
-                    const [usuario, progresso, exercicios, proximoExercicio] = await Promise.all([
-                        API.getUsuario(usuarioID), API.getProgresso(usuarioID),
-                        API.getExercicios(), API.getProximoExercicio(usuarioID)
-                    ]);
-                    if (usuario) UI.renderUserInfo(usuario);
-                    if (progresso && exercicios) UI.renderStats(progresso, exercicios.length);
-                    UI.renderProximoExercicio(proximoExercicio);
-                } catch (error) {
-                    console.error("Falha ao carregar dados do dashboard.", error);
-                }
-            }
+  const API = {
+    async fetchData(url) {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          // Específico para /exercicios, onde 200 com array vazio é esperado para "nenhum exercício"
+          if (url.includes("/exercicios") && response.status === 404) {
+             return []; // Retorna array vazio para indicar que não há exercícios
+          }
+          const errorData = await response.json();
+          throw new Error(
+            errorData.message || `Erro na rede: ${response.statusText}`
+          );
+        }
+        const text = await response.text();
+        return text ? JSON.parse(text) : null;
+      } catch (error) {
+        console.error(`Falha ao buscar dados de ${url}:`, error);
+        if (url.includes("/exercicios")) {
+          return []; // Retorna array vazio em caso de erro ao buscar exercícios
+        }
+        UI.renderError(`Não foi possível carregar os dados. Tente novamente.`);
+        throw error;
+      }
+    },
+    getUsuario: (id) => API.fetchData(`/api/usuarios/${id}`),
+    getProgresso: (id) => API.fetchData(`/progresso/${id}`),
+    getExercicios: () => API.fetchData("/exercicios"),
+    getProximoExercicio: (id) => API.fetchData(`/api/progresso/proximo/${id}`),
+  };
 
-            startJourneyBtn.addEventListener('click', () => {
-                SoundManager.play('click');
-                SoundManager.startMusic();
-                welcomeOverlay.classList.add('hidden');
-            });
-            
-            UI.btnSair.addEventListener('click', () => {
-                SoundManager.play('click');
-                if (confirm("Tem certeza que deseja sair?")) { window.location.href = 'cadastro.html'; }
-            });
-            UI.navLinks.forEach(link => {
-                link.addEventListener('click', (e) => { SoundManager.play('click'); });
-            });
+  async function initDashboardData() {
+    const usuarioID = localStorage.getItem("loggedInUserId");
 
-            initDashboardData();
-        });
+    if (!usuarioID) {
+      UI.renderError(
+        "Usuário não logado. Redirecionando para a página de cadastro."
+      );
+      setTimeout(() => {
+        window.location.href = "cadastro.html";
+      }, 2000);
+      return;
+    }
+
+    try {
+      UI.clearMessages(); // Limpa mensagens de erro anteriores
+
+      // Fetch all data concurrently
+      const [usuario, progresso, exercicios, proximoExercicio] = await Promise.all([
+        API.getUsuario(usuarioID),
+        API.getProgresso(usuarioID),
+        API.getExercicios(),
+        API.getProximoExercicio(usuarioID),
+      ]);
+
+      if (usuario) UI.renderUserInfo(usuario);
+      else UI.renderError("Não foi possível carregar informações do usuário.");
+
+      const totalExercicios = exercicios ? exercicios.length : 0;
+      if (progresso) UI.renderStats(progresso, totalExercicios);
+      else UI.renderStats([], totalExercicios); // Passa totalExercicios mesmo se progresso for nulo
+
+      UI.renderProximoExercicio(proximoExercicio);
+
+    } catch (error) {
+      console.error("Falha ao carregar dados do dashboard:", error);
+      UI.renderError(
+        "Erro ao carregar dados do dashboard. Por favor, tente novamente."
+      );
+      // Ensure skeletons are removed even on error
+      UI.userNameElement?.classList.remove("skeleton-text", "skeleton-text-lg");
+      UI.userEmailElement?.classList.remove("skeleton-text", "skeleton-text-md");
+      document.getElementById("user-avatar-container")?.classList.remove("skeleton");
+      UI.totalExercisesElement?.classList.remove("skeleton-text", "skeleton-text-sm");
+      UI.completedExercisesElement?.classList.remove("skeleton-text", "skeleton-text-sm");
+      document.getElementById("stats-progresso-percent")?.classList.remove("skeleton-text", "skeleton-text-sm");
+      document.getElementById("stats-conquistas")?.classList.remove("skeleton-text", "skeleton-text-sm");
+      UI.nextExerciseTitleElement?.classList.remove("skeleton-text", "skeleton-text-lg");
+      UI.nextExerciseDescriptionElement?.classList.remove("skeleton-text", "skeleton-text-md");
+      UI.btnIniciarExercicio?.classList.remove("skeleton-button");
+    }
+  }
+
+  // Handle welcome overlay
+  const hasVisitedDashboard = sessionStorage.getItem('hasVisitedDashboard');
+  if (!hasVisitedDashboard) {
+      UI.welcomeOverlay.classList.remove('hidden');
+  } else {
+      UI.welcomeOverlay.classList.add('hidden');
+  }
+
+  UI.startJourneyBtn.addEventListener("click", () => {
+    UI.welcomeOverlay.classList.add("hidden");
+    sessionStorage.setItem('hasVisitedDashboard', 'true');
+  });
+
+  UI.btnSair.addEventListener("click", () => {
+    if (confirm("Tem certeza que deseja sair?")) {
+      localStorage.removeItem("loggedInUserId");
+      localStorage.removeItem("loggedInSessionId");
+      sessionStorage.removeItem('hasVisitedDashboard'); // Limpar ao sair
+      window.location.href = "cadastro.html";
+    }
+  });
+
+  initDashboardData();
+});
