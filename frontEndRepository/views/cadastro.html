@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Cadastro / Login</title>
+    <title>AbstroLab - Cadastro / Login</title>
     <link rel="stylesheet" href="../css/style.css" />
     <link
       rel="stylesheet"
@@ -12,19 +12,17 @@
     />
 </head>
 
-<body>
+<body class="cadastro-login-page">
     <div class="text-center">
         <h2 class="mainTitle">BEM-VINDO DE VOLTA!</h2>
     </div>
 
     <div class="main-container">
-        <!-- Container de Cadastro -->
         <div id="container-cadastro" class="card">
             <div class="card-body">
-                <h2 class="text-center">Cadastrar-se</h2>
+                <h2 class="form-title">Cadastrar-se</h2>
                 <div class="line-divider my-4"></div>
 
-                <!-- Campo Nome -->
                 <div class="input-group">
                     <i class="fa fa-user input-icon"></i>
                     <input
@@ -33,10 +31,11 @@
                       name="nome"
                       placeholder="Nome Completo"
                       class="form-control"
+                      required
+                      aria-label="Nome Completo"
                     />
                 </div>
 
-                <!-- Campo E-mail -->
                 <div class="input-group mt-3">
                     <i class="fa fa-envelope input-icon"></i>
                     <input
@@ -45,10 +44,11 @@
                       name="email"
                       placeholder="E-mail"
                       class="form-control"
+                      required
+                      aria-label="E-mail"
                     />
                 </div>
 
-                <!-- Campo Senha -->
                 <div class="input-group mt-3">
                     <i class="fa fa-lock input-icon"></i>
                     <input
@@ -57,10 +57,11 @@
                       name="senha"
                       placeholder="Senha"
                       class="form-control"
+                      required
+                      aria-label="Senha"
                     />
                 </div>
 
-                <!-- Campo Confirmar Senha -->
                 <div class="input-group mt-3">
                     <i class="fa fa-lock input-icon"></i>
                     <input
@@ -69,16 +70,18 @@
                       name="confirmarSenha"
                       placeholder="Confirmar Senha"
                       class="form-control"
+                      required
+                      aria-label="Confirmar Senha"
                     />
                 </div>
 
-                <!-- Mensagem de erro -->
                 <div
                   id="erroSenha"
-                  style="display: none; color: red; font-size: 0.9rem;"
+                  class="feedback-message error"
+                  style="display: none;"
+                  role="alert"
                 ></div>
 
-                <!-- Campo Idade -->
                 <div class="input-group mt-3">
                     <i class="fa fa-calendar input-icon"></i>
                     <input
@@ -86,57 +89,58 @@
                         id="dataNascimento"
                         name="dataNascimento"
                         class="form-control"
-                        placeholder="Data de Nascimento"
                         required
+                        aria-label="Data de Nascimento"
                     />
                 </div>
 
-                <!-- Campo Gênero -->
                 <div class="input-group mt-3">
                     <i class="fa fa-venus-mars input-icon"></i>
                     <div class="gender-options">
-                        <label>
+                        <label for="feminino">
                             <input
                               type="radio"
                               id="feminino"
                               name="genero"
                               value="feminino"
                               class="gender-input"
+                              required
                             />
-                            F
+                            Feminino
                         </label>
-                        <label>
+                        <label for="masculino">
                             <input
                               type="radio"
                               id="masculino"
                               name="genero"
                               value="masculino"
                               class="gender-input"
+                              required
                             />
-                            M
+                            Masculino
                         </label>
-                        <label>
+                        <label for="outro">
                             <input
                               type="radio"
                               id="outro"
                               name="genero"
                               value="outro"
                               class="gender-input"
+                              required
                             />
                             Outro
                         </label>
                     </div>
                 </div>
 
-                <button class="btnCadastro">Cadastrar-se</button>
+                <button class="btn-primary btnCadastro">Cadastrar-se</button>
             </div>
         </div>
 
-        <!-- Container de Login -->
         <div id="container-login" class="cardLogin">
             <div class="card-body">
                 <div class="LoginTitle">
-                    <h2>Entrar</h2>
+                    <h2 class="form-title">Entrar</h2>
                 </div>
                 <div class="line-divider my-4"></div>
 
@@ -146,8 +150,10 @@
                       type="text"
                       id="emailLogin"
                       name="emailLogin"
-                      placeholder="E-mail ou nome de usuário"
+                      placeholder="E-mail"
                       class="form-control"
+                      required
+                      aria-label="E-mail de Login"
                     />
                 </div>
 
@@ -159,14 +165,16 @@
                       name="senhaLogin"
                       placeholder="Senha"
                       class="form-control"
+                      required
+                      aria-label="Senha de Login"
                     />
                 </div>
 
                 <div class="btnEntrar">
-                    <button id="btnEntrar" class="entrarBtn">Entrar</button>
+                    <button id="btnEntrar" class="btn-primary entrarBtn">Entrar</button>
                 </div>
 
-                <div id="erroLogin" style="color:red; display:none; margin-top:10px;"></div>
+                <div id="erroLogin" class="feedback-message error" style="display:none;"></div>
             </div>
         </div>
     </div>

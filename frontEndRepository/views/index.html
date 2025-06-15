@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 </head>
 <body>
-    <header></header>
+    <header></header> 
     <section class="hero" id="inicio">
         <div class="hero-content">
             <h1>Bem-vindo ao AbstroLab!</h1>
@@ -21,31 +21,51 @@
     </section>
 
     <section class="features" id="funcionalidades">
+        <h2 class="section-title">Nossos Recursos</h2>
         <div class="carousel-container">
             <div class="carousel">
                 <div class="carousel-items">
                     <div class="feature-card">
-                        <i class="fas fa-gamepad"></i>
+                        <i class="fas fa-gamepad feature-icon"></i>
                         <h3>Aprendizado Interativo</h3>
                         <p>Jogos que ajudam as crianças a entenderem conceitos matemáticos de maneira divertida.</p>
                     </div>
                     <div class="feature-card">
-                        <i class="fas fa-users"></i>
+                        <i class="fas fa-users feature-icon"></i>
                         <h3>Interação e Suporte</h3>
                         <p>Pais e educadores podem acompanhar o progresso do aprendizado.</p>
                     </div>
                     <div class="feature-card">
-                        <i class="fas fa-cogs"></i>
-                        <h3>Customização</h3>
-                        <p>As atividades estão separadas em trilhas com níveis graduais.</p>
+                        <i class="fas fa-cogs feature-icon"></i>
+                        <h3>Trilhas Customizadas</h3>
+                        <p>As atividades estão separadas em trilhas com níveis graduais para cada necessidade.</p>
                     </div>
                 </div>
-                <button class="carousel-prev">&#10094;</button>
-                <button class="carousel-next">&#10095;</button>
+                <div class="carousel-buttons-wrapper">
+                    <button class="carousel-prev" aria-label="Item anterior">&#10094;</button>
+                    <button class="carousel-next" aria-label="Próximo item">&#10095;</button>
+                </div>
             </div>
         </div>
     </section>
-<script type="module" src="../js/script.js"></script>
+
+    <section class="testimonials" id="depoimentos">
+        <h2 class="section-title">O que dizem sobre nós</h2>
+        <div class="testimonial-cards-container">
+            <div class="testimonial-card">
+                <p class="testimonial-text">"O AbstroLab tem sido uma ferramenta incrível para o aprendizado da minha filha. Ela adora os jogos e finalmente está compreendendo a matemática!"</p>
+                <p class="testimonial-author">- Mãe de uma aluna com TEA</p>
+            </div>
+            <div class="testimonial-card">
+                <p class="testimonial-text">"Como educadora, vejo o impacto positivo do AbstroLab no desenvolvimento dos meus alunos. A abordagem visual é fantástica!"</p>
+                <p class="testimonial-author">- Professora Ana Silva</p>
+            </div>
+        </div>
+    </section>
+
+    <footer></footer>
+
+    <script type="module" src="../js/script.js"></script>
 </body>
 
 </html>

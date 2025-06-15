@@ -4,49 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AbstroLab - Contato</title>
+    <link rel="stylesheet" href="../css/style.css"> 
     <link rel="stylesheet" href="../css/contato.css"> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body>
+<body class="contato-page">
+<header></header> 
 <main>
-    <section class="sobre">
-        <div class="sobre-content">
-            <h1>Entre em Contato</h1>
-            <br>
+    <section class="contato-hero">
+        <div class="hero-content">
+            <h1 class="section-title">Entre em Contato</h1>
             <p>
                 Se você tem dúvidas, sugestões ou quer saber mais sobre o <b>AbstroLab</b>, preencha os campos abaixo e entraremos em contato.
             </p>
-            <hr class="my-2 text-primary">
         </div>
     </section>
 
-    <section class="contato-form">
+    <section class="contato-form-section">
         <div class="form-container">
             <form id="contatoForm">
                 <div class="form-group">
                     <label for="nome"><i class="fas fa-user"></i> Nome</label>
-                    <input type="text" id="nome" name="nome" required placeholder="Seu nome">
+                    <input type="text" id="nome" name="nome" required placeholder="Seu nome completo">
                 </div>
                 <div class="form-group">
                     <label for="email"><i class="fas fa-envelope"></i> E-mail</label>
-                    <input type="email" id="email" name="email" required placeholder="Seu e-mail">
+                    <input type="email" id="email" name="email" required placeholder="seu.email@exemplo.com">
                 </div>
                 <div class="form-group">
                     <label for="telefone"><i class="fas fa-phone"></i> Telefone</label>
-                    <input type="text" id="telefone" name="telefone" required placeholder="Seu telefone">
+                    <input type="text" id="telefone" name="telefone" placeholder="(XX) XXXXX-XXXX">
                 </div>
                 <div class="form-group">
                     <label for="mensagem"><i class="fas fa-comment-dots"></i> Mensagem</label>
-                    <textarea id="mensagem" name="mensagem" required placeholder="Digite sua mensagem"></textarea>
+                    <textarea id="mensagem" name="mensagem" required placeholder="Digite sua mensagem aqui..."></textarea>
                 </div>
-                <button type="submit" class="btn-enviar"><i class="fas fa-paper-plane"></i> Enviar</button>
+                <button type="submit" class="btn-primary btn-enviar"><i class="fas fa-paper-plane"></i> Enviar Mensagem</button>
             </form>
             <p id="resultado" class="mensagem-feedback"></p>
         </div>
     </section>
 </main>
+<footer></footer>
 
-
+<script type="module" src="../js/script.js"></script>
 <script>
     document.getElementById('contatoForm').addEventListener('submit', function(event) {
         event.preventDefault();
@@ -58,31 +59,18 @@
             mensagem: document.getElementById('mensagem').value
         };
 
-        fetch('http://localhost:8080/contatos', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(contato)
-        })
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('resultado').innerText = "Mensagem enviada com sucesso!";
-            document.getElementById('contatoForm').reset();
-        })
-        .catch(error => {
-            document.getElementById('resultado').innerText = "Erro ao enviar mensagem.";
-            console.error('Erro:', error);
-        });
-    });
-
-    // JavaScript for hamburger menu toggle
-    const hamburger = document.getElementById('hamburger');
-    const navLinks = document.getElementById('navLinks');
-
-    hamburger.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
+        // Simulação de envio para o backend, já que a rota /contatos não está definida no server.js
+        // Em um cenário real, você teria uma rota POST /api/contatos no server.js para isso.
+        // Por enquanto, apenas mostraremos um feedback no frontend.
+        console.log('Dados de contato enviados (simulado):', contato);
+        document.getElementById('resultado').innerText = "Mensagem enviada com sucesso! (Simulado)";
+        document.getElementById('resultado').style.color = 'var(--primary-color)';
+        document.getElementById('contatoForm').reset();
+        setTimeout(() => {
+            document.getElementById('resultado').innerText = '';
+        }, 5000); // Limpa a mensagem após 5 segundos
     });
 </script>
-<script type="module" src="../js/script.js"></script>
 
 </body>
 </html>

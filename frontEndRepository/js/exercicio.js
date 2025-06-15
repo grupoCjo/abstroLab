@@ -1,86 +1,3 @@
-const SoundManager = {
-    sounds: {},
-    music: null,
-    volume: 0.5,
-    isMuted: false,
-    isMusicPlaying: false,
-    soundUrls: {
-        click: 'https://cdn.pixabay.com/audio/2022/03/15/audio_2c63821366.mp3',
-        correct: 'https://cdn.pixabay.com/audio/2022/03/10/audio_c3b184b72f.mp3',
-        incorrect: 'https://cdn.pixabay.com/audio/2021/08/04/audio_a46cf2f010.mp3',
-        levelComplete: 'https://cdn.pixabay.com/audio/2022/08/31/audio_145d2e4684.mp3'
-    },
-    musicUrl: 'https://cdn.pixabay.com/audio/2024/05/13/audio_baf7a7f45a.mp3',
-
-    init() {
-        this.isMuted = localStorage.getItem('abstrolab_muted') === 'true';
-        this.volume = parseFloat(localStorage.getItem('abstrolab_volume') || '0.5');
-
-        for (const key in this.soundUrls) {
-            this.sounds[key] = new Audio(this.soundUrls[key]);
-            this.sounds[key].volume = this.volume;
-        }
-
-        this.music = new Audio(this.musicUrl);
-        this.music.loop = true;
-        this.music.volume = this.volume;
-
-        if (this.isMuted) this.mute();
-    },
-
-    play(soundName) {
-        if (!this.isMuted && this.sounds[soundName]) {
-            this.sounds[soundName].currentTime = 0;
-            this.sounds[soundName].play().catch(e => console.error("Erro ao tocar som:", e));
-        }
-    },
-
-    startMusic() {
-        if (!this.isMusicPlaying && !this.isMuted) {
-            const playPromise = this.music.play();
-            if (playPromise !== undefined) {
-                playPromise.then(() => { this.isMusicPlaying = true; })
-                    .catch(() => console.log("Música aguardando interação do usuário para iniciar."));
-            }
-        }
-    },
-
-    stopMusic() {
-        if (this.music) {
-            this.music.pause();
-            this.music.currentTime = 0;
-        }
-        this.isMusicPlaying = false;
-    },
-
-    setVolume(value) {
-        this.volume = parseFloat(value);
-        localStorage.setItem('abstrolab_volume', this.volume.toString());
-        if (!this.isMuted) {
-            for (const key in this.sounds) this.sounds[key].volume = this.volume;
-            if (this.music) this.music.volume = this.volume;
-        }
-    },
-
-    toggleMute() {
-        this.isMuted = !this.isMuted;
-        localStorage.setItem('abstrolab_muted', this.isMuted.toString());
-        this.isMuted ? this.mute() : this.unmute();
-        return this.isMuted;
-    },
-
-    mute() {
-        for (const key in this.sounds) this.sounds[key].volume = 0;
-        if (this.music) this.music.volume = 0;
-    },
-
-    unmute() {
-        this.setVolume(parseFloat(localStorage.getItem('abstrolab_volume') || '0.5'));
-    }
-};
-
-SoundManager.init();
-
 document.addEventListener('DOMContentLoaded', async () => {
     const tituloEl = document.getElementById('titulo');
     const enunciadoEl = document.getElementById('enunciado');
@@ -93,39 +10,61 @@ document.addEventListener('DOMContentLoaded', async () => {
     const feedbackIconEl = document.getElementById('feedback-icon');
     const progressBar = document.getElementById('progressBar');
 
-    const iconCorrect = 'https://cdn-icons-png.flaticon.com/512/4315/4315445.png';
-    const iconIncorrect = 'https://cdn-icons-png.flaticon.com/512/4315/4315408.png';
-    const iconComplete = 'https://cdn-icons-png.flaticon.com/512/2920/2920325.png';
+    const iconCorrect = '../img/correct.png'; // Caminho local
+    const iconIncorrect = '../img/incorrect.png'; // Caminho local
+    const iconComplete = '../img/complete.png'; // Caminho local
 
     const urlParams = new URLSearchParams(window.location.search);
     const codigo = urlParams.get('codigo');
+    const USUARIO_ID = localStorage.getItem('loggedInUserId');
 
     let todosExercicios = [];
     let exercicioAtual = null;
 
-    if (!codigo) {
-        tituloEl.textContent = 'Erro';
-        enunciadoEl.textContent = 'Código do exercício não foi encontrado na URL.';
+    if (!codigo || !USUARIO_ID) {
+        tituloEl.textContent = 'Erro ao carregar exercício';
+        enunciadoEl.textContent = 'Código do exercício ou ID do usuário não foi encontrado na URL/sessão.';
+        // Remover esqueletos e botões
+        alternativasEl.innerHTML = '';
+        pictogramaEl.innerHTML = '';
+        verificarBtn.style.display = 'none';
+        proximoBtn.style.display = 'none';
         return;
     }
 
-    document.body.addEventListener('click', () => SoundManager.startMusic(), { once: true });
+    function removeSkeletons() {
+        tituloEl.classList.remove('skeleton-text', 'skeleton-text-lg');
+        enunciadoEl.classList.remove('skeleton-text', 'skeleton-text-md');
+        pictogramaEl.classList.remove('skeleton');
+        pictogramaEl.querySelector('.skeleton-image')?.remove();
+        alternativasEl.querySelectorAll('.skeleton-card').forEach(card => card.remove());
+        verificarBtn.classList.remove('skeleton-button');
+        proximoBtn.classList.remove('skeleton-button');
+    }
 
     async function renderizarExercicio(exercicio) {
+        removeSkeletons(); // Remove esqueletos ao renderizar dados reais
+
         exercicioAtual = exercicio;
         tituloEl.textContent = exercicio.titulo;
         enunciadoEl.textContent = exercicio.enunciado;
         alternativasEl.innerHTML = '';
 
-        const alternativasObj = JSON.parse(exercicio.alternativas);
+        const alternativasObj = typeof exercicio.alternativas === 'string' ? JSON.parse(exercicio.alternativas) : exercicio.alternativas;
+
+        // Limpa a seleção anterior
+        document.querySelectorAll('.alternativa-card').forEach(c => c.classList.remove('selected'));
+        verificarBtn.disabled = true; // Desabilita o botão até uma nova seleção
+
         Object.entries(alternativasObj).forEach(([key, alternativaTexto]) => {
             const card = document.createElement('div');
             card.className = 'alternativa-card';
-            card.innerHTML = `<input type="radio" name="resposta" value="${alternativaTexto}">
-                              <label>${alternativaTexto}</label>`;
+            card.innerHTML = `
+                <input type="radio" name="resposta" value="${alternativaTexto}" id="alt-${key}">
+                <label for="alt-${key}">${alternativaTexto}</label>
+            `;
 
             card.addEventListener('click', () => {
-                SoundManager.play('click');
                 document.querySelectorAll('.alternativa-card').forEach(c => c.classList.remove('selected'));
                 card.classList.add('selected');
                 card.querySelector('input').checked = true;
@@ -140,23 +79,43 @@ document.addEventListener('DOMContentLoaded', async () => {
         verificarBtn.style.display = 'block';
         proximoBtn.style.display = 'none';
         feedbackEl.style.display = 'none';
-        verificarBtn.disabled = true;
     }
 
     async function buscarPictograma(titulo) {
-        if (!titulo) return;
+        if (!titulo) {
+            pictogramaEl.innerHTML = '';
+            return;
+        }
+
+        let palavraBusca = '';
         const palavrasChave = titulo.replace(/[?.,!]/g, '').split(" ");
-        let palavraBusca = palavrasChave[palavrasChave.length - 1];
-        if (palavraBusca && palavraBusca.length <= 2 && palavrasChave.length > 1) {
-            palavraBusca = palavrasChave[palavrasChave.length - 2];
+        if (palavrasChave.length > 0) {
+            palavraBusca = palavrasChave[palavrasChave.length - 1].toLowerCase();
+            if (palavraBusca.length <= 2 && palavrasChave.length > 1) {
+                palavraBusca = palavrasChave[palavrasChave.length - 2].toLowerCase();
+            }
+        }
+        
+        if (palavraBusca.endsWith('s') && palavraBusca.length > 3) {
+            palavraBusca = palavraBusca.slice(0, -1);
+        }
+        if (palavraBusca.endsWith('as')) {
+            palavraBusca = palavraBusca.slice(0, -2) + 'a';
+        }
+        if (palavraBusca.endsWith('os')) {
+            palavraBusca = palavraBusca.slice(0, -2) + 'o';
         }
 
         try {
             const pictogramaResponse = await fetch(`/api/pictogramas/${palavraBusca}`);
-            if (!pictogramaResponse.ok) throw new Error('Falha ao buscar pictograma');
+            if (!pictogramaResponse.ok) {
+                console.warn(`Falha ao buscar pictograma para "${palavraBusca}". Status: ${pictogramaResponse.status}`);
+                pictogramaEl.innerHTML = '';
+                return;
+            }
 
             const pictogramas = await pictogramaResponse.json();
-            if (pictogramas.length > 0 && pictogramas[0]._id) {
+            if (pictogramas && pictogramas.length > 0 && pictogramas[0]._id) {
                 const pictogramaURL = `https://api.arasaac.org/api/pictograms/${pictogramas[0]._id}?download=false`;
                 pictogramaEl.innerHTML = `<img src="${pictogramaURL}" alt="Pictograma para ${titulo}">`;
             } else {
@@ -168,8 +127,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    verificarBtn.addEventListener('click', () => {
-        SoundManager.play('click');
+    verificarBtn.addEventListener('click', async () => {
         const selecionadaInput = document.querySelector('input[name="resposta"]:checked');
         if (!selecionadaInput) return;
 
@@ -179,13 +137,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         verificarBtn.style.display = 'none';
         proximoBtn.style.display = 'block';
 
-        if (respostaEscolhida === exercicioAtual.resposta_correta) {
-            SoundManager.play('correct');
+        if (String(respostaEscolhida) === String(exercicioAtual.resposta_correta)) {
             feedbackEl.className = 'feedback-container correct';
             resultadoEl.textContent = 'Muito bem!';
             feedbackIconEl.src = iconCorrect;
+            try {
+                await fetch('/api/progresso/registrar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ usuario_ID: USUARIO_ID, exercicio_ID: exercicioAtual.exercicio_ID })
+                });
+            } catch (error) {
+                console.error("Erro ao registrar progresso:", error);
+            }
         } else {
-            SoundManager.play('incorrect');
             feedbackEl.className = 'feedback-container incorrect';
             resultadoEl.textContent = `Quase! A resposta certa era: ${exercicioAtual.resposta_correta}`;
             feedbackIconEl.src = iconIncorrect;
@@ -193,15 +158,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     proximoBtn.addEventListener('click', () => {
-        SoundManager.play('click');
-        const indiceAtualNoArray = todosExercicios.findIndex(e => e.exercicio_codigo === codigo);
+        const indiceAtualNoArray = todosExercicios.findIndex(e => String(e.exercicio_codigo) === String(codigo));
 
-        if (indiceAtualNoArray < todosExercicios.length - 1) {
+        if (indiceAtualNoArray !== -1 && indiceAtualNoArray < todosExercicios.length - 1) {
             const proximoExercicio = todosExercicios[indiceAtualNoArray + 1];
-            window.location.href = `exercicio.html?codigo=${proximoExercicio.exercicio_codigo}`;
+            window.location.href = `exercicio.html?codigo=${encodeURIComponent(proximoExercicio.exercicio_codigo)}`;
         } else {
-            SoundManager.play('levelComplete');
-            SoundManager.stopMusic();
             tituloEl.textContent = "Trilha Concluída!";
             pictogramaEl.innerHTML = `<img src="${iconComplete}" alt="Trilha Concluída" style="max-width:150px;">`;
             enunciadoEl.innerHTML = "<p style='font-size:1.5em; font-weight:bold;'>Parabéns! Você completou todos os exercícios desta trilha.</p>";
@@ -209,7 +171,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             verificarBtn.style.display = 'none';
             proximoBtn.textContent = 'Voltar para Trilhas';
             proximoBtn.onclick = () => {
-                SoundManager.play('click');
                 window.location.href = 'trilha.html';
             };
         }
@@ -217,13 +178,31 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     try {
         const todosResponse = await fetch('/exercicios');
-        if (!todosResponse.ok) throw new Error('Falha ao carregar lista de exercícios.');
+        if (!todosResponse.ok) {
+            // Se não houver exercícios, a API retorna um array vazio com status 200, então 404 é um erro real.
+            throw new Error('Falha ao carregar lista de exercícios.');
+        }
         todosExercicios = await todosResponse.json();
 
-        const exercicioDetalhado = todosExercicios.find(e => e.exercicio_codigo === codigo);
-        if (!exercicioDetalhado) throw new Error('Exercício não encontrado.');
+        // Se a lista de exercícios estiver vazia, exibe uma mensagem
+        if (!todosExercicios || todosExercicios.length === 0) {
+            removeSkeletons();
+            tituloEl.textContent = 'Nenhum Exercício Disponível';
+            enunciadoEl.textContent = 'Parece que ainda não há exercícios cadastrados. Por favor, volte mais tarde.';
+            alternativasEl.innerHTML = '';
+            pictogramaEl.innerHTML = '';
+            verificarBtn.style.display = 'none';
+            proximoBtn.style.display = 'none';
+            return;
+        }
 
-        const indiceAtual = todosExercicios.findIndex(e => e.exercicio_codigo === codigo);
+        const exercicioDetalhadoResponse = await fetch(`/api/exercicios/codigo/${codigo}`);
+        if (!exercicioDetalhadoResponse.ok) {
+            throw new Error('Exercício não encontrado ou erro ao carregar detalhes.');
+        }
+        const exercicioDetalhado = await exercicioDetalhadoResponse.json();
+
+        const indiceAtual = todosExercicios.findIndex(e => String(e.exercicio_codigo) === String(codigo));
         if (indiceAtual !== -1 && todosExercicios.length > 0) {
             const progressoPercentual = ((indiceAtual + 1) / todosExercicios.length) * 100;
             progressBar.style.width = `${progressoPercentual}%`;
@@ -233,9 +212,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     } catch (error) {
         console.error('Erro ao carregar o exercício:', error);
+        removeSkeletons();
         tituloEl.textContent = 'Erro ao Carregar';
-        enunciadoEl.innerHTML = `<p style="color:red;">${error.message}. Tente recarregar a página.</p>`;
+        enunciadoEl.innerHTML = `<p style="color:var(--incorrect-color-text);">${error.message}. Tente recarregar a página.</p>`;
         alternativasEl.style.display = 'none';
+        pictogramaEl.innerHTML = '';
         verificarBtn.style.display = 'none';
+        proximoBtn.style.display = 'none';
     }
 });

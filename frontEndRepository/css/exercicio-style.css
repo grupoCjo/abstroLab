@@ -3,186 +3,358 @@
 :root {
     --primary-color: #ff8fab;
     --secondary-color: #81d4fa;
-    --correct-color: #d4edda;
-    --correct-border: #28a745;
-    --incorrect-color: #f8d7da;
-    --incorrect-border: #dc3545;
+    --correct-color-bg: #e6ffed; /* Light green for correct feedback */
+    --correct-color-text: #1a7e37; /* Dark green for correct text */
+    --incorrect-color-bg: #ffe6e6; /* Light red for incorrect feedback */
+    --incorrect-color-text: #cc0000; /* Dark red for incorrect text */
     --background-gradient: linear-gradient(120deg, #f8c6d2, #e0f7fa);
     --text-color: #4A4A4A;
+    --text-light: #6c757d;
     --white-color: #FFFFFF;
+    --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    --border-radius: 20px;
+    --button-border-radius: 50px;
+    --transition-duration: 0.3s;
 }
 
-body {
+body.exercicios-page {
     background: var(--background-gradient);
     font-family: 'Poppins', sans-serif;
     min-height: 100vh;
     padding: 20px;
     margin: 0;
-}
-
-.exercicios-page {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    padding-top: 80px; /* Ajuste para o header */
 }
 
+/* Wrapper for centering and max-width */
 .exercicio-wrapper {
     width: 100%;
-    max-width: 700px;
+    max-width: 760px; /* Increased max-width for a more spacious feel */
     margin: auto;
+    padding: 20px; /* Add some padding around the content */
 }
 
+/* Progress Bar */
 .progress-bar-container {
     width: 100%;
     height: 16px;
     background-color: #e0e0e0;
     border-radius: 8px;
-    margin-bottom: 25px;
+    margin-bottom: 30px; /* More space */
     overflow: hidden;
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .progress-bar {
-    width: 0%; /* Atualizado via JS */
+    width: 0%; /* Updated via JS */
     height: 100%;
     background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
     border-radius: 8px;
     transition: width 0.5s ease-in-out;
 }
 
+/* Exercise Container */
 .exercicio-container {
     background-color: var(--white-color);
     padding: 40px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
     text-align: center;
+    animation: fadeIn 0.8s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #titulo {
-    font-size: 2.2rem;
+    font-size: 2.5rem; /* Larger title */
     color: var(--text-color);
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+/* Pictogram Display */
+#pictograma-container {
+    min-height: 120px; /* Reserve space to prevent layout shift */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 25px;
 }
 
 #pictograma-container img {
-    max-width: 120px;
+    max-width: 150px; /* Larger pictograms */
+    max-height: 150px;
     border-radius: 15px;
-    animation: fadeIn 0.5s;
+    object-fit: contain;
+    animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Bouncy animation */
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
+@keyframes popIn {
+    0% { transform: scale(0.5); opacity: 0; }
+    80% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); }
 }
 
+/* Enunciation */
 #enunciado {
-    font-size: 1.2rem;
-    color: #555;
-    margin-bottom: 30px;
+    font-size: 1.3rem; /* Larger font size */
+    color: var(--text-color);
+    margin-bottom: 35px;
+    line-height: 1.5;
+    text-align: center;
+    font-weight: 400;
 }
 
+/* Alternatives Grid */
 .alternativas-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 15px;
-    margin-bottom: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjust minmax for larger cards */
+    gap: 20px; /* More space between cards */
+    width: 100%;
+    margin-bottom: 35px;
 }
 
 .alternativa-card {
-    background-color: #f9f9f9;
-    border: 2px solid #ddd;
+    background-color: #fdfdfd; /* Lighter background for cards */
+    border: 2px solid #e0e0e0;
     border-radius: 15px;
-    padding: 20px;
+    padding: 25px; /* More padding */
     cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 1.1rem;
+    transition: all var(--transition-duration) ease;
+    font-size: 1.2rem; /* Larger font for alternatives */
     font-weight: 600;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 80px; /* Ensure consistent height */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* Subtle shadow */
 }
 
 .alternativa-card:hover {
-    transform: translateY(-5px);
-    border-color: var(--secondary-color);
+    transform: translateY(-5px) scale(1.02);
+    border-color: var(--primary-color);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
 }
 
 .alternativa-card.selected {
-    background-color: #e0f7fa;
-    border-color: var(--secondary-color);
-    color: var(--text-color);
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--white-color);
+    box-shadow: 0 6px 15px rgba(var(--primary-color), 0.4);
+    transform: translateY(-2px);
 }
 
 .alternativa-card input[type="radio"] {
-    display: none;
+    display: none; /* Hide default radio button */
 }
 
+/* Feedback Container */
 .feedback-container {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 15px;
-    padding: 15px;
+    padding: 18px; /* More padding */
     border-radius: 15px;
-    margin-top: 20px;
-    transition: background-color 0.3s ease;
+    margin-top: 25px;
+    transition: background-color var(--transition-duration) ease;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
 }
 
 .feedback-container.correct {
-    background-color: var(--correct-color);
+    background-color: var(--correct-color-bg);
 }
 
 .feedback-container.incorrect {
-    background-color: var(--incorrect-color);
+    background-color: var(--incorrect-color-bg);
 }
 
 #feedback-icon {
-    width: 40px;
-    height: 40px;
+    width: 50px; /* Larger icons */
+    height: 50px;
+    object-fit: contain;
     animation: popIn 0.4s ease-out;
 }
 
-@keyframes popIn {
-    0% { transform: scale(0.5); opacity: 0; }
-    80% { transform: scale(1.1); }
-    100% { transform: scale(1); opacity: 1; }
-}
-
 #resultado {
-    font-size: 1.2rem;
+    font-size: 1.4rem; /* Larger text for feedback */
     font-weight: 700;
 }
 
-.feedback-container.correct #resultado { color: var(--correct-border); }
-.feedback-container.incorrect #resultado { color: var(--incorrect-border); }
+.feedback-container.correct #resultado { color: var(--correct-color-text); }
+.feedback-container.incorrect #resultado { color: var(--incorrect-color-text); }
 
-/* Botões de Ação */
+/* Action Buttons */
 .action-buttons {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 30px;
+    width: 100%;
 }
 
 .btn-action {
     width: 100%;
-    max-width: 300px;
-    padding: 18px;
-    font-size: 1.2rem;
+    max-width: 320px; /* Slightly wider buttons */
+    padding: 18px 30px;
+    font-size: 1.3rem; /* Larger font */
     font-weight: 700;
-    border-radius: 50px;
+    border-radius: var(--button-border-radius);
     border: none;
     color: white;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all var(--transition-duration) ease;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
 }
 
 #verificar {
-    background-color: var(--correct-border);
+    background-color: var(--primary-color); /* Use primary color for verify */
+}
+
+#verificar:hover:not(:disabled) {
+    background-color: #e36490; /* Darker pink */
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
 
 #verificar:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
 }
 
 #proximo {
     background-color: var(--secondary-color);
+}
+
+#proximo:hover {
+    background-color: #69c5f0; /* Darker blue */
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+/* Skeleton Loading States */
+.skeleton-text {
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    animation: pulse 1.5s infinite ease-in-out;
+    color: transparent; /* Hide text content */
+}
+
+.skeleton-text-lg {
+    width: 70%; 
+    height: 30px;
+    margin: 0 auto 20px auto;
+}
+.skeleton-text-md {
+    width: 90%; 
+    height: 20px; 
+    margin: 0 auto 35px auto;
+}
+.skeleton-text::before {
+    content: '\A0'; /* Non-breaking space to maintain height */
+}
+
+.pictogram-placeholder.skeleton {
+    background-color: #e0e0e0;
+    border-radius: 15px;
+    animation: pulse 1.5s infinite ease-in-out;
+    width: 120px; /* Match expected image size */
+    height: 120px; /* Match expected image size */
+    margin: 0 auto;
+}
+
+.skeleton-image {
+    width: 100%;
+    height: 100%;
+    background-color: #f0f0f0; /* Inner color of skeleton image */
+    border-radius: 15px;
+}
+
+.alternativa-card.skeleton-card {
+    background-color: #e0e0e0;
+    border-color: #ccc;
+    animation: pulse 1.5s infinite ease-in-out;
+    min-height: 80px;
+    cursor: default; /* Remove pointer cursor during skeleton */
+}
+
+.skeleton-button {
+    background-color: #e0e0e0;
+    animation: pulse 1.5s infinite ease-in-out;
+    color: transparent;
+    cursor: default;
+}
+
+.skeleton-button::before {
+    content: '\A0';
+}
+
+
+@keyframes pulse {
+    0% { background-color: #e0e0e0; }
+    50% { background-color: #f0f0f0; }
+    100% { background-color: #e0e0e0; }
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .exercicio-wrapper {
+        padding: 10px;
+    }
+    .exercicio-container {
+        padding: 30px 20px;
+    }
+    #titulo {
+        font-size: 2rem;
+    }
+    #enunciado {
+        font-size: 1.1rem;
+    }
+    .alternativas-grid {
+        grid-template-columns: 1fr; /* Stack alternatives on small screens */
+    }
+    .alternativa-card {
+        padding: 18px;
+        font-size: 1.1rem;
+    }
+    .feedback-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+    #feedback-icon {
+        width: 40px;
+        height: 40px;
+    }
+    #resultado {
+        font-size: 1.1rem;
+    }
+    .btn-action {
+        font-size: 1.1rem;
+        padding: 15px 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .exercicio-container {
+        padding: 20px 15px;
+    }
+    #titulo {
+        font-size: 1.8rem;
+    }
+    #enunciado {
+        font-size: 1rem;
+    }
 }

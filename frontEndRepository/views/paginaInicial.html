@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AbstroLab - Meu Dashboard</title>
     <link rel="stylesheet" href="../css/paginaInicial.css" />
-    <link rel="stylesheet" href="../css/style.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="pagInicial">
+<body class="pagInicial theme-light">
     <div class="welcome-overlay" id="welcome-overlay">
         <div class="welcome-box">
             <h1>Bem-vindo(a) ao AbstroLab!</h1>
@@ -21,16 +20,19 @@
         <aside class="sidebar">
             <div class="logo">AbstroLab</div>
             <div class="user-profile">
-                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Avatar do Usuário" class="user-avatar">
-                <h2 id="nomeUsuario">Carregando...</h2>
+                <div id="user-avatar-container">
+                    <img id="user-avatar" src="" alt="" class="user-avatar">
+                </div>
+                <h2 id="user-name" class="skeleton-text skeleton-text-lg"></h2>
+                <p id="user-email" class="skeleton-text skeleton-text-md"></p>
             </div>
             <nav class="sidebar-nav">
-                <a href="./paginaInicial.html" class="nav-item active"><i class="icon">🏠</i> Dashboard</a>
-                <a href="./trilha.html" class="nav-item"><i class="icon">🗺️</i> Ver Trilha Completa</a>
-                <a href="./configuracoes.html" class="nav-item"><i class="icon">⚙️</i> Configurações</a>
+                <a href="./paginaInicial.html" class="nav-item active sidebar-link">🏠 Dashboard</a>
+                <a href="./trilha.html" class="nav-item sidebar-link">🗺️ Ver Trilha Completa</a>
+                <a href="./configuracoes.html" class="nav-item sidebar-link">⚙️ Configurações</a>
             </nav>
-            <button id="btnSair" class="btn-sair">
-                <i class="icon">🚪</i> Sair
+            <button id="btnSair" class="btn-sair sidebar-link">
+                🚪 Sair
             </button>
         </aside>
 
@@ -39,35 +41,35 @@
                 <h1>Seu Progresso</h1>
                 <p>Continue sua jornada de aprendizado e conquiste novos desafios!</p>
             </header>
+            <div id="message-area" style="display: none;" class="feedback-message error"></div>
             <section class="main-action-card" id="card-proximo-exercicio">
                 <div class="card-content">
-                    <div class="skeleton-text skeleton" style="width: 70%;"></div>
-                    <div class="skeleton-text skeleton" style="width: 50%;"></div>
-                    <div class="skeleton-button skeleton"></div>
+                    <h2 id="next-exercise-title" class="skeleton-text skeleton-text-lg"></h2>
+                    <p id="next-exercise-description" class="skeleton-text skeleton-text-md"></p>
+                    <button id="btn-iniciar-exercicio" class="btn-start skeleton-button"></button>
                 </div>
             </section>
             <section class="stats-grid">
                 <div class="stat-card">
                     <h3>Exercícios Completos</h3>
-                    <p id="stats-completos" class="skeleton-text skeleton">0</p>
+                    <p><span id="completed-exercises" class="skeleton-text skeleton-text-sm">0</span>/<span id="total-exercises" class="skeleton-text skeleton-text-sm">0</span></p>
                 </div>
                 <div class="stat-card">
                     <h3>Progresso da Trilha</h3>
                     <div class="progress-bar-container">
-                        <div id="stats-progresso-barra" class="progress-bar"></div>
+                        <div id="exercise-progress" class="progress-bar"></div>
                     </div>
-                    <span id="stats-progresso-percent" class="skeleton-text skeleton" style="width: 40px">0%</span>
+                    <span id="stats-progresso-percent" class="skeleton-text skeleton-text-sm">0%</span>
                 </div>
                 <div class="stat-card">
                     <h3>Conquistas</h3>
-                    <p id="stats-conquistas" class="skeleton-text skeleton">🏆</p>
+                    <p id="stats-conquistas" class="skeleton-text skeleton-text-sm">🏆</p>
                 </div>
             </section>
         </main>
     </div>
 
-    
-    <scrIpt type="module" src="../js/script.js"></script>
+    <script type="module" src="../js/script.js"></script>
     <script src="../js/paginaInicial.js"></script>
 
 </body>

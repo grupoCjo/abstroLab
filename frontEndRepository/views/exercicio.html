@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../css/exercicio-style.css">
 </head>
 <body>
+    <header></header> 
     <main class="exercicios-page">
         <div class="exercicio-wrapper" role="main" aria-label="Área de exercícios">
             <section class="progress-bar-container" aria-label="Barra de progresso do exercício">
@@ -16,19 +17,25 @@
             </section>
 
             <section class="exercicio-container" aria-live="polite" aria-atomic="true">
-                <h2 id="titulo">Carregando...</h2>
+                <h2 id="titulo" class="skeleton-text skeleton-text-lg"></h2>
 
-                <div id="pictograma-container" aria-label="Área de exibição do pictograma"></div>
+                <div id="pictograma-container" class="pictogram-placeholder skeleton" aria-label="Área de exibição do pictograma">
+                    <div class="skeleton-image"></div>
+                </div>
 
-                <p id="enunciado"></p>
+                <p id="enunciado" class="skeleton-text skeleton-text-md"></p>
+                
 
                 <div id="alternativas-container" class="alternativas-grid" aria-label="Opções de resposta">
-                    <!-- alternativas serão inseridas aqui dinamicamente -->
+                    <div class="alternativa-card skeleton-card"></div>
+                    <div class="alternativa-card skeleton-card"></div>
+                    <div class="alternativa-card skeleton-card"></div>
+                    <div class="alternativa-card skeleton-card"></div>
                 </div>
 
                 <div class="action-buttons">
-                    <button id="verificar" class="btn-action" disabled>Verificar</button>
-                    <button id="proximo" class="btn-action" style="display:none;">Próximo</button>
+                    <button id="verificar" class="btn-action skeleton-button" disabled>Verificar</button>
+                    <button id="proximo" class="btn-action skeleton-button" style="display:none;">Próximo</button>
                 </div>
 
                 <div class="feedback-container" id="feedback-container" style="display:none;" role="alert" aria-live="assertive">
@@ -38,7 +45,9 @@
             </section>
         </div>
     </main>
+    <footer></footer>
+
+    <script type="module" src="../js/script.js"></script>
     <script src="../js/exercicio.js"></script>
-    <script src="../js/script.js"></script>
 </body>
 </html>
