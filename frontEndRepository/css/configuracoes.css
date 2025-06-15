@@ -1,3 +1,4 @@
+/* abstroLab/frontEndRepository/css/configuracoes.css */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 :root {
@@ -8,7 +9,6 @@
     --border-radius: 16px;
 }
 
-/* --- Temas --- */
 body.theme-light {
     --bg-color: #f4f7fc;
     --card-bg: #FFFFFF;
@@ -17,12 +17,12 @@ body.theme-light {
     --border-color: #e9ecef;
     --input-bg: #fdfdfd;
     --input-border: #dee2e6;
-    --button-hover-bg: #e0f2f7; /* Um tom mais claro para hover em light */
+    --button-hover-bg: #e0f2f7;
     --button-hover-text: var(--text-color);
 }
 body.theme-dark {
-    --bg-color: #1a1a2e; /* Azul escuro mais agradável */
-    --card-bg: #22223b; /* Outro tom de azul escuro */
+    --bg-color: #1a1a2e;
+    --card-bg: #22223b;
     --text-color: #e0e0e0;
     --text-light: #a0a0a0;
     --border-color: #333;
@@ -32,9 +32,9 @@ body.theme-dark {
     --button-hover-text: var(--text-color);
 }
 body.theme-pink {
-    --bg-color: #ffebee; /* Rosa claro */
+    --bg-color: #ffebee;
     --card-bg: #ffffff;
-    --text-color: #d81b60; /* Rosa mais forte */
+    --text-color: #d81b60;
     --text-light: #f06292;
     --border-color: #f8bbd0;
     --input-bg: #fff5f5;
@@ -43,13 +43,12 @@ body.theme-pink {
     --button-hover-text: var(--text-color);
 }
 
-/* --- Estrutura Base --- */
 body {
     font-family: var(--font-family);
     background-color: var(--bg-color);
     color: var(--text-color);
     margin: 0;
-    padding: 40px 20px; /* Ajustado para melhor responsividade */
+    padding: 80px 20px 40px 20px;
     transition: background-color 0.3s, color 0.3s;
     display: flex;
     flex-direction: column;
@@ -82,7 +81,6 @@ body {
     color: var(--secondary-color);
 }
 
-/* Card de Configuração */
 .settings-card {
     background-color: var(--card-bg);
     border-radius: var(--border-radius);
@@ -116,7 +114,7 @@ body {
     font-weight: 600;
     font-size: 1rem;
     color: var(--text-color);
-    text-align: left; /* Alinhar label à esquerda */
+    text-align: left;
 }
 .form-group input[type="text"] {
     padding: 12px;
@@ -134,13 +132,11 @@ body {
     box-shadow: 0 0 0 3px rgba(var(--primary-color), 0.2);
     outline: none;
 }
-.form-group button { /* Estilo para o botão Salvar Nome */
-    align-self: flex-start; /* Alinha o botão à esquerda dentro do form-group */
+.form-group button {
+    align-self: flex-start;
     margin-top: 10px;
 }
 
-
-/* Botões */
 .btn {
     border: none;
     cursor: pointer;
@@ -155,18 +151,16 @@ body {
     color: white;
 }
 .btn-primary:hover {
-    background-color: var(--secondary-color); /* Um bom hover para botões primários */
+    background-color: var(--secondary-color);
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(var(--primary-color), 0.3);
 }
 
-
-/* Theme Switcher */
 .theme-switcher {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
-    justify-content: center; /* Centraliza os botões de tema */
+    justify-content: center;
 }
 .theme-option {
     padding: 10px 20px;
@@ -190,29 +184,26 @@ body {
     box-shadow: 0 2px 8px rgba(var(--primary-color), 0.3);
 }
 
-/* Mensagem de Feedback */
 .feedback-message {
     margin-top: 10px;
     font-weight: 600;
-    height: 20px; /* Evita que o layout pule */
+    height: 20px;
     text-align: center;
 }
 .feedback-message.success { color: #28a745; }
 .feedback-message.error { color: #dc3545; }
 
-/* Seção de botões de ações (Salvar Alterações) */
 .settings-actions {
     display: flex;
     justify-content: center;
     margin-top: 40px;
 }
 .settings-actions .btn-primary {
-    width: auto; /* Permite que o botão se ajuste ao conteúdo */
+    width: auto;
     padding: 15px 30px;
     font-size: 1.1rem;
 }
 
-/* Responsividade */
 @media (max-width: 768px) {
     body {
         padding: 20px;

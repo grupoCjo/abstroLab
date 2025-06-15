@@ -9,10 +9,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const resultadoEl = document.getElementById('resultado');
     const feedbackIconEl = document.getElementById('feedback-icon');
     const progressBar = document.getElementById('progressBar');
+    const voltarTrilhaBtn = document.createElement('button');
 
     const iconCorrect = '../img/correct.png';
-    const iconIncorrect = '../img/incorrect.png'; 
-    const iconComplete = '../img/complete.png'; 
+    const iconIncorrect = '../img/incorrect.png';
+    const iconComplete = '../img/complete.png';
 
     const urlParams = new URLSearchParams(window.location.search);
     const codigo = urlParams.get('codigo');
@@ -21,14 +22,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     let todosExercicios = [];
     let exercicioAtual = null;
 
+    voltarTrilhaBtn.id = 'voltar-trilha';
+    voltarTrilhaBtn.className = 'btn-action';
+    voltarTrilhaBtn.textContent = 'Voltar para a Trilha';
+    voltarTrilhaBtn.style.display = 'none';
+    document.querySelector('.action-buttons').appendChild(voltarTrilhaBtn);
+
     if (!codigo || !USUARIO_ID) {
         tituloEl.textContent = 'Erro ao carregar exercício';
         enunciadoEl.textContent = 'Código do exercício ou ID do usuário não foi encontrado na URL/sessão.';
-        // Remover esqueletos e botões
         alternativasEl.innerHTML = '';
         pictogramaEl.innerHTML = '';
         verificarBtn.style.display = 'none';
         proximoBtn.style.display = 'none';
+        voltarTrilhaBtn.style.display = 'block';
         return;
     }
 
@@ -43,7 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function renderizarExercicio(exercicio) {
-        removeSkeletons(); // Remove esqueletos ao renderizar dados reais
+        removeSkeletons();
 
         exercicioAtual = exercicio;
         tituloEl.textContent = exercicio.titulo;
@@ -52,9 +59,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const alternativasObj = typeof exercicio.alternativas === 'string' ? JSON.parse(exercicio.alternativas) : exercicio.alternativas;
 
-        // Limpa a seleção anterior
         document.querySelectorAll('.alternativa-card').forEach(c => c.classList.remove('selected'));
-        verificarBtn.disabled = true; // Desabilita o botão até uma nova seleção
+        verificarBtn.disabled = true;
 
         Object.entries(alternativasObj).forEach(([key, alternativaTexto]) => {
             const card = document.createElement('div');
@@ -78,6 +84,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         verificarBtn.style.display = 'block';
         proximoBtn.style.display = 'none';
+        voltarTrilhaBtn.style.display = 'none';
         feedbackEl.style.display = 'none';
     }
 
@@ -95,7 +102,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 palavraBusca = palavrasChave[palavrasChave.length - 2].toLowerCase();
             }
         }
-        
+
         if (palavraBusca.endsWith('s') && palavraBusca.length > 3) {
             palavraBusca = palavraBusca.slice(0, -1);
         }
@@ -136,6 +143,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         feedbackEl.style.display = 'flex';
         verificarBtn.style.display = 'none';
         proximoBtn.style.display = 'block';
+        voltarTrilhaBtn.style.display = 'none';
 
         if (String(respostaEscolhida) === String(exercicioAtual.resposta_correta)) {
             feedbackEl.className = 'feedback-container correct';
@@ -169,22 +177,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             enunciadoEl.innerHTML = "<p style='font-size:1.5em; font-weight:bold;'>Parabéns! Você completou todos os exercícios desta trilha.</p>";
             alternativasEl.style.display = 'none';
             verificarBtn.style.display = 'none';
-            proximoBtn.textContent = 'Voltar para Trilhas';
-            proximoBtn.onclick = () => {
-                window.location.href = 'trilha.html';
-            };
+            proximoBtn.style.display = 'none';
+            voltarTrilhaBtn.style.display = 'block';
         }
+    });
+
+    voltarTrilhaBtn.addEventListener('click', () => {
+        window.location.href = 'trilha.html';
     });
 
     try {
         const todosResponse = await fetch('/exercicios');
         if (!todosResponse.ok) {
-            // Se não houver exercícios, a API retorna um array vazio com status 200, então 404 é um erro real.
             throw new Error('Falha ao carregar lista de exercícios.');
         }
         todosExercicios = await todosResponse.json();
 
-        // Se a lista de exercícios estiver vazia, exibe uma mensagem
         if (!todosExercicios || todosExercicios.length === 0) {
             removeSkeletons();
             tituloEl.textContent = 'Nenhum Exercício Disponível';
@@ -193,6 +201,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             pictogramaEl.innerHTML = '';
             verificarBtn.style.display = 'none';
             proximoBtn.style.display = 'none';
+            voltarTrilhaBtn.style.display = 'block';
             return;
         }
 
@@ -219,5 +228,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         pictogramaEl.innerHTML = '';
         verificarBtn.style.display = 'none';
         proximoBtn.style.display = 'none';
+        voltarTrilhaBtn.style.display = 'block';
     }
 });

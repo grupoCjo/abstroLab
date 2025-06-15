@@ -1,13 +1,10 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  // Define as páginas que não devem carregar o header e o footer via JS (elas já têm no HTML)
-  // Mas todas devem aplicar o tema.
-  const noHeaderFooterPages = ['configuracoes.html', 'paginaInicial.html', 'exercicio.html', 'trilha.html', 'contato.html', 'sobre.html']; 
+  const themedPages = ['paginaInicial.html', 'trilha.html', 'configuracoes.html', 'exercicio.html'];
   const currentPage = window.location.pathname.split('/').pop();
 
-  // Aplica o tema imediatamente para todas as páginas que o suportam
   await aplicarTemaSalvo();
 
-  // Carrega o header e footer apenas para as páginas que não são declaradas como "noHeaderFooterPages"
+  const noHeaderFooterPages = ['configuracoes.html', 'paginaInicial.html', 'exercicio.html', 'trilha.html'];
   if (!noHeaderFooterPages.includes(currentPage)) {
     carregarHeaderFooter();
   }
@@ -47,7 +44,7 @@ function setupHamburgerMenu() {
   if (hamburger && navLinks) {
     hamburger.addEventListener('click', () => {
       navLinks.classList.toggle('active');
-      hamburger.classList.toggle('active'); // Adiciona classe 'active' ao hamburger
+      hamburger.classList.toggle('active');
     });
   }
 }
@@ -73,15 +70,14 @@ function inicializarCarrossel() {
     if (featureCards.length === 0) return;
     const itemStyle = getComputedStyle(featureCards[0]);
     const itemWidth = featureCards[0].offsetWidth;
-    const gap = parseFloat(getComputedStyle(carouselItems).getPropertyValue('gap')) || 0; // Pega o valor do gap
+    const gap = parseFloat(getComputedStyle(carouselItems).getPropertyValue('gap')) || 0;
     
-    // Calcula quantos itens cabem na view e ajusta o índice para não ir além do final
     const carouselWidth = carouselItems.parentElement.offsetWidth;
     const itemsInView = Math.floor(carouselWidth / (itemWidth + gap));
-    const maxIndex = Math.max(0, totalItems - itemsInView); // Garante que não há índice negativo
+    const maxIndex = Math.max(0, totalItems - itemsInView);
     
-    index = Math.min(index, maxIndex); // Ajusta o índice se a tela for redimensionada para menor
-    index = Math.max(0, index); // Garante que o índice não seja negativo
+    index = Math.min(index, maxIndex);
+    index = Math.max(0, index);
 
     carouselItems.style.transform = `translateX(-${index * (itemWidth + gap)}px)`;
   };
@@ -95,12 +91,12 @@ function inicializarCarrossel() {
     let newIndex = index + step;
 
     if (newIndex < 0) {
-        newIndex = 0; // Não permite ir para antes do primeiro item
+        newIndex = 0;
     } else if (newIndex > totalItems - itemsInView) {
-        newIndex = totalItems - itemsInView; // Não permite ir para depois do último item visível
+        newIndex = totalItems - itemsInView;
     }
     
-    if (index !== newIndex) { // Só atualiza se o índice realmente mudar
+    if (index !== newIndex) {
         index = newIndex;
         updateCarousel();
     }
@@ -110,9 +106,8 @@ function inicializarCarrossel() {
   document.querySelector('.carousel-next')?.addEventListener('click', () => moveCarousel(1));
 
   window.addEventListener('resize', updateCarousel);
-  updateCarousel(); // Inicializa a posição correta ao carregar
+  updateCarousel();
 }
-
 
 function inicializarCadastro() {
   const btnCadastro = document.querySelector(".btnCadastro");
@@ -140,7 +135,7 @@ function inicializarCadastro() {
       erroSenha.style.display = "block";
       return;
     }
-    if (senha.length < 6) { // Exemplo de validação de senha mínima
+    if (senha.length < 6) {
         erroSenha.innerText = "A senha deve ter no mínimo 6 caracteres.";
         erroSenha.style.display = "block";
         return;
@@ -179,7 +174,6 @@ function inicializarCadastro() {
 
       if (response.ok) {
         alert("Cadastro realizado com sucesso!");
-        // Após o cadastro, tentar logar o usuário automaticamente para iniciar uma sessão
         const loginResponse = await fetch("/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -190,7 +184,7 @@ function inicializarCadastro() {
         if (loginResponse.ok) {
             localStorage.setItem('loggedInUserId', loginResult.usuario_ID);
             await criarSessao(loginResult.usuario_ID);
-            // Redireciona para a página inicial do dashboard
+            sessionStorage.removeItem('hasVisitedDashboard');
             window.location.href = "paginaInicial.html";
         } else {
             alert("Cadastro realizado, mas falha no login automático. Por favor, faça login manualmente.");
@@ -236,6 +230,7 @@ function inicializarLogin() {
         localStorage.setItem('loggedInUserId', resultado.usuario_ID);
         await criarSessao(resultado.usuario_ID);
         alert("Login efetuado com sucesso!");
+        sessionStorage.removeItem('hasVisitedDashboard');
         window.location.href = "paginaInicial.html";
       } else {
         erroLogin.innerText = resultado.message || "Email ou senha inválidos.";
@@ -254,14 +249,13 @@ async function criarSessao(usuario_ID) {
     const sessaoResponse = await fetch("/api/sessoes/criar", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ usuario_ID }), // sessao_status 'ativa' é default no backend
+      body: JSON.stringify({ usuario_ID }),
     });
 
     const sessaoResult = await sessaoResponse.json();
 
     if (sessaoResponse.ok) {
       localStorage.setItem('loggedInSessionId', sessaoResult.sessao_ID);
-      console.log("Sessão criada com sucesso:", sessaoResult.sessao_ID);
     } else {
       console.warn("Erro ao criar sessão:", sessaoResult.message);
     }
@@ -275,36 +269,40 @@ async function aplicarTemaSalvo() {
     const USUARIO_ID = localStorage.getItem('loggedInUserId');
     let savedTheme = localStorage.getItem('abstrolab_theme');
 
-    // Se o usuário estiver logado, tente buscar o tema do banco de dados
-    if (USUARIO_ID) {
-        try {
-            const response = await fetch(`/api/configuracoes/${USUARIO_ID}`);
-            if (response.ok) {
-                const config = await response.json();
-                savedTheme = config.tema;
-                localStorage.setItem('abstrolab_theme', savedTheme); // Atualiza o localStorage com o tema do DB
-            } else if (response.status === 404) {
-                // Se não houver configuração para o usuário no DB, define como 'light'
-                // e salva no localStorage. O salvamento no DB ocorrerá se o usuário
-                // for para a página de configurações e salvar suas preferências.
-                savedTheme = 'light';
-                localStorage.setItem('abstrolab_theme', savedTheme);
-            } else {
-                console.error("Erro ao buscar configurações do usuário:", await response.text());
-                // Fallback para o tema salvo localmente ou padrão
+    const themedPages = ['paginaInicial.html', 'trilha.html', 'configuracoes.html', 'exercicio.html'];
+    const currentPage = window.location.pathname.split('/').pop();
+
+    if (themedPages.includes(currentPage)) {
+        if (USUARIO_ID) {
+            try {
+                const response = await fetch(`/api/configuracoes/${USUARIO_ID}`);
+                if (response.ok) {
+                    const config = await response.json();
+                    savedTheme = config.tema;
+                    localStorage.setItem('abstrolab_theme', savedTheme);
+                } else if (response.status === 404) {
+                    savedTheme = 'light';
+                    localStorage.setItem('abstrolab_theme', savedTheme);
+                } else {
+                    console.error("Erro ao buscar configurações do usuário:", await response.text());
+                    if (!savedTheme) savedTheme = 'light';
+                }
+            } catch (error) {
+                console.error("Erro na comunicação com a API de configurações:", error);
                 if (!savedTheme) savedTheme = 'light';
             }
-        } catch (error) {
-            console.error("Erro na comunicação com a API de configurações:", error);
-            // Fallback para o tema salvo localmente ou padrão
+        } else {
             if (!savedTheme) savedTheme = 'light';
         }
+        body.className = body.className.split(' ').filter(c => !c.startsWith('theme-')).join(' ');
+        body.classList.add(`theme-${savedTheme}`);
+        if (currentPage === 'configuracoes.html') {
+            const themeOptions = document.querySelectorAll(".theme-option");
+            themeOptions.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.theme === savedTheme);
+            });
+        }
     } else {
-        // Se não houver usuário logado e não há tema salvo, usa 'light'
-        if (!savedTheme) savedTheme = 'light';
+        body.className = '';
     }
-
-    // Remove apenas classes de tema existentes e aplica o novo tema
-    body.className = body.className.split(' ').filter(c => !c.startsWith('theme-')).join(' ');
-    body.classList.add(`theme-${savedTheme}`);
 }

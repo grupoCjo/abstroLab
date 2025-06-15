@@ -1,6 +1,6 @@
+/* abstroLab/frontEndRepository/css/trilha.css */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-/* Variáveis de tema para a página da trilha */
 body.trilha-page.theme-light {
     --trilha-bg-start: #f8c6d2;
     --trilha-bg-end: #e0f7fa;
@@ -22,8 +22,8 @@ body.trilha-page.theme-dark {
     --trilha-card-bg: #2c2c47;
     --trilha-text-color: #e0e0e0;
     --trilha-text-light: #a0a0a0;
-    --trilha-primary-bolinha: #5c2c6d; /* Roxo escuro */
-    --trilha-secondary-bolinha: #2c5f7d; /* Azul acinzentado escuro */
+    --trilha-primary-bolinha: #5c2c6d;
+    --trilha-secondary-bolinha: #2c5f7d;
     --trilha-bolinha-shadow: rgba(92, 44, 109, 0.4);
     --trilha-bolinha-hover: #3c3c5f;
     --trilha-bolinha-completed-bg: #215e47;
@@ -46,15 +46,13 @@ body.trilha-page.theme-pink {
     --trilha-bolinha-completed-border: #e91e63;
 }
 
-
-/* Estilos base para a página da trilha */
 .trilha-page {
     background: linear-gradient(120deg, var(--trilha-bg-start), var(--trilha-bg-end));
     font-family: var(--font-family);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    padding-top: 80px; /* Espaço para o header fixo */
+    padding-top: 80px;
     color: var(--trilha-text-color);
     transition: background-color 0.3s, color 0.3s;
 }
@@ -68,7 +66,7 @@ body.trilha-page.theme-pink {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-bottom: 60px; /* Espaço para o footer fixo */
+    padding-bottom: 60px;
 }
 
 .trilha-header {
@@ -109,31 +107,29 @@ body.trilha-page.theme-pink {
     color: var(--trilha-secondary-bolinha);
 }
 
-/* Container da Grade de Bolinhas */
 .trilha-grid-container {
     background-color: var(--trilha-card-bg);
     border-radius: var(--border-radius-main);
     box-shadow: var(--shadow-strong);
     padding: 40px;
     width: 100%;
-    max-width: 900px; /* Ajuste a largura máxima conforme necessário */
-    display: flex; /* Usar flexbox para alinhar as bolinhas */
-    flex-wrap: wrap; /* Permitir que as bolinhas quebrem para a próxima linha */
-    justify-content: center; /* Centralizar as bolinhas */
-    gap: 25px; /* Espaçamento entre as bolinhas */
+    max-width: 900px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
 }
 
 .bolinhas-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 25px; /* Espaçamento entre os itens */
+    gap: 25px;
     width: 100%;
 }
 
-/* Estilo para cada bolinha de exercício */
 .bolinha {
-    width: 80px; /* Bolinhas maiores para melhor toque */
+    width: 80px;
     height: 80px;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--trilha-primary-bolinha), var(--trilha-secondary-bolinha));
@@ -142,12 +138,12 @@ body.trilha-page.theme-pink {
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 1.8rem; /* Tamanho do número maior */
+    font-size: 1.8rem;
     cursor: pointer;
     box-shadow: 0 4px 15px var(--trilha-bolinha-shadow);
     transition: all 0.3s ease;
-    flex-shrink: 0; /* Não permite que as bolinhas encolham */
-    position: relative; /* Para a linha de conexão */
+    flex-shrink: 0;
+    position: relative;
 }
 
 .bolinha:hover {
@@ -155,10 +151,9 @@ body.trilha-page.theme-pink {
     box-shadow: 0 8px 25px var(--trilha-bolinha-shadow);
 }
 
-/* Indicador de exercício completo */
 .bolinha.completed {
-    background: var(--trilha-bolinha-completed-bg); /* Cor de fundo para completo */
-    color: var(--trilha-bolinha-completed-text); /* Cor do texto para completo */
+    background: var(--trilha-bolinha-completed-bg);
+    color: var(--trilha-bolinha-completed-text);
     border: 3px solid var(--trilha-bolinha-completed-border);
 }
 
@@ -167,14 +162,12 @@ body.trilha-page.theme-pink {
     color: white;
 }
 
-
-/* Esqueletos de carregamento */
 .skeleton-bolinha {
     background-color: #e0e0e0;
     animation: pulse 1.5s infinite ease-in-out;
     cursor: default;
     box-shadow: none;
-    pointer-events: none; /* Desabilita cliquess durante o carregamento */
+    pointer-events: none;
 }
 
 @keyframes pulse {
@@ -183,7 +176,6 @@ body.trilha-page.theme-pink {
     100% { background-color: #e0e0e0; }
 }
 
-/* Mensagem de exercícios não disponíveis */
 .trilha-empty-message {
     padding: 25px 30px;
     font-size: 1.3em;
@@ -194,7 +186,32 @@ body.trilha-page.theme-pink {
     width: 100%;
 }
 
-/* Responsividade */
+.btn-sair-trilha {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: auto;
+    padding: 10px 20px;
+    margin-top: 30px;
+    border-radius: 12px;
+    border: none;
+    background-color: #fce4ec;
+    color: #ad1457;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.btn-sair-trilha:hover {
+    background-color: #d81b60;
+    color: white;
+    box-shadow: 0 4px 15px rgba(216, 27, 96, 0.3);
+    transform: translateY(-2px);
+}
+
 @media (max-width: 768px) {
     .trilha-page {
         padding-top: 70px;
