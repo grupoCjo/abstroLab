@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         container.innerHTML = '<p class="feedback-message error trilha-empty-message">Por favor, faça login para ver a trilha de exercícios.</p>';
         btnSairTrilha.textContent = '🚪 Voltar para o Login';
         btnSairTrilha.addEventListener('click', () => {
-            window.location.href = 'cadastro.html';
+            window.location.href = '../views/cadastro.html';
         });
         return;
     }
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             localStorage.removeItem("loggedInUserId");
             localStorage.removeItem("loggedInSessionId");
             sessionStorage.removeItem('hasVisitedDashboard');
-            window.location.href = "cadastro.html";
+            window.location.href = "../views/cadastro.html";
         }
     });
 
