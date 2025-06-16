@@ -258,6 +258,7 @@ app.post("/api/exercicios", async (req, res) => {
       "alternativas",
       "resposta_correta",
       "nivel",
+      "codigo"
     ];
 
     for (const campo of camposObrigatorios) {
@@ -286,7 +287,7 @@ app.post("/api/exercicios", async (req, res) => {
     for (const exercicio of exercicios) {
       // O exercicio_ID é AUTO_INCREMENT, e o trigger cuidará do exercicio_codigo
       const querySQL = `
-        INSERT INTO exercicios (posicao_trilha, titulo, enunciado, alternativas, resposta_correta, nivel, codigo)
+        INSERT INTO exercicios (posicao_trilha, titulo, enunciado, alternativas, resposta_correta, nivel,codigo)
         VALUES (?, ?, ?, ?, ?, ?, ?)
       `;
 
@@ -297,7 +298,7 @@ app.post("/api/exercicios", async (req, res) => {
         JSON.stringify(exercicio.alternativas),
         exercicio.resposta_correta,
         exercicio.nivel,
-        exercicio.codigo // o campo 'codigo' do JSON de entrada será ignorado se o trigger for usado, mas o modelo de dados o inclui
+        exercicio.codigo
       ]);
       logger.info(`Exercício cadastrado com ID: ${result.insertId} e Título: ${exercicio.titulo}`);
       resultados.push({ exercicio_ID: result.insertId, titulo: exercicio.titulo });
