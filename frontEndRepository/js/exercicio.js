@@ -94,37 +94,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        let palavraBusca = '';
-        const palavrasChave = titulo.replace(/[?.,!]/g, '').split(" ");
-        if (palavrasChave.length > 0) {
-            palavraBusca = palavrasChave[palavrasChave.length - 1].toLowerCase();
-            if (palavraBusca.length <= 2 && palavrasChave.length > 1) {
-                palavraBusca = palavrasChave[palavrasChave.length - 2].toLowerCase();
-            }
-        }
-
-        if (palavraBusca.endsWith('s') && palavraBusca.length > 3) {
-            palavraBusca = palavraBusca.slice(0, -1);
-        }
-        if (palavraBusca.endsWith('as')) {
-            palavraBusca = palavraBusca.slice(0, -2) + 'a';
-        }
-        if (palavraBusca.endsWith('os')) {
-            palavraBusca = palavraBusca.slice(0, -2) + 'o';
-        }
-
         try {
-            const pictogramaResponse = await fetch(`/api/pictogramas/${palavraBusca}`);
+            // Buscar exatamente o título completo- Tif, fiz os exercícios com o título sendo o nome de um pictograma da API
+            const pictogramaResponse = await fetch(`/api/pictogramas/${encodeURIComponent(titulo)}`);
+
             if (!pictogramaResponse.ok) {
-                console.warn(`Falha ao buscar pictograma para "${palavraBusca}". Status: ${pictogramaResponse.status}`);
+                console.warn(`Falha ao buscar pictograma para "${titulo}". Status: ${pictogramaResponse.status}`);
                 pictogramaEl.innerHTML = '';
                 return;
             }
 
             const pictogramas = await pictogramaResponse.json();
+
             if (pictogramas && pictogramas.length > 0 && pictogramas[0]._id) {
                 const pictogramaURL = `https://api.arasaac.org/api/pictograms/${pictogramas[0]._id}?download=false`;
                 pictogramaEl.innerHTML = `<img src="${pictogramaURL}" alt="Pictograma para ${titulo}">`;
+
+                if (pictogramas[0].keyword && pictogramas[0].keyword.length > 0) {
+                    const pluralWord = pictogramas[0].keyword[0].plural;
+                    console.log(`Plural registrado no pictograma: ${pluralWord}`);
+                }
+
             } else {
                 pictogramaEl.innerHTML = '';
             }
@@ -133,6 +123,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             pictogramaEl.innerHTML = '';
         }
     }
+    
 
     verificarBtn.addEventListener('click', async () => {
         const selecionadaInput = document.querySelector('input[name="resposta"]:checked');
